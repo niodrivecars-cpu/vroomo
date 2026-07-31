@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from django.contrib.auth.models import User
+from django.core import signing
 from django.core.files.base import ContentFile
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -48,6 +49,22 @@ class DocumentTestCase(TestCase):
 
 
 class VehicleDocumentModelTests(DocumentTestCase):
+    def test_get_signed_download_url_points_to_signed_route(self):
+        url = self.doc.get_signed_download_url()
+        self.assertIn(reverse('fleet:document_download_signed', kwargs={'pk': self.doc.pk}), url)
+        self.assertIn('token=', url)
+
+    def test_signed_url_token_encodes_expected_payload(self):
+        url = self.doc.get_signed_download_url(ttl=3600)
+        token = url.split('token=', 1)[1]
+        data = signing.loads(token)
+        self.assertEqual(1, data['v'])
+        self.assertEqual(self.doc.pk, data['doc'])
+        self.assertEqual(self.company.pk, data['company'])
+        self.assertEqual('vehicle_document_download', data['purpose'])
+        self.assertEqual(self.doc.download_token_version, data['version'])
+        self.assertAlmostEqual(timezone.now().timestamp() + 3600, float(data['exp']), delta=10)
+
     def test_revoke_download_links_increments_token_version(self):
         self.doc.revoke_download_links()
         self.assertEqual(2, self.doc.download_token_version)
@@ -134,3 +151,77 @@ class DocumentDownloadViewTests(DocumentTestCase):
         self.doc.save()
         response = self.client.get(self._download_url(self.doc.pk))
         self.assertEqual(response.status_code, 404)
+
+
+class DocumentDownloadSignedTests(DocumentTestCase):
+    def _signed_token(self, doc, **overrides):
+        payload = {
+            'v': 1,
+            'doc': doc.pk,
+            'company': doc.vehicle.company_id,
+            'purpose': 'vehicle_document_download',
+            'version': doc.download_token_version,
+            'exp': timezone.now().timestamp() + 3600,
+        }
+        payload.update(overrides)
+        return signing.dumps(payload)
+
+    def _signed_url(self, doc, **overrides):
+        url = reverse('fleet:document_download_signed', kwargs={'pk': doc.pk})
+        return f'{url}?token={self._signed_token(doc, **overrides)}'
+
+    def test_signed_download_works_without_login(self):
+        response = self.client.get(self._signed_url(self.doc))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(FILE_BYTES, b''.join(response.streaming_content))
+
+    def test_signed_download_rejects_expired_token(self):
+        url = self._signed_url(self.doc, exp=timezone.now().timestamp() - 10)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+    def test_signed_download_rejects_revoked_token(self):
+        url = self._signed_url(self.doc)
+        self.doc.revoke_download_links()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+    def test_signed_download_rejects_wrong_company(self):
+        url = self._signed_url(self.doc, company=self.other_company.pk)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+    def test_signed_download_rejects_wrong_document(self):
+        url = self._signed_url(self.doc)
+        wrong = reverse('fleet:document_download_signed', kwargs={'pk': self.other_doc.pk})
+        response = self.client.get(f'{wrong}?token={url.split("token=", 1)[1]}')
+        self.assertEqual(response.status_code, 403)
+
+    def test_signed_download_rejects_tampered_token(self):
+        token = self._signed_token(self.doc)
+        tampered = (token[:-4] + ('A' if token[-4] != 'A' else 'B') + token[-3:])
+        url = reverse('fleet:document_download_signed', kwargs={'pk': self.doc.pk})
+        response = self.client.get(f'{url}?token={tampered}')
+        self.assertEqual(response.status_code, 403)
+
+    def test_signed_download_rejects_missing_token(self):
+        url = reverse('fleet:document_download_signed', kwargs={'pk': self.doc.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+    def test_signed_download_rejects_wrong_purpose(self):
+        url = self._signed_url(self.doc, purpose='other')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+    def test_signed_download_rejects_wrong_version(self):
+        url = self._signed_url(self.doc, version=999)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
+
+    def test_signed_download_audits_success_and_denial(self):
+        url = self._signed_url(self.doc)
+        self.client.get(url)
+        self.assertEqual(1, AuditLog.objects.filter(action='DOWNLOAD').count())
+        self.client.get(self._signed_url(self.doc, exp=timezone.now().timestamp() - 10))
+        self.assertEqual(2, AuditLog.objects.filter(action='DOWNLOAD').count())

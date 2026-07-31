@@ -23,7 +23,12 @@ from django_ratelimit.decorators import ratelimit
 
 from .audit import log_audit
 from .decorators import staff_required
-from .downloads import is_download_rate_limited, serve_document
+from .downloads import (
+    decode_token,
+    get_document_or_none,
+    is_download_rate_limited,
+    serve_document,
+)
 from .forms import (
     BookingForm,
     DriverForm,
@@ -415,6 +420,23 @@ def document_download(request, pk):
         log_audit(request, 'DOWNLOAD', summary=_('Download denied: rate limit exceeded'))
         return HttpResponseForbidden(_('Download denied: rate limit exceeded'))
     log_audit(request, 'DOWNLOAD', obj=doc, summary=_('Document downloaded'))
+    return serve_document(doc, request)
+
+
+@require_GET
+def document_download_signed(request, pk):
+    data = decode_token(request.GET.get('token'))
+    if data is None:
+        log_audit(request, 'DOWNLOAD', summary=_('Download denied: invalid or expired token'))
+        return HttpResponseForbidden(_('Download denied: invalid or expired token'))
+    doc = get_document_or_none(data.get('doc'), company_id=data.get('company'))
+    if doc is None or doc.pk != pk or doc.download_token_version != data.get('version'):
+        log_audit(request, 'DOWNLOAD', summary=_('Download denied: token does not match document'))
+        return HttpResponseForbidden(_('Download denied: token does not match document'))
+    if is_download_rate_limited(request):
+        log_audit(request, 'DOWNLOAD', summary=_('Download denied: rate limit exceeded'))
+        return HttpResponseForbidden(_('Download denied: rate limit exceeded'))
+    log_audit(request, 'DOWNLOAD', obj=doc, summary=_('Document downloaded via signed link'))
     return serve_document(doc, request)
 
 

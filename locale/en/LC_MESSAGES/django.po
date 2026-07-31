@@ -804,3 +804,12 @@ msgstr "Document downloaded"
 
 msgid "Download document"
 msgstr "Download document"
+
+msgid "Download denied: invalid or expired token"
+msgstr "Download denied: invalid or expired token"
+
+msgid "Download denied: token does not match document"
+msgstr "Download denied: token does not match document"
+
+msgid "Document downloaded via signed link"
+msgstr "Document downloaded via signed link"
