@@ -1,0 +1,100 @@
+{% extends 'fleet/base.html' %}
+{% load i18n %}
+{% load humanize vroom_extras %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">{{ driver.first_name }} {{ driver.last_name }}</h2>
+    <a href="{% url 'fleet:driver_list' %}" class="btn btn-outline-secondary">{% translate "Back to list" %}</a>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3"><strong>{% translate "Name" %}:</strong> {{ driver.first_name }} {{ driver.last_name }}</div>
+            <div class="col-md-3"><strong>CIN:</strong> {{ driver.cin }}</div>
+            <div class="col-md-3"><strong>{% translate "Phone" %}:</strong> {{ driver.phone }}</div>
+            <div class="col-md-3"><strong>{% translate "License Number" %}:</strong> {{ driver.license_number }}</div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-3">
+                <strong>{% translate "License Expiry" %}:</strong>
+                {% if driver.license_expiry < today %}
+                    <span class="text-danger fw-bold">{{ driver.license_expiry|date:"SHORT_DATE_FORMAT" }} ({% translate "Expired" %})</span>
+                {% elif driver.license_expiry <= today|add:"30days" %}
+                    <span class="text-warning fw-bold">{{ driver.license_expiry|date:"SHORT_DATE_FORMAT" }} ({% translate "Expiring soon" %})</span>
+                {% else %}
+                    {{ driver.license_expiry|date:"SHORT_DATE_FORMAT" }}
+                {% endif %}
+            </div>
+            <div class="col-md-3">
+                <strong>{% translate "Active" %}:</strong>
+                {% if driver.is_active %}
+                    <span class="text-success fw-bold">✓</span>
+                {% else %}
+                    <span class="text-danger fw-bold">✗</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4 class="mb-3">{% translate "Recent Bookings" %}</h4>
+{% if bookings %}
+<table class="table table-striped mb-4">
+    <thead>
+        <tr>
+            <th>{% translate "Vehicle" %}</th>
+            <th>{% translate "Pickup" %}</th>
+            <th>{% translate "Expected Return" %}</th>
+            <th>{% translate "Status" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for b in bookings %}
+        <tr>
+            <td>{{ b.vehicle.license_plate }}</td>
+            <td>{{ b.pickup_date|date:"SHORT_DATETIME_FORMAT" }}</td>
+            <td>{{ b.expected_return|date:"SHORT_DATETIME_FORMAT" }}</td>
+            <td>{{ b.get_status_display }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="text-muted mb-4">{% translate "No bookings" %}</p>
+{% endif %}
+
+<h4 class="mb-3">{% translate "Violations" %}</h4>
+{% if violations %}
+<table class="table table-striped mb-3">
+    <thead>
+        <tr>
+            <th>{% translate "Type" %}</th>
+            <th>{% translate "Date" %}</th>
+            <th>{% translate "Location" %}</th>
+            <th>{% translate "Fine" %}</th>
+            <th>{% translate "Surcharge" %}</th>
+            <th>{% translate "Total" %}</th>
+            <th>{% translate "Status" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for v in violations %}
+        <tr class="{% if v.is_overdue %}table-danger{% endif %}">
+            <td>{{ v.get_violation_type_display }}</td>
+            <td>{{ v.violation_date|date:"SHORT_DATETIME_FORMAT" }}</td>
+            <td>{{ v.violation_location|default:"-" }}</td>
+            <td>{{ v.fine_amount|currency:LANGUAGE_CODE }}</td>
+            <td>{{ v.majoration_amount|currency:LANGUAGE_CODE }}</td>
+            <td>{{ v.total_due|currency:LANGUAGE_CODE }}</td>
+            <td>{{ v.get_status_display }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="fw-bold">{% blocktranslate with total=total_fines|currency:LANGUAGE_CODE %}Total fines: {{ total }}{% endblocktranslate %}</p>
+{% else %}
+<p class="text-muted">{% translate "No violations" %} ✓</p>
+{% endif %}
+{% endblock %}

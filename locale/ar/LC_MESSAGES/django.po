@@ -1,0 +1,795 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Vroom\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-31\n"
+"PO-Revision-Date: 2026-07-31\n"
+"Language-Team: \n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+msgid "Action"
+msgstr "الإجراء"
+
+msgid "Actions"
+msgstr "الإجراءات"
+
+msgid "Active"
+msgstr "نشط"
+
+msgid "Actual Return"
+msgstr "تاريخ الرجوع الفعلي"
+
+msgid "Actual return"
+msgstr "تاريخ الرجوع الفعلي"
+
+msgid "Add Booking"
+msgstr "إضافة حجز"
+
+msgid "Add Document"
+msgstr "إضافة وثيقة"
+
+msgid "Add Driver"
+msgstr "إضافة سائق"
+
+msgid "Add Maintenance"
+msgstr "إضافة صيانة"
+
+msgid "Add Vehicle"
+msgstr "إضافة مركبة"
+
+msgid "Add Violation"
+msgstr "إضافة مخالفة"
+
+msgid "Add booking"
+msgstr "إضافة حجز"
+
+msgid "Add document for %(plate)s"
+msgstr "إضافة وثيقة لـ %(plate)s"
+
+msgid "Add driver"
+msgstr "إضافة سائق"
+
+msgid "Add maintenance for %(plate)s"
+msgstr "إضافة صيانة لـ %(plate)s"
+
+msgid "Add vehicle"
+msgstr "إضافة مركبة"
+
+msgid "Add violation"
+msgstr "إضافة مخالفة"
+
+msgid "Added document: %(type)s - %(plate)s"
+msgstr "تمت إضافة الوثيقة: %(type)s - %(plate)s"
+
+msgid "Added driver: %(first)s %(last)s"
+msgstr "تمت إضافة السائق: %(first)s %(last)s"
+
+msgid "Added maintenance: %(type)s - %(plate)s"
+msgstr "تمت إضافة الصيانة: %(type)s - %(plate)s"
+
+msgid "Added vehicle: %(plate)s"
+msgstr "تمت إضافة المركبة: %(plate)s"
+
+msgid "Added violation: %(type)s - %(plate)s"
+msgstr "تمت إضافة المخالفة: %(type)s - %(plate)s"
+
+msgid "All documents are valid"
+msgstr "جميع الوثائق سارية"
+
+msgid "Amount"
+msgstr "المبلغ"
+
+msgid "Anonymous"
+msgstr "مجهول"
+
+msgid "Audit log"
+msgstr "سجل التدقيق"
+
+msgid "Audit logs"
+msgstr "سجلات التدقيق"
+
+msgid "Available"
+msgstr "متاحة"
+
+msgid "Back to Dashboard"
+msgstr "العودة إلى لوحة القيادة"
+
+msgid "Back to list"
+msgstr "العودة إلى القائمة"
+
+msgid "Booking"
+msgstr "حجز"
+
+msgid "Booking Details"
+msgstr "تفاصيل الحجز"
+
+msgid "Booking created successfully"
+msgstr "تم إنشاء الحجز بنجاح"
+
+msgid "Booking updated successfully"
+msgstr "تم تعديل الحجز"
+
+msgid "Bookings"
+msgstr "الحجوزات"
+
+msgid "CIN number"
+msgstr "رقم البطاقة الوطنية"
+
+msgid "Cancel"
+msgstr "إلغاء"
+
+msgid "Cancelled"
+msgstr "ملغاة"
+
+msgid "Cannot change a rented vehicle to available. Return the booking first."
+msgstr "لا يمكن تغيير مركبة مؤجرة إلى متاحة. سجّل إرجاع الحجز أولاً"
+
+msgid "Cannot pick up a booking that is not confirmed"
+msgstr "لا يمكن استلام حجز غير مؤكد"
+
+msgid "Cannot return a booking that is not rented"
+msgstr "لا يمكن إرجاع حجز غير مؤجر"
+
+msgid "Change summary"
+msgstr "ملخص التغيير"
+
+msgid "Changed status %(plate)s: %(old)s \\u2192 %(new)s"
+msgstr "تم تغيير حالة %(plate)s: %(old)s → %(new)s"
+
+msgid "Companies"
+msgstr "الشركات"
+
+msgid "Company"
+msgstr "شركة"
+
+msgid "Company name"
+msgstr "اسم الشركة"
+
+msgid "Confirm deletion?"
+msgstr "تأكيد الحذف؟"
+
+msgid "Confirmed"
+msgstr "مؤكد"
+
+msgid "Content type"
+msgstr "نوع الكائن"
+
+msgid "Cost"
+msgstr "التكلفة"
+
+msgid "Create"
+msgstr "إضافة"
+
+msgid "Created at"
+msgstr "تاريخ الإنشاء"
+
+msgid "Current km"
+msgstr "الكيلومترات الحالية"
+
+msgid "Customer"
+msgstr "العميل"
+
+msgid "Customer Phone"
+msgstr "هاتف العميل"
+
+msgid "Customer name"
+msgstr "اسم العميل"
+
+msgid "Customer phone"
+msgstr "هاتف العميل"
+
+msgid "Daily Rate"
+msgstr "السعر اليومي"
+
+msgid "Daily rate"
+msgstr "السعر اليومي"
+
+msgid "Dashboard"
+msgstr "لوحة القيادة"
+
+msgid "Date"
+msgstr "التاريخ"
+
+msgid "Days Late"
+msgstr "أيام التأخير"
+
+msgid "Days Left"
+msgstr "الأيام المتبقية"
+
+msgid "Days remaining"
+msgstr "الأيام المتبقية"
+
+msgid "Delete"
+msgstr "حذف"
+
+msgid "Deleted document: %(type)s - %(plate)s"
+msgstr "تم حذف الوثيقة: %(type)s - %(plate)s"
+
+msgid "Deleted maintenance: %(type)s - %(plate)s"
+msgstr "تم حذف الصيانة: %(type)s - %(plate)s"
+
+msgid "Deleted violation: %(type)s - %(plate)s"
+msgstr "تم حذف المخالفة: %(type)s - %(plate)s"
+
+msgid "Deposit"
+msgstr "الضمان"
+
+msgid "Disputed"
+msgstr "متنازع عليها"
+
+msgid "Document added successfully"
+msgstr "تمت إضافة الوثيقة"
+
+msgid "Document deleted successfully"
+msgstr "تم حذف الوثيقة"
+
+msgid "Document number"
+msgstr "رقم الوثيقة"
+
+msgid "Document type"
+msgstr "نوع الوثيقة"
+
+msgid "Document updated successfully"
+msgstr "تم تعديل الوثيقة"
+
+msgid "Documents"
+msgstr "الوثائق"
+
+msgid "Documents Expiring Soon"
+msgstr "الوثائق المنتهية قريبًا"
+
+msgid "Download"
+msgstr "تحميل"
+
+msgid "Driver"
+msgstr "سائق"
+
+msgid "Driver added successfully"
+msgstr "تمت إضافة السائق"
+
+msgid "Driver designated"
+msgstr "تم تحديد السائق"
+
+msgid "Driver updated successfully"
+msgstr "تم تعديل السائق"
+
+msgid "Drivers"
+msgstr "السائقون"
+
+msgid "Due Maintenance"
+msgstr "الصيانة المستحقة"
+
+msgid "Edit"
+msgstr "تعديل"
+
+msgid "Edit booking"
+msgstr "تعديل حجز"
+
+msgid "Edit document"
+msgstr "تعديل وثيقة"
+
+msgid "Edit driver"
+msgstr "تعديل سائق"
+
+msgid "Edit maintenance"
+msgstr "تعديل صيانة"
+
+msgid "Edit vehicle"
+msgstr "تعديل مركبة"
+
+msgid "Edit violation"
+msgstr "تعديل مخالفة"
+
+msgid "Edited booking: %(name)s"
+msgstr "تم تعديل الحجز: %(name)s"
+
+msgid "Edited document: %(type)s - %(plate)s"
+msgstr "تم تعديل الوثيقة: %(type)s - %(plate)s"
+
+msgid "Edited driver: %(first)s %(last)s"
+msgstr "تم تعديل السائق: %(first)s %(last)s"
+
+msgid "Edited maintenance: %(type)s - %(plate)s"
+msgstr "تم تعديل الصيانة: %(type)s - %(plate)s"
+
+msgid "Edited vehicle: %(plate)s"
+msgstr "تم تعديل المركبة: %(plate)s"
+
+msgid "Edited violation: %(type)s - %(plate)s"
+msgstr "تم تعديل المخالفة: %(type)s - %(plate)s"
+
+msgid "Expected Return"
+msgstr "تاريخ الرجوع المتوقع"
+
+msgid "Expected return"
+msgstr "تاريخ الرجوع المتوقع"
+
+msgid "Expired"
+msgstr "منتهية"
+
+msgid "Expired?"
+msgstr "منتهية؟"
+
+msgid "Expiring soon"
+msgstr "تنتهي قريبًا"
+
+msgid "Expiry Date"
+msgstr "تاريخ الانتهاء"
+
+msgid "Expiry date"
+msgstr "تاريخ الانتهاء"
+
+msgid "Extension not allowed. Allowed extensions: PDF, PNG, JPG"
+msgstr "يُسمح فقط بملفات PDF و JPG و PNG و JPEG"
+
+msgid "Failed login"
+msgstr "فشل تسجيل دخول"
+
+msgid "Failed login: %(user)s"
+msgstr "فشل تسجيل الدخول: %(user)s"
+
+msgid "Failed to send email (attempt %(attempt)d/%(max_retries)d): %(err)s"
+msgstr "فشل إرسال البريد (المحاولة %(attempt)d/%(max_retries)d): %(err)s"
+
+msgid "Failed to send email after %(count)d attempts"
+msgstr "فشل إرسال البريد بعد %(count)d محاولة"
+
+msgid "Failed to send email after repeated attempts"
+msgstr "فشل إرسال البريد بعد محاولات متكررة"
+
+msgid "File"
+msgstr "الملف"
+
+msgid "File size exceeds the maximum allowed (10 MB)"
+msgstr "حجم الملف يتجاوز الحد الأقصى المسموح به (10 MB)"
+
+msgid "File type not allowed. Allowed types: PDF, PNG, JPG"
+msgstr "نوع الملف غير مسموح به"
+
+msgid "Fine"
+msgstr "الغرامة"
+
+msgid "Fine amount"
+msgstr "مبلغ الغرامة"
+
+msgid "First"
+msgstr "الأول"
+
+msgid "First name"
+msgstr "الاسم"
+
+msgid "Forgot your password?"
+msgstr "نسيت كلمة السر؟"
+
+msgid "Full Name"
+msgstr "الاسم الكامل"
+
+msgid "IP address"
+msgstr "عنوان IP"
+
+msgid "Insurance"
+msgstr "التأمين"
+
+msgid "Kilometers"
+msgstr "الكيلومترات"
+
+msgid "Km at service"
+msgstr "الكيلومترات عند الصيانة"
+
+msgid "Last"
+msgstr "الأخيرة"
+
+msgid "Last name"
+msgstr "اللقب"
+
+msgid "Late"
+msgstr "متأخرة"
+
+msgid "Late Bookings"
+msgstr "الحجوزات المتأخرة"
+
+msgid "Late status"
+msgstr "حالة التأخير"
+
+msgid "License Expiry"
+msgstr "انتهاء الرخصة"
+
+msgid "License Number"
+msgstr "رقم الرخصة"
+
+msgid "License Plate"
+msgstr "رقم اللوحة"
+
+msgid "License expiry"
+msgstr "انتهاء الرخصة"
+
+msgid "License number"
+msgstr "رقم الرخصة"
+
+msgid "License plate"
+msgstr "رقم اللوحة"
+
+msgid "Location"
+msgstr "المكان"
+
+msgid "Login"
+msgstr "تسجيل دخول"
+
+msgid "Login: %(user)s"
+msgstr "تسجيل دخول: %(user)s"
+
+msgid "Logout"
+msgstr "تسجيل خروج"
+
+msgid "Logout: %(user)s"
+msgstr "تسجيل خروج: %(user)s"
+
+msgid "Maintenance"
+msgstr "صيانة"
+
+msgid "Maintenance added successfully"
+msgstr "تمت إضافة الصيانة"
+
+msgid "Maintenance deleted successfully"
+msgstr "تم حذف الصيانة"
+
+msgid "Maintenance records"
+msgstr "سجلات الصيانة"
+
+msgid "Maintenance updated successfully"
+msgstr "تم تعديل الصيانة"
+
+msgid "Make"
+msgstr "الماركة"
+
+msgid "Model"
+msgstr "الموديل"
+
+msgid "Name"
+msgstr "الاسم"
+
+msgid "New"
+msgstr "جديدة"
+
+msgid "New booking: %(name)s - %(plate)s"
+msgstr "حجز جديد: %(name)s - %(plate)s"
+
+msgid "Next"
+msgstr "التالية"
+
+msgid "Next Service"
+msgstr "الصيانة القادمة"
+
+msgid "Next service (date)"
+msgstr "الصيانة القادمة (تاريخ)"
+
+msgid "Next service at (km)"
+msgstr "الصيانة القادمة عند (كلم)"
+
+msgid "No"
+msgstr "لا"
+
+msgid "No alerts today"
+msgstr "لا توجد تنبيهات اليوم"
+
+msgid "No bookings"
+msgstr "لا توجد حجوزات"
+
+msgid "No documents"
+msgstr "لا توجد وثائق"
+
+msgid "No drivers"
+msgstr "لا يوجد سائقون"
+
+msgid "No due maintenance"
+msgstr "لا توجد صيانة مستحقة"
+
+msgid "No late bookings"
+msgstr "لا توجد حجوزات متأخرة"
+
+msgid "No maintenance"
+msgstr "لا توجد صيانة"
+
+msgid "No maintenance records"
+msgstr "لا توجد سجلات صيانة"
+
+msgid "No vehicles"
+msgstr "لا توجد مركبات"
+
+msgid "No violations"
+msgstr "لا توجد مخالفات"
+
+msgid "Not specified"
+msgstr "غير محدد"
+
+msgid "Notes"
+msgstr "ملاحظات"
+
+msgid "Notification date"
+msgstr "تاريخ التبليغ"
+
+msgid "Number"
+msgstr "الرقم"
+
+msgid "Object ID"
+msgstr "معرف الكائن"
+
+msgid "Object representation"
+msgstr "تمثيل الكائن"
+
+msgid "Other"
+msgstr "أخرى"
+
+msgid "Out of Service"
+msgstr "خارج الخدمة"
+
+msgid "Out of service"
+msgstr "خارج الخدمة"
+
+msgid "Overdue"
+msgstr "تجاوزت الأجل"
+
+msgid "PV number"
+msgstr "رقم المحضر"
+
+msgid "Page navigation"
+msgstr "التنقل بين الصفحات"
+
+msgid "Paid"
+msgstr "مدفوعة"
+
+msgid "Paid by"
+msgstr "دفعها"
+
+msgid "Parking"
+msgstr "وقوف ممنوع"
+
+msgid "Payment deadline"
+msgstr "آخر أجل للدفع"
+
+msgid "Phone"
+msgstr "الهاتف"
+
+msgid "Phone use"
+msgstr "استخدام الهاتف"
+
+msgid "Picked up vehicle: %(plate)s - %(name)s"
+msgstr "تم استلام المركبة: %(plate)s - %(name)s"
+
+msgid "Pickup"
+msgstr "استلام"
+
+msgid "Pickup Date"
+msgstr "تاريخ الاستلام"
+
+msgid "Pickup date"
+msgstr "تاريخ الاستلام"
+
+msgid "Pickup km"
+msgstr "كيلومترات الاستلام"
+
+msgid "Points deducted"
+msgstr "النقاط المخصومة"
+
+msgid "Previous"
+msgstr "السابقة"
+
+msgid "Rate limit exceeded: %(method)s %(path)s"
+msgstr "تم تجاوز حد الطلبات: %(method)s %(path)s"
+
+msgid "Recent Bookings"
+msgstr "الحجوزات الأخيرة"
+
+msgid "Record Pickup"
+msgstr "تسجيل استلام"
+
+msgid "Record Return"
+msgstr "تسجيل إرجاع"
+
+msgid "Red light"
+msgstr "عدم احترام إشارة"
+
+msgid "Registration card"
+msgstr "البطاقة الرمادية"
+
+msgid "Rented"
+msgstr "مؤجرة"
+
+msgid "Return"
+msgstr "إرجاع"
+
+msgid "Return date must be after pickup date"
+msgstr "تاريخ الرجوع يجب أن يكون بعد تاريخ الاستلام"
+
+msgid "Return km"
+msgstr "كيلومترات الرجوع"
+
+msgid "Returned"
+msgstr "مُرجعة"
+
+msgid "Returned vehicle: %(plate)s - %(name)s"
+msgstr "تم إرجاع المركبة: %(plate)s - %(name)s"
+
+msgid "Save"
+msgstr "حفظ"
+
+msgid "Seatbelt"
+msgstr "عدم وضع حزام"
+
+msgid "Send daily alert report"
+msgstr "إرسال تقرير التنبيهات اليومي"
+
+msgid "Sent %(count)d alert(s) to %(email)s"
+msgstr "تم إرسال %(count)d تنبيه إلى %(email)s"
+
+msgid "Session key"
+msgstr "مفتاح الجلسة"
+
+msgid "Sign in"
+msgstr "تسجيل الدخول"
+
+msgid "Speeding"
+msgstr "تجاوز السرعة"
+
+msgid "Status"
+msgstr "الحالة"
+
+msgid "Status change"
+msgstr "تغيير حالة"
+
+msgid "Surcharge"
+msgstr "الزيادة"
+
+msgid "Technical inspection"
+msgstr "الفحص التقني"
+
+msgid "This vehicle is already booked for this period"
+msgstr "هذه المركبة محجوزة بالفعل في هذه الفترة"
+
+msgid ""
+"This vehicle is not available for booking (maintenance or out of service)"
+msgstr "هذه المركبة غير متاحة للحجز (في صيانة أو خارج الخدمة)"
+
+msgid "Total"
+msgstr "المجموع"
+
+msgid "Type"
+msgstr "النوع"
+
+msgid "Update"
+msgstr "تعديل"
+
+msgid "Update Status"
+msgstr "تحديث الحالة"
+
+msgid "User"
+msgstr "المستخدم"
+
+msgid "User agent"
+msgstr "المتصفح"
+
+msgid "User profile"
+msgstr "ملف مستخدم"
+
+msgid "User profiles"
+msgstr "ملفات المستخدمين"
+
+msgid "Username"
+msgstr "اسم المستخدم"
+
+msgid "Vehicle"
+msgstr "مركبة"
+
+msgid "Vehicle added successfully"
+msgstr "تمت إضافة المركبة"
+
+msgid "Vehicle document"
+msgstr "وثيقة مركبة"
+
+msgid "Vehicle documents"
+msgstr "وثائق المركبات"
+
+msgid "Vehicle pickup recorded"
+msgstr "تم تسجيل استلام المركبة"
+
+msgid "Vehicle return recorded"
+msgstr "تم تسجيل إرجاع المركبة"
+
+msgid "Vehicle status updated"
+msgstr "تم تحديث حالة المركبة"
+
+msgid "Vehicle updated successfully"
+msgstr "تم تعديل المركبة"
+
+msgid "Vehicles"
+msgstr "المركبات"
+
+msgid "View"
+msgstr "عرض"
+
+msgid "Vignette"
+msgstr "الفينييت"
+
+msgid "Violation"
+msgstr "مخالفة"
+
+msgid "Violation added (no driver specified)"
+msgstr "تمت إضافة المخالفة (بدون سائق محدد)"
+
+msgid "Violation added and linked to driver %(driver)s"
+msgstr "تمت إضافة المخالفة وربطها بالسائق %(driver)s"
+
+msgid "Violation date"
+msgstr "تاريخ المخالفة"
+
+msgid "Violation deleted successfully"
+msgstr "تم حذف المخالفة"
+
+msgid "Violation type"
+msgstr "نوع المخالفة"
+
+msgid "Violation updated successfully"
+msgstr "تم تعديل المخالفة"
+
+msgid "Violations"
+msgstr "المخالفات"
+
+msgid "Vroom alerts:\\n\\n"
+msgstr ""
+"تنبيهات Vroom:\n"
+"\n"
+
+msgid "Vroom daily report - %(date)s (%(count)d alert(s))"
+msgstr "تقرير Vroom اليومي - %(date)s (%(count)d تنبيه)"
+
+msgid "Year"
+msgstr "السنة"
+
+msgid "Yes"
+msgstr "نعم"
+
+msgid "You do not have permission to access this page"
+msgstr "ليس لديك صلاحية للوصول إلى هذه الصفحة"
+
+msgid "\\n\\n-- Vroom system"
+msgstr ""
+"\n"
+"\n"
+"-- نظام Vroom"
+
+msgid "day(s)"
+msgstr "يوم"
+
+msgid ""
+"⚠️ [Upcoming] %(plate)s - %(doc_type)s expires on %(date)s (%(days)d days)"
+msgstr "⚠️ [قريبة] %(plate)s - %(doc_type)s تنتهي في %(date)s (%(days)d يوم)"
+
+msgid "🔧 [Maintenance] %(plate)s - %(type)s due"
+msgstr "🔧 [صيانة] %(plate)s - %(type)s مستحقة"
+
+msgid "🔴 [Expired] %(plate)s - %(doc_type)s expired on %(date)s"
+msgstr "🔴 [منتهية] %(plate)s - %(doc_type)s انتهت في %(date)s"
+
+msgid ""
+"🔴 [Late] %(plate)s - Customer %(name)s (%(phone)s) is %(days)d days late"
+msgstr "🔴 [متأخر] %(plate)s - العميل %(name)s (%(phone)s) متأخر %(days)d يوم"
+
+msgid "🪪 [License] %(first)s %(last)s - license expires on %(date)s"
+msgstr "🪪 [رخصة] %(first)s %(last)s - الرخصة تنتهي في %(date)s"
+
+msgid "Logout (%(username)s)"
+msgstr "تسجيل الخروج (%(username)s)"
+
+msgid "Late %(days)s day(s)"
+msgstr "متأخر %(days)s يوم (أيام)"
+
+msgid "Total fines: %(total)s"
+msgstr "إجمالي الغرامات: %(total)s"
+
+msgid "%(km)s km"
+msgstr "%(km)s كم"

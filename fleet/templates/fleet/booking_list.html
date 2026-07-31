@@ -1,0 +1,62 @@
+{% extends 'fleet/base.html' %}
+{% load i18n %}
+{% load humanize vroom_extras %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">{% translate "Bookings" %}</h2>
+    <a href="{% url 'fleet:booking_create' %}" class="btn btn-success">{% translate "Add Booking" %}</a>
+</div>
+
+{% if bookings %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>{% translate "Customer" %}</th>
+            <th>{% translate "Vehicle" %}</th>
+            <th>{% translate "Driver" %}</th>
+            <th>{% translate "Pickup" %}</th>
+            <th>{% translate "Expected Return" %}</th>
+            <th>{% translate "Status" %}</th>
+            <th>{% translate "Amount" %}</th>
+            <th>{% translate "Actions" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for b in bookings %}
+        <tr>
+            <td>{{ b.customer_name }}</td>
+            <td>{{ b.vehicle }}</td>
+            <td>{{ b.driver }}</td>
+            <td>{{ b.pickup_date|date:"SHORT_DATETIME_FORMAT" }}</td>
+            <td>{{ b.expected_return|date:"SHORT_DATETIME_FORMAT" }}</td>
+            <td>
+                {% if b.status == 'confirmed' %}
+                    <span class="badge bg-secondary">{% translate "Confirmed" %}</span>
+                {% elif b.status == 'rented' %}
+                    <span class="badge bg-primary">{% translate "Rented" %}</span>
+                {% elif b.status == 'returned' %}
+                    <span class="badge bg-success">{% translate "Returned" %}</span>
+                {% elif b.status == 'late' %}
+                    <span class="badge bg-danger">{% translate "Late" %}</span>
+                {% elif b.status == 'cancelled' %}
+                    <span class="badge bg-dark">{% translate "Cancelled" %}</span>
+                {% endif %}
+                {% if b.is_late %}
+                    <span class="badge bg-danger">{% blocktranslate with days=b.days_late %}Late {{ days }} day(s){% endblocktranslate %}</span>
+                {% endif %}
+            </td>
+            <td>{{ b.total_amount|currency:LANGUAGE_CODE }}</td>
+            <td>
+                <a href="{% url 'fleet:booking_detail' b.pk %}" class="btn btn-sm btn-outline-primary">{% translate "View" %}</a>
+                <a href="{% url 'fleet:booking_edit' b.pk %}" class="btn btn-sm btn-outline-warning">{% translate "Edit" %}</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="text-muted">{% translate "No bookings" %}</p>
+{% endif %}
+{% include 'fleet/pagination.html' %}
+{% endblock %}

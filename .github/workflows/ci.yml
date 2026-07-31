@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: vroom_ci
+          POSTGRES_USER: vroom
+          POSTGRES_PASSWORD: vroom
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U vroom -d vroom_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      # All base settings have safe defaults, so tests run without a .env file.
+      PYTHONDONTWRITEBYTECODE: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gettext libmagic1
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Security scan (bandit)
+        run: bandit -r fleet config -q -ll
+
+      - name: Dependency audit (pip-audit)
+        run: pip-audit -r requirements.txt -r requirements-dev.txt
+
+      - name: Check migrations have no drift
+        run: python -m manage makemigrations --check --dry-run --settings=config.test_settings
+
+      - name: Compile translation catalogs
+        run: python -m manage compilemessages --ignore venv --settings=config.test_settings
+
+      - name: Run tests
+        run: python -m manage test fleet --settings=config.test_settings
+
+      - name: Collect static files
+        run: python -m manage collectstatic --noinput --settings=config.test_settings
+
+      - name: Production settings check (check --deploy)
+        env:
+          DJANGO_SETTINGS_MODULE: config.settings.production
+          SECRET_KEY: ci-only-9Zx3vQ7wT2mR8pN5cL6bK1hD4fG0jS7aY3uE8iW
+          DEBUG: "False"
+          ALLOWED_HOSTS: ci.example.com
+          CSRF_TRUSTED_ORIGINS: https://ci.example.com
+          DATABASE_URL: postgres://vroom:vroom@localhost:5432/vroom_ci
+        run: python -m manage check --deploy

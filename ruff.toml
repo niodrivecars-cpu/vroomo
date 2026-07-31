@@ -1,0 +1,15 @@
+exclude = [
+    "websi",
+    "vroomo",
+    "venv",
+    "staticfiles",
+    "media",
+    "locale",
+    "__pycache__",
+]
+
+[lint.per-file-ignores]
+"fleet/migrations/*.py" = ["RUF012"]
+"fleet/models.py" = ["RUF012"]
+"fleet/forms.py" = ["RUF012"]
+"fleet/admin.py" = ["RUF012"]

@@ -1,0 +1,9 @@
+{% extends 'fleet/base.html' %}
+{% load i18n %}
+{% block content %}
+<div class="text-center mt-5">
+    <h1 class="display-1 text-danger">403</h1>
+    <p class="lead">{{ message }}</p>
+    <a href="{% url 'fleet:dashboard' %}" class="btn btn-primary">{% translate "Back to Dashboard" %}</a>
+</div>
+{% endblock %}

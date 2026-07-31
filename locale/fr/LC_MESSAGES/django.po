@@ -1,0 +1,801 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Vroom\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-31\n"
+"PO-Revision-Date: 2026-07-31\n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Action"
+msgstr "Action"
+
+msgid "Actions"
+msgstr "Actions"
+
+msgid "Active"
+msgstr "Actif"
+
+msgid "Actual Return"
+msgstr "Retour effectif"
+
+msgid "Actual return"
+msgstr "Retour effectif"
+
+msgid "Add Booking"
+msgstr "Ajouter une réservation"
+
+msgid "Add Document"
+msgstr "Ajouter un document"
+
+msgid "Add Driver"
+msgstr "Ajouter un conducteur"
+
+msgid "Add Maintenance"
+msgstr "Ajouter une maintenance"
+
+msgid "Add Vehicle"
+msgstr "Ajouter un véhicule"
+
+msgid "Add Violation"
+msgstr "Ajouter une infraction"
+
+msgid "Add booking"
+msgstr "Ajouter une réservation"
+
+msgid "Add document for %(plate)s"
+msgstr "Ajouter un document pour %(plate)s"
+
+msgid "Add driver"
+msgstr "Ajouter un conducteur"
+
+msgid "Add maintenance for %(plate)s"
+msgstr "Ajouter une maintenance pour %(plate)s"
+
+msgid "Add vehicle"
+msgstr "Ajouter un véhicule"
+
+msgid "Add violation"
+msgstr "Ajouter une infraction"
+
+msgid "Added document: %(type)s - %(plate)s"
+msgstr "Document ajouté : %(type)s - %(plate)s"
+
+msgid "Added driver: %(first)s %(last)s"
+msgstr "Conducteur ajouté : %(first)s %(last)s"
+
+msgid "Added maintenance: %(type)s - %(plate)s"
+msgstr "Maintenance ajoutée : %(type)s - %(plate)s"
+
+msgid "Added vehicle: %(plate)s"
+msgstr "Véhicule ajouté : %(plate)s"
+
+msgid "Added violation: %(type)s - %(plate)s"
+msgstr "Infraction ajoutée : %(type)s - %(plate)s"
+
+msgid "All documents are valid"
+msgstr "Tous les documents sont valides"
+
+msgid "Amount"
+msgstr "Montant"
+
+msgid "Anonymous"
+msgstr "Anonyme"
+
+msgid "Audit log"
+msgstr "Journal d'audit"
+
+msgid "Audit logs"
+msgstr "Journaux d'audit"
+
+msgid "Available"
+msgstr "Disponible"
+
+msgid "Back to Dashboard"
+msgstr "Retour au tableau de bord"
+
+msgid "Back to list"
+msgstr "Retour à la liste"
+
+msgid "Booking"
+msgstr "Réservation"
+
+msgid "Booking Details"
+msgstr "Détails de la réservation"
+
+msgid "Booking created successfully"
+msgstr "Réservation créée avec succès"
+
+msgid "Booking updated successfully"
+msgstr "Réservation modifiée avec succès"
+
+msgid "Bookings"
+msgstr "Réservations"
+
+msgid "CIN number"
+msgstr "N° CIN"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Cancelled"
+msgstr "Annulé"
+
+msgid "Cannot change a rented vehicle to available. Return the booking first."
+msgstr ""
+"Impossible de passer un véhicule loué à disponible. Retournez d'abord la "
+"réservation."
+
+msgid "Cannot pick up a booking that is not confirmed"
+msgstr "Impossible de prendre en charge une réservation non confirmée"
+
+msgid "Cannot return a booking that is not rented"
+msgstr "Impossible de retourner une réservation non louée"
+
+msgid "Change summary"
+msgstr "Résumé de modification"
+
+msgid "Changed status %(plate)s: %(old)s \\u2192 %(new)s"
+msgstr "Statut changé %(plate)s : %(old)s → %(new)s"
+
+msgid "Companies"
+msgstr "Sociétés"
+
+msgid "Company"
+msgstr "Société"
+
+msgid "Company name"
+msgstr "Nom de la société"
+
+msgid "Confirm deletion?"
+msgstr "Confirmer la suppression ?"
+
+msgid "Confirmed"
+msgstr "Confirmé"
+
+msgid "Content type"
+msgstr "Type de contenu"
+
+msgid "Cost"
+msgstr "Coût"
+
+msgid "Create"
+msgstr "Création"
+
+msgid "Created at"
+msgstr "Créé le"
+
+msgid "Current km"
+msgstr "Km actuel"
+
+msgid "Customer"
+msgstr "Client"
+
+msgid "Customer Phone"
+msgstr "Téléphone du client"
+
+msgid "Customer name"
+msgstr "Nom du client"
+
+msgid "Customer phone"
+msgstr "Téléphone du client"
+
+msgid "Daily Rate"
+msgstr "Tarif journalier"
+
+msgid "Daily rate"
+msgstr "Tarif journalier"
+
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Days Late"
+msgstr "Jours de retard"
+
+msgid "Days Left"
+msgstr "Jours restants"
+
+msgid "Days remaining"
+msgstr "Jours restants"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Deleted document: %(type)s - %(plate)s"
+msgstr "Document supprimé : %(type)s - %(plate)s"
+
+msgid "Deleted maintenance: %(type)s - %(plate)s"
+msgstr "Maintenance supprimée : %(type)s - %(plate)s"
+
+msgid "Deleted violation: %(type)s - %(plate)s"
+msgstr "Infraction supprimée : %(type)s - %(plate)s"
+
+msgid "Deposit"
+msgstr "Caution"
+
+msgid "Disputed"
+msgstr "Contestée"
+
+msgid "Document added successfully"
+msgstr "Document ajouté avec succès"
+
+msgid "Document deleted successfully"
+msgstr "Document supprimé avec succès"
+
+msgid "Document number"
+msgstr "N° de document"
+
+msgid "Document type"
+msgstr "Type de document"
+
+msgid "Document updated successfully"
+msgstr "Document modifié avec succès"
+
+msgid "Documents"
+msgstr "Documents"
+
+msgid "Documents Expiring Soon"
+msgstr "Documents expirant bientôt"
+
+msgid "Download"
+msgstr "Télécharger"
+
+msgid "Driver"
+msgstr "Conducteur"
+
+msgid "Driver added successfully"
+msgstr "Conducteur ajouté avec succès"
+
+msgid "Driver designated"
+msgstr "Conducteur désigné"
+
+msgid "Driver updated successfully"
+msgstr "Conducteur modifié avec succès"
+
+msgid "Drivers"
+msgstr "Conducteurs"
+
+msgid "Due Maintenance"
+msgstr "Maintenance due"
+
+msgid "Edit"
+msgstr "Modifier"
+
+msgid "Edit booking"
+msgstr "Modifier la réservation"
+
+msgid "Edit document"
+msgstr "Modifier le document"
+
+msgid "Edit driver"
+msgstr "Modifier le conducteur"
+
+msgid "Edit maintenance"
+msgstr "Modifier la maintenance"
+
+msgid "Edit vehicle"
+msgstr "Modifier le véhicule"
+
+msgid "Edit violation"
+msgstr "Modifier l'infraction"
+
+msgid "Edited booking: %(name)s"
+msgstr "Réservation modifiée : %(name)s"
+
+msgid "Edited document: %(type)s - %(plate)s"
+msgstr "Document modifié : %(type)s - %(plate)s"
+
+msgid "Edited driver: %(first)s %(last)s"
+msgstr "Conducteur modifié : %(first)s %(last)s"
+
+msgid "Edited maintenance: %(type)s - %(plate)s"
+msgstr "Maintenance modifiée : %(type)s - %(plate)s"
+
+msgid "Edited vehicle: %(plate)s"
+msgstr "Véhicule modifié : %(plate)s"
+
+msgid "Edited violation: %(type)s - %(plate)s"
+msgstr "Infraction modifiée : %(type)s - %(plate)s"
+
+msgid "Expected Return"
+msgstr "Retour prévu"
+
+msgid "Expected return"
+msgstr "Retour prévu"
+
+msgid "Expired"
+msgstr "Expiré"
+
+msgid "Expired?"
+msgstr "Expiré ?"
+
+msgid "Expiring soon"
+msgstr "Expire bientôt"
+
+msgid "Expiry Date"
+msgstr "Date d'expiration"
+
+msgid "Expiry date"
+msgstr "Date d'expiration"
+
+msgid "Extension not allowed. Allowed extensions: PDF, PNG, JPG"
+msgstr "Extensions autorisées : PDF, PNG, JPG uniquement"
+
+msgid "Failed login"
+msgstr "Échec de connexion"
+
+msgid "Failed login: %(user)s"
+msgstr "Échec de connexion : %(user)s"
+
+msgid "Failed to send email (attempt %(attempt)d/%(max_retries)d): %(err)s"
+msgstr ""
+"Échec d'envoi d'email (tentative %(attempt)d/%(max_retries)d) : %(err)s"
+
+msgid "Failed to send email after %(count)d attempts"
+msgstr "Échec d'envoi d'email après %(count)d tentative(s)"
+
+msgid "Failed to send email after repeated attempts"
+msgstr "Échec d'envoi d'email après plusieurs tentatives"
+
+msgid "File"
+msgstr "Fichier"
+
+msgid "File size exceeds the maximum allowed (10 MB)"
+msgstr "La taille du fichier dépasse la limite autorisée (10 Mo)"
+
+msgid "File type not allowed. Allowed types: PDF, PNG, JPG"
+msgstr "Type de fichier non autorisé"
+
+msgid "Fine"
+msgstr "Amende"
+
+msgid "Fine amount"
+msgstr "Montant de l'amende"
+
+msgid "First"
+msgstr "Première"
+
+msgid "First name"
+msgstr "Prénom"
+
+msgid "Forgot your password?"
+msgstr "Mot de passe oublié ?"
+
+msgid "Full Name"
+msgstr "Nom complet"
+
+msgid "IP address"
+msgstr "Adresse IP"
+
+msgid "Insurance"
+msgstr "Assurance"
+
+msgid "Kilometers"
+msgstr "Kilométrage"
+
+msgid "Km at service"
+msgstr "Km à la maintenance"
+
+msgid "Last"
+msgstr "Dernière"
+
+msgid "Last name"
+msgstr "Nom"
+
+msgid "Late"
+msgstr "En retard"
+
+msgid "Late Bookings"
+msgstr "Réservations en retard"
+
+msgid "Late status"
+msgstr "Statut de retard"
+
+msgid "License Expiry"
+msgstr "Expiration du permis"
+
+msgid "License Number"
+msgstr "N° de permis"
+
+msgid "License Plate"
+msgstr "Plaque d'immatriculation"
+
+msgid "License expiry"
+msgstr "Expiration du permis"
+
+msgid "License number"
+msgstr "N° de permis"
+
+msgid "License plate"
+msgstr "Plaque d'immatriculation"
+
+msgid "Location"
+msgstr "Lieu"
+
+msgid "Login"
+msgstr "Connexion"
+
+msgid "Login: %(user)s"
+msgstr "Connexion : %(user)s"
+
+msgid "Logout"
+msgstr "Déconnexion"
+
+msgid "Logout: %(user)s"
+msgstr "Déconnexion : %(user)s"
+
+msgid "Maintenance"
+msgstr "Maintenance"
+
+msgid "Maintenance added successfully"
+msgstr "Maintenance ajoutée avec succès"
+
+msgid "Maintenance deleted successfully"
+msgstr "Maintenance supprimée avec succès"
+
+msgid "Maintenance records"
+msgstr "Registres de maintenance"
+
+msgid "Maintenance updated successfully"
+msgstr "Maintenance modifiée avec succès"
+
+msgid "Make"
+msgstr "Marque"
+
+msgid "Model"
+msgstr "Modèle"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "New"
+msgstr "Nouvelle"
+
+msgid "New booking: %(name)s - %(plate)s"
+msgstr "Nouvelle réservation : %(name)s - %(plate)s"
+
+msgid "Next"
+msgstr "Suivante"
+
+msgid "Next Service"
+msgstr "Prochaine maintenance"
+
+msgid "Next service (date)"
+msgstr "Prochaine maintenance (date)"
+
+msgid "Next service at (km)"
+msgstr "Prochaine maintenance à (km)"
+
+msgid "No"
+msgstr "Non"
+
+msgid "No alerts today"
+msgstr "Aucune alerte aujourd'hui"
+
+msgid "No bookings"
+msgstr "Aucune réservation"
+
+msgid "No documents"
+msgstr "Aucun document"
+
+msgid "No drivers"
+msgstr "Aucun conducteur"
+
+msgid "No due maintenance"
+msgstr "Aucune maintenance due"
+
+msgid "No late bookings"
+msgstr "Aucune réservation en retard"
+
+msgid "No maintenance"
+msgstr "Aucune maintenance"
+
+msgid "No maintenance records"
+msgstr "Aucun enregistrement de maintenance"
+
+msgid "No vehicles"
+msgstr "Aucun véhicule"
+
+msgid "No violations"
+msgstr "Aucune infraction"
+
+msgid "Not specified"
+msgstr "Non spécifié"
+
+msgid "Notes"
+msgstr "Notes"
+
+msgid "Notification date"
+msgstr "Date de notification"
+
+msgid "Number"
+msgstr "Numéro"
+
+msgid "Object ID"
+msgstr "ID d'objet"
+
+msgid "Object representation"
+msgstr "Représentation d'objet"
+
+msgid "Other"
+msgstr "Autre"
+
+msgid "Out of Service"
+msgstr "Hors service"
+
+msgid "Out of service"
+msgstr "Hors service"
+
+msgid "Overdue"
+msgstr "En souffrance"
+
+msgid "PV number"
+msgstr "N° PV"
+
+msgid "Page navigation"
+msgstr "Navigation de page"
+
+msgid "Paid"
+msgstr "Payée"
+
+msgid "Paid by"
+msgstr "Payé par"
+
+msgid "Parking"
+msgstr "Stationnement"
+
+msgid "Payment deadline"
+msgstr "Date limite de paiement"
+
+msgid "Phone"
+msgstr "Téléphone"
+
+msgid "Phone use"
+msgstr "Usage du téléphone"
+
+msgid "Picked up vehicle: %(plate)s - %(name)s"
+msgstr "Véhicule pris en charge : %(plate)s - %(name)s"
+
+msgid "Pickup"
+msgstr "Prise en charge"
+
+msgid "Pickup Date"
+msgstr "Date de prise en charge"
+
+msgid "Pickup date"
+msgstr "Date de prise en charge"
+
+msgid "Pickup km"
+msgstr "Km prise en charge"
+
+msgid "Points deducted"
+msgstr "Points déduits"
+
+msgid "Previous"
+msgstr "Précédente"
+
+msgid "Rate limit exceeded: %(method)s %(path)s"
+msgstr "Limite de taux dépassée : %(method)s %(path)s"
+
+msgid "Recent Bookings"
+msgstr "Réservations récentes"
+
+msgid "Record Pickup"
+msgstr "Enregistrer prise en charge"
+
+msgid "Record Return"
+msgstr "Enregistrer retour"
+
+msgid "Red light"
+msgstr "Feu rouge"
+
+msgid "Registration card"
+msgstr "Carte grise"
+
+msgid "Rented"
+msgstr "Loué"
+
+msgid "Return"
+msgstr "Retour"
+
+msgid "Return date must be after pickup date"
+msgstr "La date de retour doit être après la date de prise en charge"
+
+msgid "Return km"
+msgstr "Km retour"
+
+msgid "Returned"
+msgstr "Retourné"
+
+msgid "Returned vehicle: %(plate)s - %(name)s"
+msgstr "Véhicule retourné : %(plate)s - %(name)s"
+
+msgid "Save"
+msgstr "Enregistrer"
+
+msgid "Seatbelt"
+msgstr "Ceinture de sécurité"
+
+msgid "Send daily alert report"
+msgstr "Envoyer le rapport d'alertes quotidien"
+
+msgid "Sent %(count)d alert(s) to %(email)s"
+msgstr "%(count)d alerte(s) envoyée(s) à %(email)s"
+
+msgid "Session key"
+msgstr "Clé de session"
+
+msgid "Sign in"
+msgstr "Connexion"
+
+msgid "Speeding"
+msgstr "Excès de vitesse"
+
+msgid "Status"
+msgstr "Statut"
+
+msgid "Status change"
+msgstr "Changement de statut"
+
+msgid "Surcharge"
+msgstr "Majoration"
+
+msgid "Technical inspection"
+msgstr "Contrôle technique"
+
+msgid "This vehicle is already booked for this period"
+msgstr "Ce véhicule est déjà réservé pour cette période"
+
+msgid ""
+"This vehicle is not available for booking (maintenance or out of service)"
+msgstr "Ce véhicule n'est pas disponible (maintenance ou hors service)"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Update"
+msgstr "Modification"
+
+msgid "Update Status"
+msgstr "Mettre à jour le statut"
+
+msgid "User"
+msgstr "Utilisateur"
+
+msgid "User agent"
+msgstr "Navigateur"
+
+msgid "User profile"
+msgstr "Profil utilisateur"
+
+msgid "User profiles"
+msgstr "Profils utilisateur"
+
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+msgid "Vehicle"
+msgstr "Véhicule"
+
+msgid "Vehicle added successfully"
+msgstr "Véhicule ajouté avec succès"
+
+msgid "Vehicle document"
+msgstr "Document du véhicule"
+
+msgid "Vehicle documents"
+msgstr "Documents du véhicule"
+
+msgid "Vehicle pickup recorded"
+msgstr "Prise en charge enregistrée"
+
+msgid "Vehicle return recorded"
+msgstr "Retour enregistré"
+
+msgid "Vehicle status updated"
+msgstr "Statut du véhicule mis à jour"
+
+msgid "Vehicle updated successfully"
+msgstr "Véhicule modifié avec succès"
+
+msgid "Vehicles"
+msgstr "Véhicules"
+
+msgid "View"
+msgstr "Voir"
+
+msgid "Vignette"
+msgstr "Vignette"
+
+msgid "Violation"
+msgstr "Infraction"
+
+msgid "Violation added (no driver specified)"
+msgstr "Infraction ajoutée (aucun conducteur spécifié)"
+
+msgid "Violation added and linked to driver %(driver)s"
+msgstr "Infraction ajoutée et liée au conducteur %(driver)s"
+
+msgid "Violation date"
+msgstr "Date d'infraction"
+
+msgid "Violation deleted successfully"
+msgstr "Infraction supprimée avec succès"
+
+msgid "Violation type"
+msgstr "Type d'infraction"
+
+msgid "Violation updated successfully"
+msgstr "Infraction modifiée avec succès"
+
+msgid "Violations"
+msgstr "Infractions"
+
+msgid "Vroom alerts:\\n\\n"
+msgstr ""
+"Alertes Vroom :\n"
+"\n"
+
+msgid "Vroom daily report - %(date)s (%(count)d alert(s))"
+msgstr "Rapport quotidien Vroom - %(date)s (%(count)d alerte(s))"
+
+msgid "Year"
+msgstr "Année"
+
+msgid "Yes"
+msgstr "Oui"
+
+msgid "You do not have permission to access this page"
+msgstr "Vous n'avez pas la permission d'accéder à cette page"
+
+msgid "\\n\\n-- Vroom system"
+msgstr ""
+"\n"
+"\n"
+"-- Système Vroom"
+
+msgid "day(s)"
+msgstr "jour(s)"
+
+msgid ""
+"⚠️ [Upcoming] %(plate)s - %(doc_type)s expires on %(date)s (%(days)d days)"
+msgstr ""
+"⚠️ [À venir] %(plate)s - %(doc_type)s expire le %(date)s (%(days)d jours)"
+
+msgid "🔧 [Maintenance] %(plate)s - %(type)s due"
+msgstr "🔧 [Maintenance] %(plate)s - %(type)s due"
+
+msgid "🔴 [Expired] %(plate)s - %(doc_type)s expired on %(date)s"
+msgstr "🔴 [Expiré] %(plate)s - %(doc_type)s expiré le %(date)s"
+
+msgid ""
+"🔴 [Late] %(plate)s - Customer %(name)s (%(phone)s) is %(days)d days late"
+msgstr ""
+"🔴 [En retard] %(plate)s - Client %(name)s (%(phone)s) a %(days)d jours de "
+"retard"
+
+msgid "🪪 [License] %(first)s %(last)s - license expires on %(date)s"
+msgstr "🪪 [Permis] %(first)s %(last)s - permis expire le %(date)s"
+
+msgid "Logout (%(username)s)"
+msgstr "Déconnexion (%(username)s)"
+
+msgid "Late %(days)s day(s)"
+msgstr "En retard de %(days)s jour(s)"
+
+msgid "Total fines: %(total)s"
+msgstr "Total des amendes : %(total)s"
+
+msgid "%(km)s km"
+msgstr "%(km)s km"
