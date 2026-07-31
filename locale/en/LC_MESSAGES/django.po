@@ -813,3 +813,39 @@ msgstr "Download denied: token does not match document"
 
 msgid "Document downloaded via signed link"
 msgstr "Document downloaded via signed link"
+
+msgid "Clear"
+msgstr "Clear"
+
+msgid "Back"
+msgstr "Back"
+
+msgid "Temporary links revoked"
+msgstr "Temporary links revoked"
+
+msgid "Generate temporary download link"
+msgstr "Generate temporary download link"
+
+msgid "Revoke temporary links"
+msgstr "Revoke temporary links"
+
+msgid "Link TTL"
+msgstr "Link TTL"
+
+msgid "15 minutes"
+msgstr "15 minutes"
+
+msgid "1 hour"
+msgstr "1 hour"
+
+msgid "24 hours"
+msgstr "24 hours"
+
+msgid "Generate"
+msgstr "Generate"
+
+msgid "Copy link"
+msgstr "Copy link"
+
+msgid "Temporary download link"
+msgstr "Temporary download link"

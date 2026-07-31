@@ -824,3 +824,39 @@ msgstr "Téléchargement refusé : le jeton ne correspond pas au document"
 
 msgid "Document downloaded via signed link"
 msgstr "Document téléchargé via un lien signé"
+
+msgid "Clear"
+msgstr "Effacer"
+
+msgid "Back"
+msgstr "Retour"
+
+msgid "Temporary links revoked"
+msgstr "Liens temporaires révoqués"
+
+msgid "Generate temporary download link"
+msgstr "Générer un lien de téléchargement temporaire"
+
+msgid "Revoke temporary links"
+msgstr "Révoquer les liens temporaires"
+
+msgid "Link TTL"
+msgstr "Durée de validité du lien"
+
+msgid "15 minutes"
+msgstr "15 minutes"
+
+msgid "1 hour"
+msgstr "1 heure"
+
+msgid "24 hours"
+msgstr "24 heures"
+
+msgid "Generate"
+msgstr "Générer"
+
+msgid "Copy link"
+msgstr "Copier le lien"
+
+msgid "Temporary download link"
+msgstr "Lien de téléchargement temporaire"

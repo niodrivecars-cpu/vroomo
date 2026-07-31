@@ -1,0 +1,19 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% block content %}
+<h1>{% translate 'Generate temporary download link' %}</h1>
+<p>{{ doc }}</p>
+<form method="post">{% csrf_token %}
+  <fieldset class="module aligned">
+    <div class="form-row">
+      <label for="id_ttl">{% translate 'Link TTL' %}:</label>
+      <select name="ttl" id="id_ttl">
+        <option value="15m">{% translate '15 minutes' %}</option>
+        <option value="1h" selected>{% translate '1 hour' %}</option>
+        <option value="24h">{% translate '24 hours' %}</option>
+      </select>
+    </div>
+  </fieldset>
+  <div class="submit-row"><input type="submit" value="{% translate 'Generate' %}" class="default"></div>
+</form>
+{% endblock %}

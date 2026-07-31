@@ -1,10 +1,11 @@
 from datetime import timedelta
 from unittest.mock import patch
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Permission, User
 from django.core import signing
+from django.core.cache import cache
 from django.core.files.base import ContentFile
-from django.test import TestCase, override_settings
+from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
@@ -18,6 +19,9 @@ FILE_BYTES = b'%PDF-1.4\n1 0 obj\n<<>>\nendobj\ntrailer\n<<>>\n%%EOF\n'
 )
 class DocumentTestCase(TestCase):
     def setUp(self):
+        # Rate-limit counters persist across tests (shared cache, reused user PKs);
+        # clear so download budgets are deterministic regardless of suite order.
+        cache.clear()
         self.company = Company.objects.create(name='Alpha')
         self.other_company = Company.objects.create(name='Beta')
         self.user = User.objects.create_user(
@@ -263,3 +267,52 @@ class DocumentServeEdgeCaseTests(DocumentTestCase):
         with patch.object(self.doc.file.storage, 'open', side_effect=OSError('boom')):
             response = self.client.get(self._download_url(self.doc.pk))
         self.assertEqual(404, response.status_code)
+
+
+class AdminDocumentDownloadTests(DocumentTestCase):
+    def setUp(self):
+        super().setUp()
+        perms = Permission.objects.filter(
+            codename__in=('view_vehicledocument', 'change_vehicledocument', 'delete_vehicledocument'),
+        )
+        self.user.user_permissions.add(*perms)
+        self.client.force_login(self.user)
+
+    def test_change_form_offers_generate_and_revoke(self):
+        url = reverse('admin:fleet_vehicledocument_change', args=[self.doc.pk])
+        response = self.client.get(url)
+        self.assertContains(response, 'Generate temporary download link')
+        self.assertContains(response, 'Revoke temporary links')
+
+    def test_change_form_hides_raw_media_url(self):
+        url = reverse('admin:fleet_vehicledocument_change', args=[self.doc.pk])
+        response = self.client.get(url)
+        self.assertNotIn(self.doc.file.url, response.content.decode())
+
+    def test_generate_link_requires_staff(self):
+        anonymous = Client()
+        url = reverse('admin:fleet_vehicledocument_generate_link', args=[self.doc.pk])
+        response = anonymous.get(url)
+        self.assertIn(response.status_code, (302, 403))
+
+    def test_generate_link_returns_absolute_url(self):
+        url = reverse('admin:fleet_vehicledocument_generate_link', args=[self.doc.pk])
+        response = self.client.post(url, {'ttl': '1h'})
+        self.assertEqual(200, response.status_code)
+        self.assertIn('http://testserver', response.content.decode())
+
+    def test_revoke_links_from_change_form_increments_version(self):
+        url = reverse('admin:fleet_vehicledocument_change', args=[self.doc.pk])
+        self.client.post(url, {
+            'vehicle': self.doc.vehicle_id,
+            'doc_type': self.doc.doc_type,
+            'doc_number': self.doc.doc_number,
+            'expiry_date': self.doc.expiry_date.isoformat(),
+            '_revoke_links': '1',
+        })
+        self.doc.refresh_from_db()
+        self.assertEqual(2, self.doc.download_token_version)
+
+    def test_auditlog_admin_lists_company(self):
+        from fleet.admin import AuditLogAdmin
+        self.assertIn('company', AuditLogAdmin.list_display)

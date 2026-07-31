@@ -1,0 +1,9 @@
+{% load i18n %}
+{% if widget.download_url %}
+  <p class="file-upload"><a href="{{ widget.download_url }}" class="button">{% translate 'Download document' %}</a></p>
+{% endif %}
+{% if widget.is_initial %}
+  <p class="file-upload"><input type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}"{% if widget.attrs.disabled %} disabled{% endif %}>
+  <label for="{{ widget.checkbox_id }}">{% translate 'Clear' %}</label></p>
+{% endif %}
+<input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>

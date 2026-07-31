@@ -818,3 +818,39 @@ msgstr "تم رفض التحميل: الرمز لا يطابق المستند"
 
 msgid "Document downloaded via signed link"
 msgstr "تم تحميل المستند عبر رابط موقّع"
+
+msgid "Clear"
+msgstr "مسح"
+
+msgid "Back"
+msgstr "رجوع"
+
+msgid "Temporary links revoked"
+msgstr "تم إبطال الروابط المؤقتة"
+
+msgid "Generate temporary download link"
+msgstr "إنشاء رابط تحميل مؤقت"
+
+msgid "Revoke temporary links"
+msgstr "إبطال الروابط المؤقتة"
+
+msgid "Link TTL"
+msgstr "مدة صلاحية الرابط"
+
+msgid "15 minutes"
+msgstr "١٥ دقيقة"
+
+msgid "1 hour"
+msgstr "ساعة واحدة"
+
+msgid "24 hours"
+msgstr "٢٤ ساعة"
+
+msgid "Generate"
+msgstr "إنشاء"
+
+msgid "Copy link"
+msgstr "نسخ الرابط"
+
+msgid "Temporary download link"
+msgstr "رابط تحميل مؤقت"

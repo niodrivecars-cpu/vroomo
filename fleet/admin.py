@@ -1,7 +1,13 @@
+from django import forms
 from django.contrib import admin
+from django.db import models
+from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import path, reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
 
+from .audit import log_audit
 from .models import (
     AuditLog,
     Booking,
@@ -12,6 +18,20 @@ from .models import (
     VehicleDocument,
     Violation,
 )
+
+
+class AdminDocumentFileWidget(forms.ClearableFileInput):
+    """File widget whose 'current file' link is the authenticated download URL."""
+    template_name = 'admin/fleet/widgets/document_file.html'
+
+    def get_context(self, name, value, attrs):
+        ctx = super().get_context(name, value, attrs)
+        download_url = None
+        instance = getattr(value, 'instance', None)
+        if value and instance is not None and getattr(instance, 'pk', None):
+            download_url = reverse('fleet:document_download', kwargs={'pk': instance.pk})
+        ctx['widget']['download_url'] = download_url
+        return ctx
 
 
 class TenantAdminMixin:
@@ -43,6 +63,55 @@ class VehicleDocumentAdmin(TenantAdminMixin, admin.ModelAdmin):
     list_display = ('vehicle', 'doc_type', 'doc_number', 'expiry_date', 'days_until_expiry', 'is_expired')
     list_filter = ('doc_type', 'vehicle')
     search_fields = ('vehicle__license_plate', 'doc_number')
+    formfield_overrides = {
+        models.FileField: {'widget': AdminDocumentFileWidget},
+    }
+    change_form_template = 'admin/fleet/vehicledocument/change_form.html'
+    readonly_fields = ('download_token_version', 'original_filename')
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom = [
+            path(
+                '<path:object_id>/generate-download-link/',
+                self.admin_site.admin_view(self.generate_download_link_view),
+                name='fleet_vehicledocument_generate_link',
+            ),
+        ]
+        return custom + urls
+
+    def generate_download_link_view(self, request, object_id):
+        doc = self.get_queryset(request).filter(pk=object_id).first()
+        if doc is None:
+            raise Http404
+        if request.method == 'POST':
+            ttl_seconds = {'15m': 15 * 60, '1h': 60 * 60, '24h': 24 * 60 * 60}
+            seconds = ttl_seconds.get(request.POST.get('ttl', '1h'), 60 * 60)
+            url = request.build_absolute_uri(doc.get_signed_download_url(ttl=seconds))
+            return render(
+                request,
+                'admin/fleet/vehicledocument/download_link.html',
+                {'doc': doc, 'download_url': url, 'opts': self.opts},
+            )
+        return render(
+            request,
+            'admin/fleet/vehicledocument/generate_link.html',
+            {'doc': doc, 'opts': self.opts},
+        )
+
+    def response_change(self, request, obj):
+        if '_generate_link' in request.POST:
+            return HttpResponseRedirect(
+                reverse('admin:fleet_vehicledocument_generate_link', args=[obj.pk]),
+            )
+        if '_revoke_links' in request.POST:
+            obj.revoke_download_links()
+            log_audit(request, 'DOWNLOAD', obj=obj, summary=_('Temporary links revoked'))
+            self.message_user(request, _('Temporary links revoked'))
+            return HttpResponseRedirect(
+                reverse('admin:fleet_vehicledocument_change', args=[obj.pk]),
+            )
+        return super().response_change(request, obj)
 
     def get_days_remaining(self, obj):
         days = obj.days_until_expiry
@@ -96,7 +165,7 @@ class ViolationAdmin(TenantAdminMixin, admin.ModelAdmin):
 
 @admin.register(AuditLog)
 class AuditLogAdmin(admin.ModelAdmin):
-    list_display = ('created_at', 'action', 'username', 'content_type', 'object_repr', 'change_summary', 'ip_address', 'session_key')
+    list_display = ('created_at', 'action', 'username', 'content_type', 'object_repr', 'change_summary', 'ip_address', 'session_key', 'company')
     list_filter = ('action', 'created_at')
     search_fields = ('username', 'content_type', 'change_summary')
     readonly_fields = [f.name for f in AuditLog._meta.fields]
