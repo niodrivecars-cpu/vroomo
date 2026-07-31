@@ -800,3 +800,9 @@ msgstr "Total des amendes : %(total)s"
 
 msgid "%(km)s km"
 msgstr "%(km)s km"
+
+msgid "Original filename"
+msgstr "Nom du fichier d'origine"
+
+msgid "Download token version"
+msgstr "Version du jeton de téléchargement"

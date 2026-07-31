@@ -1,8 +1,14 @@
+import logging
 
 from django.conf import settings
+from django.core import signing
 from django.db import models
+from django.db.models import F
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
+logger = logging.getLogger(__name__)
 
 from .validators import (
     DocumentUploadTo,
@@ -92,6 +98,56 @@ class VehicleDocument(TenantScopedModel):
         upload_to=DocumentUploadTo(), blank=True, verbose_name=_("File"),
         validators=[validate_file_extension, validate_file_size, validate_mime_type],
     )
+    original_filename = models.CharField(
+        max_length=255, blank=True, default='', verbose_name=_('Original filename'),
+    )
+    download_token_version = models.PositiveIntegerField(
+        default=1, verbose_name=_('Download token version'),
+    )
+
+    def save(self, *args, **kwargs):
+        # Best-effort removal of the superseded physical file on replacement.
+        if self.pk:
+            old = type(self).objects.filter(pk=self.pk).only('file').first()
+            if old is not None and old.file and old.file.name and old.file != self.file:
+                old_name = old.file.name
+                if old.file.storage.exists(old_name):
+                    try:
+                        old.file.storage.delete(old_name)
+                    except OSError:
+                        logger.warning('Could not delete superseded document file %s', old_name)
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # Best-effort removal of the physical file; never aborts the DB delete.
+        storage = self.file.storage
+        name = self.file.name
+        result = super().delete(*args, **kwargs)
+        if name and storage.exists(name):
+            try:
+                storage.delete(name)
+            except OSError:
+                logger.warning('Could not delete document file %s', name)
+        return result
+
+    def get_signed_download_url(self, ttl=None):
+        ttl = ttl if ttl is not None else settings.DOCUMENT_SIGNED_URL_TTL
+        payload = {
+            'v': 1,
+            'doc': self.pk,
+            'company': self.vehicle.company_id,
+            'purpose': 'vehicle_document_download',
+            'version': self.download_token_version,
+            'exp': timezone.now().timestamp() + ttl,
+        }
+        url = reverse('fleet:document_download_signed', kwargs={'pk': self.pk})
+        return f'{url}?token={signing.dumps(payload)}'
+
+    def revoke_download_links(self):
+        type(self).objects.filter(pk=self.pk).update(
+            download_token_version=F('download_token_version') + 1,
+        )
+        self.refresh_from_db(fields=['download_token_version'])
 
     @property
     def days_until_expiry(self):
@@ -264,6 +320,7 @@ class AuditLog(models.Model):
         ('CHANGE_STATUS', _('Status change')),
         ('PICKUP', _('Pickup')),
         ('RETURN', _('Return')),
+        ('DOWNLOAD', _('Download')),
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL, verbose_name=_("User"))
@@ -276,6 +333,14 @@ class AuditLog(models.Model):
     object_id = models.CharField(max_length=50, blank=True, verbose_name=_("Object ID"))
     object_repr = models.CharField(max_length=200, blank=True, verbose_name=_("Object representation"))
     change_summary = models.CharField(max_length=500, blank=True, verbose_name=_("Change summary"))
+    company = models.ForeignKey(
+        Company,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='audit_logs',
+        verbose_name=_('Company'),
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Date"))
 
     class Meta:

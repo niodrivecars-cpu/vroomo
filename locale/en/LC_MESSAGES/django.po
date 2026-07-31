@@ -789,3 +789,9 @@ msgstr "Total fines: %(total)s"
 
 msgid "%(km)s km"
 msgstr "%(km)s km"
+
+msgid "Original filename"
+msgstr "Original filename"
+
+msgid "Download token version"
+msgstr "Download token version"

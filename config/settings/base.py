@@ -135,7 +135,11 @@ SECURITY_RATE_LIMITS = {
     'upload_per_user': '10/m',
     'upload_per_hour': '50/h',
     'api': '30/m',
+    'download_per_user': '20/h',
+    'download_anon_ip': '10/h',
 }
+
+DOCUMENT_SIGNED_URL_TTL = config('DOCUMENT_SIGNED_URL_TTL', default=24 * 60 * 60, cast=int)
 
 LOG_LEVEL = config('LOG_LEVEL', default='INFO')
 LOG_DIR = config('LOG_DIR', default='')

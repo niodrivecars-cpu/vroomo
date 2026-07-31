@@ -9,6 +9,11 @@ from django.utils.translation import gettext as _
 
 def log_audit(request, action, obj=None, summary=''):
     from .models import AuditLog
+    company_id = None
+    if obj is not None:
+        vehicle = getattr(obj, 'vehicle', None)
+        if vehicle is not None:
+            company_id = vehicle.company_id
     AuditLog.objects.create(
         user=request.user if request.user.is_authenticated else None,
         ip_address=request.META.get('REMOTE_ADDR'),
@@ -19,6 +24,7 @@ def log_audit(request, action, obj=None, summary=''):
         object_id=str(obj.pk) if obj else '',
         object_repr=str(obj)[:200] if obj else '',
         change_summary=summary,
+        company_id=company_id,
     )
 
 

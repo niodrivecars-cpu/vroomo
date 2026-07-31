@@ -794,3 +794,9 @@ msgstr "إجمالي الغرامات: %(total)s"
 
 msgid "%(km)s km"
 msgstr "%(km)s كم"
+
+msgid "Original filename"
+msgstr "اسم الملف الأصلي"
+
+msgid "Download token version"
+msgstr "إصدار رمز التحميل"
