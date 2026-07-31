@@ -1,4 +1,5 @@
 from datetime import timedelta
+from unittest.mock import patch
 
 from django.contrib.auth.models import User
 from django.core import signing
@@ -46,6 +47,22 @@ class DocumentTestCase(TestCase):
 
     def _download_url(self, pk):
         return reverse('fleet:document_download', kwargs={'pk': pk})
+
+    def _signed_token(self, doc, **overrides):
+        payload = {
+            'v': 1,
+            'doc': doc.pk,
+            'company': doc.vehicle.company_id,
+            'purpose': 'vehicle_document_download',
+            'version': doc.download_token_version,
+            'exp': timezone.now().timestamp() + 3600,
+        }
+        payload.update(overrides)
+        return signing.dumps(payload)
+
+    def _signed_url(self, doc, **overrides):
+        url = reverse('fleet:document_download_signed', kwargs={'pk': doc.pk})
+        return f'{url}?token={self._signed_token(doc, **overrides)}'
 
 
 class VehicleDocumentModelTests(DocumentTestCase):
@@ -154,22 +171,6 @@ class DocumentDownloadViewTests(DocumentTestCase):
 
 
 class DocumentDownloadSignedTests(DocumentTestCase):
-    def _signed_token(self, doc, **overrides):
-        payload = {
-            'v': 1,
-            'doc': doc.pk,
-            'company': doc.vehicle.company_id,
-            'purpose': 'vehicle_document_download',
-            'version': doc.download_token_version,
-            'exp': timezone.now().timestamp() + 3600,
-        }
-        payload.update(overrides)
-        return signing.dumps(payload)
-
-    def _signed_url(self, doc, **overrides):
-        url = reverse('fleet:document_download_signed', kwargs={'pk': doc.pk})
-        return f'{url}?token={self._signed_token(doc, **overrides)}'
-
     def test_signed_download_works_without_login(self):
         response = self.client.get(self._signed_url(self.doc))
         self.assertEqual(response.status_code, 200)
@@ -225,3 +226,40 @@ class DocumentDownloadSignedTests(DocumentTestCase):
         self.assertEqual(1, AuditLog.objects.filter(action='DOWNLOAD').count())
         self.client.get(self._signed_url(self.doc, exp=timezone.now().timestamp() - 10))
         self.assertEqual(2, AuditLog.objects.filter(action='DOWNLOAD').count())
+
+
+@override_settings(SECURITY_RATE_LIMITS={
+    'download_per_user': '1/h',
+    'download_anon_ip': '1/h',
+})
+class DocumentDownloadRateLimitTests(DocumentTestCase):
+    def setUp(self):
+        super().setUp()
+        from django.core.cache import cache
+        cache.clear()
+
+    def test_session_download_rate_limit_denies_and_audits(self):
+        self.client.force_login(self.user)
+        first = self.client.get(self._download_url(self.doc.pk))
+        self.assertEqual(200, first.status_code)
+        second = self.client.get(self._download_url(self.doc.pk))
+        self.assertEqual(403, second.status_code)
+        denied = AuditLog.objects.filter(
+            action='DOWNLOAD', change_summary__icontains='rate limit exceeded',
+        ).count()
+        self.assertEqual(1, denied)
+
+    def test_signed_download_rate_limit_denies_anonymous(self):
+        url = self._signed_url(self.doc)
+        first = self.client.get(url)
+        self.assertEqual(200, first.status_code)
+        second = self.client.get(url)
+        self.assertEqual(403, second.status_code)
+
+
+class DocumentServeEdgeCaseTests(DocumentTestCase):
+    def test_oserror_reading_file_returns_404(self):
+        self.client.force_login(self.user)
+        with patch.object(self.doc.file.storage, 'open', side_effect=OSError('boom')):
+            response = self.client.get(self._download_url(self.doc.pk))
+        self.assertEqual(404, response.status_code)
