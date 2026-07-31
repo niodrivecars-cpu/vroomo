@@ -82,7 +82,7 @@
             </td>
             <td>
                 {% if doc.file %}
-                    <a href="{{ doc.file.url }}" class="btn btn-sm btn-outline-info">{% translate "Download" %}</a>
+                    <a href="{% url 'fleet:document_download' doc.pk %}" class="btn btn-sm btn-outline-info" title="{% translate 'Download document' %}">{% translate 'Download document' %}</a>
                 {% endif %}
                 <a href="{% url 'fleet:document_edit' doc.pk %}" class="btn btn-sm btn-outline-warning">{% translate "Edit" %}</a>
                 <form method="post" action="{% url 'fleet:document_delete' doc.pk %}" style="display:inline">

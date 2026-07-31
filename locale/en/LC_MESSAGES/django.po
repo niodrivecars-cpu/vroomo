@@ -795,3 +795,12 @@ msgstr "Original filename"
 
 msgid "Download token version"
 msgstr "Download token version"
+
+msgid "Download denied: rate limit exceeded"
+msgstr "Download denied: rate limit exceeded"
+
+msgid "Document downloaded"
+msgstr "Document downloaded"
+
+msgid "Download document"
+msgstr "Download document"

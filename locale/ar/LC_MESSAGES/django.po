@@ -800,3 +800,12 @@ msgstr "اسم الملف الأصلي"
 
 msgid "Download token version"
 msgstr "إصدار رمز التحميل"
+
+msgid "Download denied: rate limit exceeded"
+msgstr "تم رفض التحميل: تم تجاوز الحد الأقصى للمعدل"
+
+msgid "Document downloaded"
+msgstr "تم تحميل المستند"
+
+msgid "Download document"
+msgstr "تحميل المستند"

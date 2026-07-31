@@ -806,3 +806,12 @@ msgstr "Nom du fichier d'origine"
 
 msgid "Download token version"
 msgstr "Version du jeton de téléchargement"
+
+msgid "Download denied: rate limit exceeded"
+msgstr "Téléchargement refusé : limite de débit dépassée"
+
+msgid "Document downloaded"
+msgstr "Document téléchargé"
+
+msgid "Download document"
+msgstr "Télécharger le document"

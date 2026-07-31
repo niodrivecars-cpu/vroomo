@@ -13,16 +13,17 @@ from django.core.paginator import Paginator
 from django.db import connection
 from django.db.models import Sum
 from django.db.utils import OperationalError
-from django.http import JsonResponse
+from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext as _
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_GET, require_POST
 from django_ratelimit.decorators import ratelimit
 
 from .audit import log_audit
 from .decorators import staff_required
+from .downloads import is_download_rate_limited, serve_document
 from .forms import (
     BookingForm,
     DriverForm,
@@ -400,6 +401,21 @@ def document_delete(request, pk):
     doc.delete()
     messages.success(request, _('Document deleted successfully'))
     return redirect('fleet:vehicle_detail', pk=vehicle_pk)
+
+
+@require_GET
+@login_required
+@staff_required
+def document_download(request, pk):
+    if request.user.is_superuser:
+        doc = get_object_or_404(VehicleDocument, pk=pk)
+    else:
+        doc = tenant_get_object_or_404(request, VehicleDocument, pk=pk)
+    if is_download_rate_limited(request):
+        log_audit(request, 'DOWNLOAD', summary=_('Download denied: rate limit exceeded'))
+        return HttpResponseForbidden(_('Download denied: rate limit exceeded'))
+    log_audit(request, 'DOWNLOAD', obj=doc, summary=_('Document downloaded'))
+    return serve_document(doc, request)
 
 
 @staff_required
