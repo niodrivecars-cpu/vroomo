@@ -20,6 +20,21 @@ from .models import (
 )
 
 
+class VehicleDocumentAdminForm(forms.ModelForm):
+    class Meta:
+        model = VehicleDocument
+        fields = '__all__'
+
+    def save(self, commit=True):
+        doc = super().save(commit=False)
+        uploaded = self.files.get('file')
+        if uploaded is not None:
+            doc.original_filename = uploaded.name
+        if commit:
+            doc.save()
+        return doc
+
+
 class AdminDocumentFileWidget(forms.ClearableFileInput):
     """File widget whose 'current file' link is the authenticated download URL."""
     template_name = 'admin/fleet/widgets/document_file.html'
@@ -63,6 +78,7 @@ class VehicleDocumentAdmin(TenantAdminMixin, admin.ModelAdmin):
     list_display = ('vehicle', 'doc_type', 'doc_number', 'expiry_date', 'days_until_expiry', 'is_expired')
     list_filter = ('doc_type', 'vehicle')
     search_fields = ('vehicle__license_plate', 'doc_number')
+    form = VehicleDocumentAdminForm
     formfield_overrides = {
         models.FileField: {'widget': AdminDocumentFileWidget},
     }

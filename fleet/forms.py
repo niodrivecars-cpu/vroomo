@@ -55,6 +55,15 @@ class VehicleDocumentForm(forms.ModelForm):
             validate_mime_type(file)
         return file
 
+    def save(self, commit=True):
+        doc = super().save(commit=False)
+        uploaded = self.files.get('file')
+        if uploaded is not None:
+            doc.original_filename = uploaded.name
+        if commit:
+            doc.save()
+        return doc
+
 
 class MaintenanceForm(forms.ModelForm):
     class Meta:

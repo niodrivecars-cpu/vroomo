@@ -5,6 +5,7 @@ from django.contrib.auth.models import Permission, User
 from django.core import signing
 from django.core.cache import cache
 from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
@@ -316,3 +317,64 @@ class AdminDocumentDownloadTests(DocumentTestCase):
     def test_auditlog_admin_lists_company(self):
         from fleet.admin import AuditLogAdmin
         self.assertIn('company', AuditLogAdmin.list_display)
+
+
+class DocumentOriginalFilenameTests(DocumentTestCase):
+    def setUp(self):
+        super().setUp()
+        self.client.force_login(self.user)
+        self.create_url = reverse('fleet:document_create', args=[self.vehicle.pk])
+
+    def _uploaded(self, name):
+        return SimpleUploadedFile(name, FILE_BYTES, content_type='application/pdf')
+
+    def test_create_view_captures_original_filename(self):
+        response = self.client.post(self.create_url, {
+            'doc_type': 'insurance',
+            'doc_number': 'INS-002',
+            'expiry_date': timezone.now().date() + timedelta(days=120),
+            'file': self._uploaded('scan assurance.pdf'),
+        })
+        self.assertRedirects(response, reverse('fleet:vehicle_detail', args=[self.vehicle.pk]))
+        created = VehicleDocument.objects.get(doc_number='INS-002')
+        self.assertEqual('scan assurance.pdf', created.original_filename)
+
+    def test_edit_view_updates_original_filename_on_new_file(self):
+        url = reverse('fleet:document_edit', args=[self.doc.pk])
+        response = self.client.post(url, {
+            'doc_type': self.doc.doc_type,
+            'doc_number': self.doc.doc_number,
+            'expiry_date': self.doc.expiry_date.isoformat(),
+            'file': self._uploaded('updated.pdf'),
+        })
+        self.assertRedirects(response, reverse('fleet:vehicle_detail', args=[self.vehicle.pk]))
+        self.doc.refresh_from_db()
+        self.assertEqual('updated.pdf', self.doc.original_filename)
+
+    def test_edit_view_preserves_original_filename_without_new_file(self):
+        url = reverse('fleet:document_edit', args=[self.doc.pk])
+        response = self.client.post(url, {
+            'doc_type': self.doc.doc_type,
+            'doc_number': self.doc.doc_number,
+            'expiry_date': self.doc.expiry_date.isoformat(),
+        })
+        self.assertRedirects(response, reverse('fleet:vehicle_detail', args=[self.vehicle.pk]))
+        self.doc.refresh_from_db()
+        self.assertEqual('registration.pdf', self.doc.original_filename)
+
+    def test_admin_save_captures_original_filename(self):
+        perms = Permission.objects.filter(
+            codename__in=('view_vehicledocument', 'change_vehicledocument', 'add_vehicledocument'),
+        )
+        self.user.user_permissions.add(*perms)
+        url = reverse('admin:fleet_vehicledocument_change', args=[self.doc.pk])
+        response = self.client.post(url, {
+            'vehicle': self.doc.vehicle_id,
+            'doc_type': self.doc.doc_type,
+            'doc_number': self.doc.doc_number,
+            'expiry_date': self.doc.expiry_date.isoformat(),
+            'file': self._uploaded('admin upload.pdf'),
+        })
+        self.assertEqual(302, response.status_code)
+        self.doc.refresh_from_db()
+        self.assertEqual('admin upload.pdf', self.doc.original_filename)
