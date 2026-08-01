@@ -10,7 +10,7 @@ TLS-terminating reverse proxy.
 Internet
    │  HTTPS (443)
    ▼
-nginx (TLS, static files, media, proxy / to gunicorn)
+nginx (TLS, static files, proxy / to gunicorn)
    │  HTTP (127.0.0.1:8000)
    ▼
 gunicorn (4 workers, config.wsgi)
@@ -41,7 +41,7 @@ sudo apt install -y python3.12 python3.12-venv python3-pip \
 ├── vroom/            # application code (git checkout, release tags)
 ├── .env              # production secrets (chmod 600, root-owned or vroom-owned)
 ├── staticfiles/      # collectstatic output (owned by vroom, served by nginx)
-├── media/            # user uploads (owned by vroom, served by nginx)
+├── media/            # private user uploads (owned by vroom; NOT served by nginx)
 └── logs/             # optional LOG_DIR for the rotating vroom.log
 ```
 
@@ -136,11 +136,6 @@ server {
         add_header Cache-Control "public, immutable";
     }
 
-    location /media/ {
-        alias /opt/vroom/media/;
-        expires 7d;
-    }
-
     location /health/ {
         proxy_pass http://127.0.0.1:8000;
         proxy_set_header Host $host;
@@ -190,7 +185,24 @@ sudo -u vroom /opt/vroom/vroom/venv/bin/python -m manage check --deploy
 
 The `check --deploy` step is also re-run automatically by `deploy.sh`.
 
-## Backups
+## 7. Document downloads
+
+Document files are **private** — nginx never serves `/media/`, so nothing is
+reachable by guessing a URL. All downloads go through the application:
+
+- `fleet:document_download` (`/fleet/documents/<pk>/download/`) serves a document
+  to an authenticated staff member, scoped to their company.
+- `fleet:document_download_signed` (`/fleet/documents/<pk>/download/?token=...`)
+  serves a document to anyone holding a valid signed token (no login required).
+
+Signed tokens expire (default `DOCUMENT_SIGNED_URL_TTL`, 86400 s / 24 h), are
+bound to a per-document revocation version, and are invalidated by
+"Revoke temporary links" in the admin. Both endpoints are rate-limited
+(`download_per_user` / `download_anon_ip` in `SECURITY_RATE_LIMITS`), and every
+attempt — allowed or denied — is written to `AuditLog`. Physical files are
+removed from storage on replace and on delete.
+
+## 8. Backups
 
 `scripts/backup.sh /opt/vroom/vroom /opt/vroom/.env /srv/backups/vroom`:
 
@@ -207,7 +219,7 @@ Schedule with cron:
 
 Test restores regularly in a scratch environment — an untested backup is a hope.
 
-## Rollback
+## 9. Rollback
 
 Two cases:
 
@@ -221,7 +233,7 @@ bash scripts/restore.sh /opt/vroom/vroom /opt/vroom/.env /srv/backups/vroom/back
 `restore.sh` drops and recreates the database from the dump and unpacks the
 media archive. It must run with the application stopped.
 
-## Security notes
+## 10. Security notes
 
 - `SECRET_KEY` must be unique per environment and never committed.
 - `DEBUG` is forced `False` by `config/settings/production.py`, which also
