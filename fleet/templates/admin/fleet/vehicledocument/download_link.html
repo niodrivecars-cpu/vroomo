@@ -4,7 +4,7 @@
 <h1>{% translate 'Temporary download link' %}</h1>
 <p>{{ doc }}</p>
 <div class="form-row" style="margin:1em 0">
-  <input id="download-link" type="text" value="{{ download_url }}" readonly style="width:100%">
+  <input id="download-link" type="text" value="{{ download_url }}" readonly dir="ltr" style="width:100%;text-align:left;unicode-bidi:isolate">
   <button type="button" onclick="navigator.clipboard.writeText(document.getElementById('download-link').value)">{% translate 'Copy link' %}</button>
 </div>
 <p><a href="{% url 'admin:fleet_vehicledocument_change' doc.pk %}">{% translate 'Back' %}</a></p>

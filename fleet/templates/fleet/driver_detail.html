@@ -12,9 +12,9 @@
     <div class="card-body">
         <div class="row">
             <div class="col-md-3"><strong>{% translate "Name" %}:</strong> {{ driver.first_name }} {{ driver.last_name }}</div>
-            <div class="col-md-3"><strong>CIN:</strong> {{ driver.cin }}</div>
-            <div class="col-md-3"><strong>{% translate "Phone" %}:</strong> {{ driver.phone }}</div>
-            <div class="col-md-3"><strong>{% translate "License Number" %}:</strong> {{ driver.license_number }}</div>
+            <div class="col-md-3"><strong>{% translate "CIN number" %}:</strong> <span class="ltr">{{ driver.cin }}</span></div>
+            <div class="col-md-3"><strong>{% translate "Phone" %}:</strong> <span class="ltr">{{ driver.phone }}</span></div>
+            <div class="col-md-3"><strong>{% translate "License Number" %}:</strong> <span class="ltr">{{ driver.license_number }}</span></div>
         </div>
         <div class="row mt-3">
             <div class="col-md-3">
@@ -53,7 +53,7 @@
     <tbody>
         {% for b in bookings %}
         <tr>
-            <td>{{ b.vehicle.license_plate }}</td>
+            <td><span class="ltr">{{ b.vehicle.license_plate }}</span></td>
             <td>{{ b.pickup_date|date:"SHORT_DATETIME_FORMAT" }}</td>
             <td>{{ b.expected_return|date:"SHORT_DATETIME_FORMAT" }}</td>
             <td>{{ b.get_status_display }}</td>

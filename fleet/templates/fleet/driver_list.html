@@ -14,7 +14,7 @@
     <thead>
         <tr>
             <th>{% translate "Full Name" %}</th>
-            <th>CIN</th>
+            <th>{% translate "CIN number" %}</th>
             <th>{% translate "Phone" %}</th>
             <th>{% translate "License Number" %}</th>
             <th>{% translate "License Expiry" %}</th>
@@ -26,9 +26,9 @@
         {% for d in drivers %}
         <tr>
             <td>{{ d.first_name }} {{ d.last_name }}</td>
-            <td>{{ d.cin }}</td>
-            <td>{{ d.phone }}</td>
-            <td>{{ d.license_number }}</td>
+            <td><span class="ltr">{{ d.cin }}</span></td>
+            <td><span class="ltr">{{ d.phone }}</span></td>
+            <td><span class="ltr">{{ d.license_number }}</span></td>
             <td>{{ d.license_expiry|date:"SHORT_DATE_FORMAT" }}</td>
             <td>
                 {% if d.is_active %}

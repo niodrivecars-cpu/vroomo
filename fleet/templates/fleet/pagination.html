@@ -1,20 +1,21 @@
 {% load i18n %}
+{% get_current_language as LANG %}
 {% if page_obj.has_other_pages %}
 <nav aria-label="{% translate 'Page navigation' %}">
     <ul class="pagination justify-content-center">
         {% if page_obj.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?page=1">&laquo; {% translate "First" %}</a>
+            <a class="page-link" href="?page=1">{% if LANG == 'ar' %}&raquo;{% else %}&laquo;{% endif %} {% translate "First" %}</a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">‹ {% translate "Previous" %}</a>
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{% if LANG == 'ar' %}&rsaquo;{% else %}&lsaquo;{% endif %} {% translate "Previous" %}</a>
         </li>
         {% else %}
         <li class="page-item disabled">
-            <span class="page-link">&laquo; {% translate "First" %}</span>
+            <span class="page-link">{% if LANG == 'ar' %}&raquo;{% else %}&laquo;{% endif %} {% translate "First" %}</span>
         </li>
         <li class="page-item disabled">
-            <span class="page-link">‹ {% translate "Previous" %}</span>
+            <span class="page-link">{% if LANG == 'ar' %}&rsaquo;{% else %}&lsaquo;{% endif %} {% translate "Previous" %}</span>
         </li>
         {% endif %}
 
@@ -32,17 +33,17 @@
 
         {% if page_obj.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% translate "Next" %} ›</a>
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% translate "Next" %} {% if LANG == 'ar' %}&lsaquo;{% else %}&rsaquo;{% endif %}</a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{% translate "Last" %} &raquo;</a>
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{% translate "Last" %} {% if LANG == 'ar' %}&laquo;{% else %}&raquo;{% endif %}</a>
         </li>
         {% else %}
         <li class="page-item disabled">
-            <span class="page-link">{% translate "Next" %} ›</span>
+            <span class="page-link">{% translate "Next" %} {% if LANG == 'ar' %}&lsaquo;{% else %}&rsaquo;{% endif %}</span>
         </li>
         <li class="page-item disabled">
-            <span class="page-link">{% translate "Last" %} &raquo;</span>
+            <span class="page-link">{% translate "Last" %} {% if LANG == 'ar' %}&laquo;{% else %}&raquo;{% endif %}</span>
         </li>
         {% endif %}
     </ul>

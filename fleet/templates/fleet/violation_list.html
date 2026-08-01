@@ -25,7 +25,7 @@
     <tbody>
         {% for v in violations %}
         <tr class="{% if v.is_overdue %}table-danger{% endif %}">
-            <td>{{ v.vehicle.license_plate }}</td>
+            <td><span class="ltr">{{ v.vehicle.license_plate }}</span></td>
             <td>
                 {% if v.driver %}
                     {{ v.driver.first_name }} {{ v.driver.last_name }}

@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0">{{ vehicle.make }} {{ vehicle.model }} - {{ vehicle.license_plate }}</h2>
+    <h2 class="mb-0">{{ vehicle.make }} {{ vehicle.model }} - <span class="ltr">{{ vehicle.license_plate }}</span></h2>
     <a href="{% url 'fleet:vehicle_edit' vehicle.pk %}" class="btn btn-warning">{% translate "Edit" %}</a>
 </div>
 
@@ -70,7 +70,7 @@
         {% for doc in documents %}
         <tr class="{% if doc.is_expired %}table-danger{% elif doc.is_expiring_soon %}table-warning{% endif %}">
             <td>{{ doc.get_doc_type_display }}</td>
-            <td>{{ doc.doc_number|default:"—" }}</td>
+            <td><span class="ltr">{{ doc.doc_number|default:"—" }}</span></td>
             <td>{{ doc.expiry_date|date:"SHORT_DATE_FORMAT" }}</td>
             <td>{{ doc.days_until_expiry }}</td>
             <td>
