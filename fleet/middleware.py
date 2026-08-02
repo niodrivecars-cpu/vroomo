@@ -6,6 +6,7 @@ from django.utils.translation import gettext as _
 from django_ratelimit.exceptions import Ratelimited
 
 from .models import Company, UserProfile
+from .security import get_client_ip
 
 logger = logging.getLogger('vroom.ratelimit')
 
@@ -87,12 +88,12 @@ class RateLimitLogMiddleware:
         company_id = company_id.pk if company_id else None
         logger.warning(
             'Rate limit exceeded | user=%s | ip=%s | company=%s | path=%s',
-            username, request.META.get('REMOTE_ADDR'), company_id, request.path,
+            username, get_client_ip(request), company_id, request.path,
         )
         from .models import AuditLog
         AuditLog.objects.create(
             username=username,
-            ip_address=request.META.get('REMOTE_ADDR'),
+            ip_address=get_client_ip(request),
             user_agent=request.META.get('HTTP_USER_AGENT', '')[:500],
             session_key=(request.session.session_key or '') if hasattr(request, 'session') and request.session else '',
             action='RATE_LIMITED',

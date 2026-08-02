@@ -162,6 +162,34 @@ sudo certbot --nginx -d vroom.example.com   # enables HTTPS + auto-renewal
 sudo systemctl reload nginx
 ```
 
+### 4.1 Client IP trust (rate limiting & audit logging)
+
+Gunicorn binds to `127.0.0.1:8000`, so Django sees `REMOTE_ADDR = 127.0.0.1` for
+every request. The app resolves the real client address in
+`fleet/security.py:get_client_ip()`, which is used by **both** django-ratelimit
+(every `ip` / `user_or_ip` key via `RATELIMIT_IP_META_KEY`) and the audit log
+(`AuditLog.ip_address`).
+
+The resolver only trusts forwarding headers from peers listed in
+`X_FORWARDED_TRUSTED_PROXIES` (env `TRUSTED_PROXY_IPS`). For those peers it
+walks `X-Forwarded-For` right-to-left (closest hop first) and returns the
+rightmost address that is not itself a trusted proxy. Because the `location /`
+block above appends the client address with
+`proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;`, any
+client-supplied `X-Forwarded-For` values are always left of the appended
+address and can never win the walk — client-supplied forwarding headers are
+never trusted directly. Requests from any other peer use `REMOTE_ADDR` and
+forwarded data is ignored.
+
+```bash
+# .env — required in the documented nginx + gunicorn-on-127.0.0.1 layout
+TRUSTED_PROXY_IPS=127.0.0.1
+```
+
+Verify after deploy: an entry in `AuditLog` shows the real client IP (not
+`127.0.0.1`), and the login IP rate limit keys off the real address (5 failed
+attempts from one client IP, then another client IP is not throttled).
+
 ## 5. Environment file
 
 Copy `.env.production.example` to `/opt/vroom/.env`, fill in real values, then:
@@ -173,7 +201,8 @@ sudo chmod 600 /opt/vroom/.env
 
 Required keys: `SECRET_KEY`, `DEBUG=False`, `ALLOWED_HOSTS`,
 `CSRF_TRUSTED_ORIGINS`, `DATABASE_URL` (or `DB_*`), `CACHE_URL`,
-`EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `ADMIN_EMAIL`.
+`TRUSTED_PROXY_IPS=127.0.0.1`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`,
+`ADMIN_EMAIL`.
 
 ## 6. Post-deploy verification
 

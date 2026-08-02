@@ -167,6 +167,77 @@ class BookingViewTest(TestCase):
         self.assertRedirects(response, reverse('fleet:booking_list'))
         self.assertEqual(Booking.objects.count(), 2)
 
+    def test_booking_create_overlap_rejected(self):
+        first = timezone.now() + timedelta(days=20)
+        response = self.client.post(reverse('fleet:booking_create'), {
+            'vehicle': self.vehicle.pk,
+            'driver': self.driver.pk,
+            'customer_name': 'خالد',
+            'customer_phone': '0633333333',
+            'pickup_date': first,
+            'expected_return': first + timedelta(days=3),
+            'total_amount': '900.00',
+            'deposit': '300.00',
+            'notes': '',
+        })
+        self.assertRedirects(response, reverse('fleet:booking_list'))
+        overlap = first + timedelta(days=1)
+        response = self.client.post(reverse('fleet:booking_create'), {
+            'vehicle': self.vehicle.pk,
+            'driver': self.driver.pk,
+            'customer_name': 'مزدوجة',
+            'customer_phone': '0644444444',
+            'pickup_date': overlap,
+            'expected_return': overlap + timedelta(days=3),
+            'total_amount': '900.00',
+            'deposit': '300.00',
+            'notes': '',
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'This vehicle is already booked for this period')
+        self.assertEqual(Booking.objects.count(), 2)
+
+    def test_booking_create_serializes_with_vehicle_row_lock(self):
+        from unittest.mock import patch
+        first = timezone.now() + timedelta(days=25)
+        data = {
+            'vehicle': self.vehicle.pk,
+            'driver': self.driver.pk,
+            'customer_name': 'خالد',
+            'customer_phone': '0633333333',
+            'pickup_date': first,
+            'expected_return': first + timedelta(days=3),
+            'total_amount': '900.00',
+            'deposit': '300.00',
+            'notes': '',
+        }
+        with patch('fleet.views.Vehicle.objects.select_for_update', wraps=Vehicle.objects.select_for_update) as lock:
+            response = self.client.post(reverse('fleet:booking_create'), data)
+        self.assertRedirects(response, reverse('fleet:booking_list'))
+        lock.assert_called_once()
+        self.assertEqual(Booking.objects.count(), 2)
+
+    def test_booking_edit_serializes_with_vehicle_row_lock(self):
+        from unittest.mock import patch
+        first = timezone.now() + timedelta(days=30)
+        data = {
+            'vehicle': self.vehicle.pk,
+            'driver': self.driver.pk,
+            'customer_name': 'محمد المغير',
+            'customer_phone': '0611111111',
+            'pickup_date': first,
+            'expected_return': first + timedelta(days=4),
+            'total_amount': '900.00',
+            'deposit': '300.00',
+            'notes': '',
+        }
+        with patch('fleet.views.Vehicle.objects.select_for_update', wraps=Vehicle.objects.select_for_update) as lock:
+            response = self.client.post(reverse('fleet:booking_edit', args=[self.booking.pk]), data)
+        self.assertRedirects(response, reverse('fleet:booking_detail', args=[self.booking.pk]))
+        lock.assert_called_once()
+        self.booking.refresh_from_db()
+        self.assertEqual(self.booking.customer_name, 'محمد المغير')
+
     def test_booking_create_pickup_after_return_rejected(self):
         response = self.client.post(reverse('fleet:booking_create'), {
             'vehicle': self.vehicle.pk,

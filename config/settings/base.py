@@ -139,6 +139,22 @@ SECURITY_RATE_LIMITS = {
     'download_anon_ip': config('DOWNLOAD_ANON_RATE_LIMIT', default='10/h'),
 }
 
+# ---- Reverse proxy trust (client IP resolution) ------------------------------
+# Comma-separated addresses of the reverse proxy(ies) in front of the app
+# (nginx on the same host: 127.0.0.1). Leave empty when the app is exposed
+# directly. Only these peers are trusted to forward the client address; all
+# other forwarding headers are ignored.
+X_FORWARDED_TRUSTED_PROXIES = config(
+    'TRUSTED_PROXY_IPS',
+    default='',
+    cast=lambda v: [s.strip() for s in v.split(',') if s.strip()],
+)
+
+# Route every django-ratelimit 'ip'/'user_or_ip' key through the centralized
+# client-IP resolver (fleet.security.get_client_ip) so rate limiting, audit
+# logging, and rate-limit audit entries all resolve the same address.
+RATELIMIT_IP_META_KEY = 'fleet.security.get_client_ip'
+
 DOCUMENT_SIGNED_URL_TTL = config('DOCUMENT_SIGNED_URL_TTL', default=24 * 60 * 60, cast=int)
 
 LOG_LEVEL = config('LOG_LEVEL', default='INFO')

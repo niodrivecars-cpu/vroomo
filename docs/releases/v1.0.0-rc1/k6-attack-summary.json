@@ -1,0 +1,67 @@
+{
+  "run": "attack",
+  "exit_code": 0,
+  "thresholds": {
+    "booking_http_500": {
+      "status": "pass",
+      "expression": "'count == 0' count=0",
+      "actual": ""
+    },
+    "download_body_mismatch": {
+      "status": "pass",
+      "expression": "'count == 0' count=0",
+      "actual": ""
+    },
+    "health_non_200": {
+      "status": "pass",
+      "expression": "'count == 0' count=0",
+      "actual": ""
+    },
+    "http_req_duration": {
+      "status": "pass",
+      "expression": "'p(95) < 5000' p(95)=3.21s",
+      "actual": ""
+    },
+    "login_429_without_retry_after": {
+      "status": "pass",
+      "expression": "'count == 0' count=0",
+      "actual": ""
+    },
+    "same_vehicle_booking_success": {
+      "status": "pass",
+      "expression": "'count == 1' count=1",
+      "actual": ""
+    },
+    "tenant_isolation_violation": {
+      "status": "pass",
+      "expression": "'count == 0' count=0",
+      "actual": ""
+    },
+    "unexpected_http_4xx": {
+      "status": "pass",
+      "expression": "'count == 0' count=0",
+      "actual": ""
+    },
+    "unexpected_http_5xx": {
+      "status": "pass",
+      "expression": "'count == 0' count=0",
+      "actual": ""
+    }
+  },
+  "checks": {
+    "total": 415,
+    "succeeded": 414,
+    "failed": 1,
+    "success_rate_pct": 99.75
+  },
+  "metrics": {
+    "http_requests_total": 461,
+    "http_requests_per_sec": 2.554923,
+    "iterations": 192,
+    "vus": {
+      "min": 1,
+      "max": 17
+    },
+    "data_received": "2.3 MB"
+  }
+}

@@ -10,7 +10,7 @@ from django.contrib.auth.views import (
 )
 from django.core.cache import cache
 from django.core.paginator import Paginator
-from django.db import connection
+from django.db import connection, transaction
 from django.db.models import Sum
 from django.db.utils import OperationalError
 from django.http import HttpResponseForbidden, JsonResponse
@@ -203,22 +203,33 @@ def booking_create(request):
             elif vehicle.status in ('maintenance', 'out_of_service'):
                 form.add_error('vehicle', _('This vehicle is not available for booking (maintenance or out of service)'))
             else:
-                conflict = Booking.objects.for_company(request.company).filter(
-                    vehicle=vehicle,
-                    status__in=['confirmed', 'rented'],
-                    pickup_date__lt=ret,
-                    expected_return__gt=pickup,
-                ).exists()
-                if conflict:
-                    form.add_error('expected_return', _('This vehicle is already booked for this period'))
-                else:
-                    booking = form.save(commit=False)
-                    booking.company = request.company
-                    booking.status = 'confirmed'
-                    booking.save()
-                    log_audit(request, 'CREATE', booking, _('New booking: %(name)s - %(plate)s') % {'name': booking.customer_name, 'plate': booking.vehicle.license_plate})
-                    messages.success(request, _('Booking created successfully'))
-                    return redirect('fleet:booking_list')
+                # The conflict check and the insert must be atomic: two
+                # concurrent requests could otherwise both pass the overlap
+                # query and double-book the same vehicle. Lock the vehicle row
+                # (PostgreSQL) so booking attempts for it serialize; SQLite
+                # ignores FOR UPDATE, so a lock wait there surfaces as
+                # OperationalError and the request just re-renders the form.
+                try:
+                    with transaction.atomic():
+                        locked = Vehicle.objects.select_for_update().get(pk=vehicle.pk)
+                        conflict = Booking.objects.for_company(request.company).filter(
+                            vehicle=locked,
+                            status__in=['confirmed', 'rented'],
+                            pickup_date__lt=ret,
+                            expected_return__gt=pickup,
+                        ).exists()
+                        if conflict:
+                            form.add_error('expected_return', _('This vehicle is already booked for this period'))
+                        else:
+                            booking = form.save(commit=False)
+                            booking.company = request.company
+                            booking.status = 'confirmed'
+                            booking.save()
+                            log_audit(request, 'CREATE', booking, _('New booking: %(name)s - %(plate)s') % {'name': booking.customer_name, 'plate': booking.vehicle.license_plate})
+                            messages.success(request, _('Booking created successfully'))
+                            return redirect('fleet:booking_list')
+                except OperationalError:
+                    pass
     else:
         form = BookingForm(company=request.company)
     return render(request, 'fleet/form.html', {'form': form, 'title': _('Add booking')})
@@ -239,19 +250,24 @@ def booking_edit(request, pk):
             elif vehicle.status in ('maintenance', 'out_of_service') and booking.status != 'rented':
                 form.add_error('vehicle', _('This vehicle is not available for booking (maintenance or out of service)'))
             else:
-                conflict = Booking.objects.for_company(request.company).filter(
-                    vehicle=vehicle,
-                    status__in=['confirmed', 'rented'],
-                    pickup_date__lt=ret,
-                    expected_return__gt=pickup,
-                ).exclude(pk=booking.pk).exists()
-                if conflict:
-                    form.add_error('expected_return', _('This vehicle is already booked for this period'))
-                else:
-                    form.save()
-                    log_audit(request, 'UPDATE', booking, _('Edited booking: %(name)s') % {'name': booking.customer_name})
-                    messages.success(request, _('Booking updated successfully'))
-                    return redirect('fleet:booking_detail', pk=pk)
+                try:
+                    with transaction.atomic():
+                        locked = Vehicle.objects.select_for_update().get(pk=vehicle.pk)
+                        conflict = Booking.objects.for_company(request.company).filter(
+                            vehicle=locked,
+                            status__in=['confirmed', 'rented'],
+                            pickup_date__lt=ret,
+                            expected_return__gt=pickup,
+                        ).exclude(pk=booking.pk).exists()
+                        if conflict:
+                            form.add_error('expected_return', _('This vehicle is already booked for this period'))
+                        else:
+                            form.save()
+                            log_audit(request, 'UPDATE', booking, _('Edited booking: %(name)s') % {'name': booking.customer_name})
+                            messages.success(request, _('Booking updated successfully'))
+                            return redirect('fleet:booking_detail', pk=pk)
+                except OperationalError:
+                    pass
     else:
         form = BookingForm(instance=booking, company=request.company)
     return render(request, 'fleet/form.html', {'form': form, 'title': _('Edit booking')})

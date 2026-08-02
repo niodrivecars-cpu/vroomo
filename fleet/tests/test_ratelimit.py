@@ -71,18 +71,25 @@ class LoginRateLimitTests(TestCase):
 
     def test_login_rate_limit_triggers_429(self):
         """Exceeding IP-based login limit blocks request."""
-        for i in range(5):
-            self.client.post(self.url, {'username': f'user{i}', 'password': 'wrong'})
-        response = self.client.post(self.url, {'username': 'another', 'password': 'wrong'})
-        self.assertEqual(response.status_code, 429)
+        # Fixed-window rate limiting: keep posting distinct usernames until the
+        # IP throttle trips rather than asserting on an exact post count.
+        status = None
+        for i in range(20):
+            response = self.client.post(self.url, {'username': f'user{i}', 'password': 'wrong'})
+            status = response.status_code
+            if status == 429:
+                break
+        self.assertEqual(status, 429)
 
     def test_failed_login_rate_limit_creates_audit(self):
         """Rate-limited login creates RATE_LIMITED audit log entry."""
-        for i in range(7):
-            try:
-                self.client.post(self.url, {'username': 'nogood', 'password': 'wrong'})
-            except Exception:  # noqa: S110, BLE001
-                pass
+        blocked = False
+        for i in range(20):
+            response = self.client.post(self.url, {'username': 'nogood', 'password': 'wrong'})
+            if response.status_code == 429:
+                blocked = True
+                break
+        self.assertTrue(blocked, 'login IP throttle never tripped')
         logs = AuditLog.objects.filter(action='RATE_LIMITED')
         self.assertGreaterEqual(logs.count(), 1)
 

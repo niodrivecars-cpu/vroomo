@@ -6,6 +6,8 @@ from django.contrib.auth.signals import (
 from django.dispatch import receiver
 from django.utils.translation import gettext as _
 
+from .security import get_client_ip
+
 
 def log_audit(request, action, obj=None, summary=''):
     from .models import AuditLog
@@ -16,7 +18,7 @@ def log_audit(request, action, obj=None, summary=''):
             company_id = vehicle.company_id
     AuditLog.objects.create(
         user=request.user if request.user.is_authenticated else None,
-        ip_address=request.META.get('REMOTE_ADDR'),
+        ip_address=get_client_ip(request) or None,
         user_agent=request.META.get('HTTP_USER_AGENT', '')[:500],
         session_key=request.session.session_key or '',
         action=action,
@@ -34,7 +36,7 @@ def on_user_logged_in(sender, request, user, **kwargs):
     AuditLog.objects.create(
         user=user,
         username=user.get_username(),
-        ip_address=request.META.get('REMOTE_ADDR'),
+        ip_address=get_client_ip(request) or None,
         user_agent=request.META.get('HTTP_USER_AGENT', '')[:500],
         session_key=(request.session.session_key or '') if request.session else '',
         action='LOGIN',
@@ -48,7 +50,7 @@ def on_user_logged_out(sender, request, user, **kwargs):
     AuditLog.objects.create(
         user=user,
         username=user.get_username() if user else 'ANONYMOUS',
-        ip_address=request.META.get('REMOTE_ADDR'),
+        ip_address=get_client_ip(request) or None,
         user_agent=request.META.get('HTTP_USER_AGENT', '')[:500],
         session_key=(request.session.session_key or '') if request.session else '',
         action='LOGOUT',
@@ -61,7 +63,7 @@ def on_user_login_failed(sender, credentials, request, **kwargs):
     from .models import AuditLog
     AuditLog.objects.create(
         username=credentials.get('username', 'UNKNOWN'),
-        ip_address=request.META.get('REMOTE_ADDR') if request else '',
+        ip_address=get_client_ip(request) if request else '',
         user_agent=request.META.get('HTTP_USER_AGENT', '')[:500] if request else '',
         session_key=(request.session.session_key or '') if request and request.session else '',
         action='LOGIN_FAILED',
