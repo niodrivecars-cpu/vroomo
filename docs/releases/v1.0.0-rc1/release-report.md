@@ -2,7 +2,7 @@
 
 **Project:** Vroom — multi-tenant fleet management
 **Tag:** `v1.0.0-rc1` · **Branch:** `release/1.0` · **Date:** 2026-08-02
-**Commit:** `2fb8606` (the commit that passed every gate below)
+**Commit:** `b269e92` (the commit that passed every gate below)
 
 ## Scope
 

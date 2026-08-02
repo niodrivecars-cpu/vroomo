@@ -1,7 +1,7 @@
 # Verification Gate — v1.0.0-rc1
 
 Date: 2026-08-02
-Commit: `2fb8606` (tag `v1.0.0-rc1`)
+Commit: `b269e92` (tag `v1.0.0-rc1`)
 
 ## Static / Unit Gate
 
