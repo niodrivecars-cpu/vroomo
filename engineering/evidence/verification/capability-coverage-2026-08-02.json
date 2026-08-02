@@ -4,7 +4,7 @@
   "type": "review",
   "status": "pass",
   "date": "2026-08-02",
-  "commit": "7844963",
+  "commit": "0b87622",
   "summary": "Capability Coverage Gate run for Phase 1.5: every capability now has knowledge + pattern (or rationale) + checklist + review step + gate + evidence. Gaps closed: code-review-checklist, business-rule-review checklist, business-rule-review capability.",
   "checks": [
     { "name": "matrix-rows", "result": "pass", "detail": "6 capability rows in platform/capabilities/README.md" },

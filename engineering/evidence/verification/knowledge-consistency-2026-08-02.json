@@ -4,7 +4,7 @@
   "type": "review",
   "status": "pass",
   "date": "2026-08-02",
-  "commit": "7844963",
+  "commit": "0b87622",
   "summary": "Knowledge Consistency Gate run for Phase 1.5: links resolve, no duplication between knowledge and patterns, terminology unified via new glossary, rule/invariant split consistent.",
   "checks": [
     { "name": "internal-links", "result": "pass", "detail": "0 broken links across engineering/**/*.md" },
