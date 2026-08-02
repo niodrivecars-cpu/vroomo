@@ -20,3 +20,12 @@ makes a fleet/rental system more than a generic Django app. Each domain carries
 
 Every rule here is protected by a reference test (see `test-matrix.md` and the
 Business Rules Review phase). A rule that exists only in prose is a debt.
+
+## Canonical Model
+
+`domain/model/` is the **single official definition** of the business model
+(entities, relationships, state machines, events, commands, policies).
+Per-context files in this directory **reference** the canonical model — they
+never re-declare an entity or state. Anything new is defined in `model/` first.
+Completeness is checked by the Business Completeness Gate
+(`execution/gates/business-completeness-gate.md`).

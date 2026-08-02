@@ -1,5 +1,8 @@
 # Fleet — State Machines
 
+Canonical source: `domain/model/state-machines.md`. This file holds the
+fleet-specific guards and notes; states are not redefined here.
+
 Two lifecycle state machines exist in the fleet domain.
 
 ## Vehicle status

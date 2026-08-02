@@ -1,5 +1,8 @@
 # Booking — State Machine
 
+Canonical source: `domain/model/state-machines.md`. This file holds the
+booking-specific guards and open questions; states are not redefined here.
+
 Source: `fleet/models.py` (Booking.STATUS_CHOICES).
 
 ## States

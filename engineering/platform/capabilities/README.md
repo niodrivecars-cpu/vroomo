@@ -15,7 +15,7 @@ is filled or explicitly "None — rationale".
 | Review | `knowledge/testing/` | None — review is a process, not a code solution | `code-review-checklist.md` | review-pipeline (reviewer) | review-pipeline | review artifacts |
 | Performance | `knowledge/performance/`, `knowledge/load-testing/` | None — performance is measured, not patterned; see `performance-gate.md` | `performance-gate.md` | performance review on gate results | performance-gate | `evidence/performance/` |
 | Release | `knowledge/hostinger/` | None — release is a procedure; see `release-playbook.md` | `release-checklist.md` | release-playbook sign-off | release-gate | `evidence/releases/` |
-| Business Rule Review | `knowledge/business/`, `domain/` | None — rule review is a methodology; see `business-traceability-gate.md` | `business-rule-review-checklist.md` | business-rule-review sub-agent | business-traceability-gate | `evidence/traceability/` |
+| Business Rule Review | `knowledge/business/`, `domain/` | None — rule review is a methodology; see `business-traceability-gate.md` | `business-rule-review-checklist.md` | business-rule-review sub-agent | business-traceability + business-completeness gates | `evidence/traceability/`, `evidence/verification/` |
 
 ## Capability files
 

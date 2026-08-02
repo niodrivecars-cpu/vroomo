@@ -14,7 +14,7 @@ with evidence attached.
 - [x] Execution: release/security/performance/migration gates + playbooks
 - [x] Evidence system with RC1 as the first manifest
 
-## Phase 1.5 — Platform Validation (current)
+## Phase 1.5 — Platform Validation
 
 Validates the platform itself before it becomes the base for Phase 2. No new
 product features — only platform coherence.
@@ -27,21 +27,36 @@ product features — only platform coherence.
 - [x] Code review checklist (closed the Review capability gap)
 - [x] Traceability snapshot for Vroom (gaps owned → Phase 2)
 
+## Phase 1.6 — Business Model Inventory (current)
+
+A complete map of the business model **before** any rule discovery, so Phase 2
+builds on one agreed model, not scattered code inferences.
+
+- [x] Canonical Model (`domain/model/`): entities, relationships, state
+      machines, events, commands, policies
+- [x] Truthful inventory: Invoice/Payment marked not-modeled; Customer marked as
+      value object; Vehicle has no `reserved` state
+- [x] Business Completeness Gate — every entity has state machine + policies +
+      events + commands + invariants + tests
+- [x] Completeness matrix for Vroom (10 owned gaps C1–C10)
+
 ## Phase 2 — Business Rules Review
 
 The goal is a **source of truth** for business rules, traced to code, tests,
-and evidence. Four parts:
+and evidence. Built **on the canonical model** — discovery asks "is every policy
+(P1–P21) represented?" rather than "are there missing rules?". Four parts:
 
 ### 2A. Business Rule Discovery
-- [ ] Answer: is any rule unrepresented in the system?
-- [ ] Expired-doc-blocks-rental policy (fleet — open)
-- [ ] Per-company uniqueness of plates/CINs (fleet — open)
-- [ ] Pricing: rate computation from daily_rate, deposit, rounding, currency
-- [ ] Reconcile `knowledge/business/` with the discovered rules
+- [ ] Enforce-or-decide every 🔲 policy: P1 (maintenance blocks booking),
+      P2 (active-only), P4 (license validity), P6 (mileage monotonic),
+      P8 (deposit ≤ value), P15 (status ↔ bookings)
+- [ ] Decide every 🧾 question: P16 (expired-doc blocks rental), P18
+      (per-company uniqueness), Customer as entity, Invoice/Payment in scope
+- [ ] Reconcile `knowledge/business/` with the canonical policies
 
 ### 2B. Invariant Specification
-- [ ] Convert every discovered rule to a numbered invariant (B1…, F1…)
-- [ ] Complete `domain/<context>/state-machine.md` for every statused entity
+- [ ] Convert every policy/invariant decision to a numbered invariant (B1…, F1…)
+- [ ] Complete `domain/model/state-machines.md` for every decision
 - [ ] Complete edge-case catalogs per context
 
 ### 2C. Traceability
@@ -53,7 +68,8 @@ and evidence. Four parts:
 - [ ] Write reference tests for every invariant
 - [ ] Known gaps to close first: B3 (window validity), B4 (money non-negative),
       B5 (state machine), B6 (PROTECT), B1 "adjacent windows", F5 (file
-      hygiene), maintenance-due, violation derived-state
+      hygiene), maintenance-due, violation derived-state, plus new policies
+      enforced in 2A (P1, P2, P4, P6, P8, P15)
 - [ ] Full closure: every invariant green for the commit
 
 ## Phase 3 — Observability

@@ -55,7 +55,14 @@
       "id": "verification/capability-coverage-2026-08-02",
       "type": "review",
       "status": "pass",
-      "commit": "7844963",
+      "commit": "0b87622",
+      "date": "2026-08-02"
+    },
+    {
+      "id": "verification/business-completeness-2026-08-02",
+      "type": "review",
+      "status": "pass",
+      "commit": "19a8d2f",
       "date": "2026-08-02"
     },
     {

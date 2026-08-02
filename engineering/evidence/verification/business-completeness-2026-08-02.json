@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema.json",
+  "id": "verification/business-completeness-2026-08-02",
+  "type": "review",
+  "status": "pass",
+  "date": "2026-08-02",
+  "commit": "19a8d2f",
+  "summary": "Business Completeness Gate run (Phase 1.6): canonical model inventoried. 11 entities checked against 6 slots (state machine, policies, events, commands, invariants, tests). 10 gaps owned and tracked in Phase 2. No silent gaps.",
+  "checks": [
+    { "name": "entity-coverage", "result": "pass", "detail": "11 entities in matrix (incl. planned Invoice/Payment, Customer decision)" },
+    { "name": "six-slots", "result": "pass", "detail": "Every row filled or marked with owned decision" },
+    { "name": "policy-to-invariant", "result": "pass", "detail": "P1-P21 cataloged; 6 not enforced are Phase 2A items" },
+    { "name": "forbidden-transitions", "result": "pass", "detail": "Vehicle, Booking, Violation state machines list forbidden transitions" },
+    { "name": "gaps-owned", "result": "pass", "detail": "10 gaps (C1-C10) tracked in platform/ROADMAP.md" },
+    { "name": "canonical-discipline", "result": "pass", "detail": "domain/model/entities.md is single source; context docs reference it" }
+  ],
+  "artifacts": [
+    { "path": "engineering/domain/model/", "kind": "report" },
+    { "path": "engineering/verification/completeness/vroom-rc1.md", "kind": "report" }
+  ],
+  "notes": "Key findings: Vehicle has no 'reserved' state (reservation = confirmed booking); Customer is not an entity; Invoice/Payment are not modeled. These become Phase 2A decisions."
+}

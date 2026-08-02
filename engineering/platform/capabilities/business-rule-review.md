@@ -23,18 +23,22 @@ traced, across all bounded contexts.
    invariant is updated first, then tests, then implementation.
 2. **Every rule is traceable** through the Business Traceability Gate chain
    (`execution/gates/business-traceability-gate.md`).
-3. **State machines are explicit.** Allowed/forbidden transitions are documented
-   (`domain/<context>/state-machine.md`) and tested.
-4. **Edge cases are catalogs**, not discoveries. `edge-cases.md` is reviewed for
+3. **The model is canonical.** Entities, states, events, commands, and policies
+   are defined in `domain/model/` once; context docs reference, never redefine
+   (`execution/gates/business-completeness-gate.md`).
+4. **State machines are explicit.** Allowed/forbidden transitions are documented
+   (`domain/model/state-machines.md`) and tested.
+5. **Edge cases are catalogs**, not discoveries. `edge-cases.md` is reviewed for
    completeness before new logic is written.
-5. **Cross-domain consistency** is checked (e.g. booking exclusivity vs vehicle
+6. **Cross-domain consistency** is checked (e.g. booking exclusivity vs vehicle
    status vs violation linking).
-6. **A rule in prose only is debt.** A rule without a reference test row is a
+7. **A rule in prose only is debt.** A rule without a reference test row is a
    recorded gap with an owner.
 
 ## Gate
 `execution/gates/business-traceability-gate.md` — Rule → Invariant → Code →
-Test → Evidence, with gaps owned and tracked.
+Test → Evidence, with gaps owned and tracked. Model completeness:
+`execution/gates/business-completeness-gate.md`.
 
 ## Evidence
 Traceability snapshots in `evidence/traceability/`. Review verdicts recorded as

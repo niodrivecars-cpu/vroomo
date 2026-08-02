@@ -19,3 +19,9 @@ Validate the platform itself, not a product release:
 | `knowledge-consistency-gate.md` | No conflicts, no duplication, one term per concept, valid links | `evidence/verification/knowledge-consistency-<date>.json` |
 | `capability-coverage-gate.md` | Every capability has standard + pattern + knowledge + checklist + review + gate + evidence | `evidence/verification/capability-coverage-<date>.json` |
 | `business-traceability-gate.md` | Rule → Invariant → Code → Test → Evidence chain per business rule | `evidence/traceability/<project>-<stage>.json` |
+
+## Business-model gate (Phase 1.6)
+
+| Gate | Verifies | Evidence |
+|---|---|---|
+| `business-completeness-gate.md` | Every entity has state machine + policies + events + commands + invariants + tests (Canonical Model) | `evidence/verification/business-completeness-<date>.json` |

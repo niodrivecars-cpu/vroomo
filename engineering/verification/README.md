@@ -9,6 +9,7 @@ claim without a recorded artifact is not verified.
 - `risk-matrix.md` — categorizing and responding to residual risk.
 - `review-pipeline.md` — the human-in-the-loop part of verification.
 - `traceability/` — Business Traceability Gate snapshots (rule → test → evidence).
+- `completeness/` — Business Completeness Gate matrices (entity → six slots).
 
 ## The core idea
 Evidence tiers (see standard) map to confidence (see confidence model) which

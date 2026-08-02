@@ -25,6 +25,11 @@ here.
 
 | Term | Definition | Notes |
 |---|---|---|
+| **Canonical Model** | The single official definition of the business model (`domain/model/`) | Everything else references it; nothing redefines it |
+| **Entity** | A thing with identity and lifecycle (Vehicle, Booking, Driver…) | Defined in `domain/model/entities.md` |
+| **Policy** | A business policy: what must/must not happen (P1…) | The source of truth in `domain/model/policies.md` |
+| **Event** | A business fact, past tense (BookingPickedUp) | Cataloged in `domain/model/events.md` |
+| **Command** | An allowed action with a guard (CreateBooking) | Cataloged in `domain/model/commands.md` |
 | **Business Rule** | A product requirement stated in business language | Lives in `domain/<context>/business-rules.md` |
 | **Invariant** | A business rule restated as "holds at all times", numbered (B1, F1…) | Lives in `domain/<context>/invariants.md` |
 | **Reference test** | An executable test that pins an invariant | Listed in `domain/<context>/test-matrix.md` |

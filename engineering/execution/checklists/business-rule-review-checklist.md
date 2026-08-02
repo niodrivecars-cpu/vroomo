@@ -9,6 +9,8 @@ rules across all contexts — not the Python.
 - [ ] Every rule maps to a numbered invariant (B1, F1, …) in `invariants.md`
 - [ ] The invariant names its enforcement (form / model / FK / service / view)
 - [ ] No rule exists only in code with no document
+- [ ] **Canonical discipline:** the entity/state/event/command/policy is defined
+      in `domain/model/` once; this context doc references it, not redefines it
 
 ## Edge cases
 - [ ] Boundary values covered (adjacent windows, exactly equal dates, zero amounts)
