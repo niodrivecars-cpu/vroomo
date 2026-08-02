@@ -1,7 +1,7 @@
 # Vroom — Business Completeness Matrix (RC1)
 
-Stage: `v1.0.0-rc1` (commit `19a8d2f`). Run: Phase 1.6, Canonical Model.
-Source: `domain/model/`. Legend: ✅ complete · ⚠️ partial · 🔲 absent · 🧾 decision open.
+Stage: `v1.0.0-rc1` (commit `19a8d2f`). Run: Phase 1.6 + Phase 2A governance,
+Canonical Model. Source: `domain/model/`. Legend: ✅ complete · ⚠️ partial · 🔲 absent · 🧾 decision open.
 
 | Entity | State Machine | Policies | Events | Commands | Invariants | Tests | Verdict |
 |---|---|---|---|---|---|---|---|
@@ -17,14 +17,27 @@ Source: `domain/model/`. Legend: ✅ complete · ⚠️ partial · 🔲 absent �
 | Invoice | 🔲 **not modeled** | 🔲 | 🔲 | 🔲 | 🔲 | 🔲 | 🔲 **in-scope? (Phase 2A)** |
 | Payment | 🔲 **not modeled** | 🔲 | 🔲 | 🔲 | 🔲 | 🔲 | 🔲 **in-scope? (Phase 2A)** |
 
-## Policy coverage vs system
+## Policy coverage vs system (governance register)
 
 | Policy status | Count | Items |
 |---|---|---|
-| ✅ enforced + tested | 9 | P5, P7, P9, P10*, P11, P12, P13, P19, P20, P21 (*test needed) |
-| ⚠️ enforced, test needed | 2 | P3, P14 |
-| 🔲 not enforced | 6 | P1, P2, P4, P6, P8, P15 |
-| 🧾 open decision | 2 | P16, P18 |
+| ✅ Enforced (implemented + tested) | 8 | P9, P11, P12, P13, P17, P19, P20, P21 |
+| 🟡 Validated (correct, not proven/implemented) | 10 | P1, P2, P3, P4, P5, P6, P7, P10, P14, P15 |
+| 🔵 Proposed (awaiting decision) | 3 | P8, P16, P18 |
+| ⚪ Out of Scope | 0 | — |
+| ❌ Rejected | 0 | — |
+
+## Use Case coverage (traceability)
+
+| UC | Scenario | Status |
+|---|---|---|
+| UC1–UC4 | Create / Cancel / Pickup / Return booking | ⚠️ guards B3–B4, P4, P6 unproven |
+| UC5 | Extend booking | 🔲 no command |
+| UC6–UC7 | Record maintenance / set vehicle status | ⚠️ P15 unproven; emissions aspirational |
+| UC8 | Upload document | ⚠️ P14 unverified |
+| UC9–UC10 | Download / revoke document links | ✅ |
+| UC11 | Record violation | ✅ |
+| UC12 | Mark violation paid | 🔲 no payment flow |
 
 ## Owned gaps (tracked in `platform/ROADMAP.md`)
 
@@ -42,5 +55,6 @@ Source: `domain/model/`. Legend: ✅ complete · ⚠️ partial · 🔲 absent �
 | C10 | B3–B6, F5, is_due, is_overdue reference tests | 2D |
 
 ## Verdict
-Model inventoried; 10 gaps — all owned and tracked. No silent gap. **PASS
-(gaps owned).** Full closure is Phase 2.
+Model inventoried and **governed**: every policy has owner, source, status,
+risk, priority, and chain; every UC is traced. 10 gaps — all owned and tracked.
+No silent gap. **PASS (gaps owned).** Full closure is Phase 2.

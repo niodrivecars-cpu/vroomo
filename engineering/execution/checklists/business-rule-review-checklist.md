@@ -37,6 +37,20 @@ rules across all contexts — not the Python.
 - [ ] Every green row maps to a real test file/location
 - [ ] No gap exists silently (all breaks are owned)
 
+## Governance (Phase 2A)
+- [ ] Every policy in `domain/model/policies.md` has an Owner and Source
+- [ ] Every policy has a Decision status: ✅ Enforced / 🟡 Validated /
+      🔵 Proposed / ⚪ Out of Scope / ❌ Rejected
+- [ ] Every policy lists Risk (Operational/Financial/Security/Legal/Customer
+      Experience) and Priority (P0–P3) from the matrix in `policies.md`
+- [ ] 🔵 Proposed policies have an owner and a decision date/blocker, not silence
+- [ ] Every Use Case in `domain/model/use-cases.md` binds Commands → Policies →
+      Events → Tests
+- [ ] Every policy is referenced by ≥1 Use Case; no policy is untraced
+- [ ] Validated-but-unimplemented policies are the Phase 2A workload, tracked in
+      the roadmap
+
 ## Verdict
-- [ ] Rules consistent, traceable, edge-cases complete, state machines explicit
+- [ ] Rules consistent, traceable, edge-cases complete, state machines explicit,
+      policies governed, use cases closed
 - [ ] OR: gaps listed with owners (recorded in snapshot, tracked in roadmap)

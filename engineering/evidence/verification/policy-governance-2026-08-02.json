@@ -1,0 +1,24 @@
+{
+  "$schema": "../schema.json",
+  "id": "verification/policy-governance-2026-08-02",
+  "type": "review",
+  "status": "pass",
+  "date": "2026-08-02",
+  "commit": "29bb880",
+  "summary": "Policy governance run (Phase 2A, Business Rule Validation & Ownership): policies.md restructured into a governance register and use-cases.md added. All 21 policies have owner, source, decision status, risk, priority, and trace chain; all 12 use cases bind commands, policies, events, and tests. 10 completeness gaps remain owned; no silent gap.",
+  "checks": [
+    { "name": "policy-governance", "result": "pass", "detail": "P1-P21 each carry Owner, Source, Criticality, Risk, Priority, Decision status, Implementation/Tests, chain" },
+    { "name": "decision-status", "result": "pass", "detail": "8 Enforced, 10 Validated, 3 Proposed, 0 Out of Scope, 0 Rejected" },
+    { "name": "use-case-coverage", "result": "pass", "detail": "UC1-UC12 each bind Commands -> Policies -> Events -> Tests; UC5/UC12 marked aspirational (no command)" },
+    { "name": "policy-to-use-case", "result": "pass", "detail": "Every policy referenced by >=1 use case; no policy left untraced" },
+    { "name": "gaps-owned", "result": "pass", "detail": "10 gaps (C1-C10) tracked in platform/ROADMAP.md; validated-but-unimplemented policies listed for 2A/2D" },
+    { "name": "gate-updated", "result": "pass", "detail": "Business Completeness Gate: seven slots + checks 7-8 (use case coverage, policy governance)" }
+  ],
+  "artifacts": [
+    { "path": "engineering/domain/model/policies.md", "kind": "report" },
+    { "path": "engineering/domain/model/use-cases.md", "kind": "report" },
+    { "path": "engineering/execution/gates/business-completeness-gate.md", "kind": "report" },
+    { "path": "engineering/verification/completeness/vroom-rc1.md", "kind": "report" }
+  ],
+  "notes": "Reclassifications vs Phase 1.6: P5/P7/P10 move Enforced -> Validated (code present, dedicated tests missing); P3/P14 move to Validated. Validated-but-unimplemented policies (P1, P2, P4, P6, P15) and Proposed decisions (P8, P16, P18) are the Phase 2A workload."
+}

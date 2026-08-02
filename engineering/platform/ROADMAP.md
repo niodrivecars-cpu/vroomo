@@ -44,14 +44,21 @@ builds on one agreed model, not scattered code inferences.
 
 The goal is a **source of truth** for business rules, traced to code, tests,
 and evidence. Built **on the canonical model** — discovery asks "is every policy
-(P1–P21) represented?" rather than "are there missing rules?". Four parts:
+(P1–P21) valid, owned, and proven?" rather than "are there missing rules?".
+Four parts:
 
-### 2A. Business Rule Discovery
-- [ ] Enforce-or-decide every 🔲 policy: P1 (maintenance blocks booking),
-      P2 (active-only), P4 (license validity), P6 (mileage monotonic),
-      P8 (deposit ≤ value), P15 (status ↔ bookings)
-- [ ] Decide every 🧾 question: P16 (expired-doc blocks rental), P18
-      (per-company uniqueness), Customer as entity, Invoice/Payment in scope
+### 2A. Business Rule Validation & Ownership
+- [x] Governance register in `domain/model/policies.md`: every policy has
+      Owner, Source, Criticality, Risk, Priority, and Decision status
+      (✅ Enforced / 🟡 Validated / 🔵 Proposed / ⚪ Out of Scope / ❌ Rejected)
+- [x] Use Cases in `domain/model/use-cases.md` (UC1–UC12) binding
+      Use Case → Commands → Policies → Events → Tests
+- [ ] Validate → approve every 🟡 Validated policy, then implement + test the
+      P0/P1 set: P1 (maintenance blocks booking), P2 (active-only),
+      P4 (license validity), P6 (mileage monotonic), P15 (status ↔ bookings)
+- [ ] Decide every 🔵 Proposed question: P8 (deposit ≤ value), P16
+      (expired-doc blocks rental), P18 (per-company uniqueness), Customer as
+      entity, Invoice/Payment in scope
 - [ ] Reconcile `knowledge/business/` with the canonical policies
 
 ### 2B. Invariant Specification

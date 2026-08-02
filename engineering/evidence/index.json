@@ -66,6 +66,13 @@
       "date": "2026-08-02"
     },
     {
+      "id": "verification/policy-governance-2026-08-02",
+      "type": "review",
+      "status": "pass",
+      "commit": "29bb880",
+      "date": "2026-08-02"
+    },
+    {
       "id": "traceability/vroom-rc1",
       "type": "review",
       "status": "pass",

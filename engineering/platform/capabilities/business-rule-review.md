@@ -34,11 +34,19 @@ traced, across all bounded contexts.
    status vs violation linking).
 7. **A rule in prose only is debt.** A rule without a reference test row is a
    recorded gap with an owner.
+8. **Policies are governed (Phase 2A).** Every policy in `policies.md` has an
+   Owner, Source, Criticality, Risk, Priority, and a Decision status
+   (✅ Enforced / 🟡 Validated / 🔵 Proposed / ⚪ Out of Scope / ❌ Rejected).
+   Review validates the policy *itself* before any implementation —
+   Policy → Validate → Approve → Implement → Test → Evidence.
+9. **Use cases close the loop.** Every scenario is bound
+   Use Case → Commands → Policies → Events → Tests in
+   `domain/model/use-cases.md`; a scenario with no command is 🔲 until one exists.
 
 ## Gate
 `execution/gates/business-traceability-gate.md` — Rule → Invariant → Code →
-Test → Evidence, with gaps owned and tracked. Model completeness:
-`execution/gates/business-completeness-gate.md`.
+Test → Evidence, with gaps owned and tracked. Model completeness + policy
+governance + use-case coverage: `execution/gates/business-completeness-gate.md`.
 
 ## Evidence
 Traceability snapshots in `evidence/traceability/`. Review verdicts recorded as

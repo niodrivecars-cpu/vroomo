@@ -13,7 +13,14 @@ domain/model/          ← canonical (this directory)
   events.md               business events (real / derived / aspirational)
   commands.md             allowed actions with guards
   policies.md             the business policies (the source of truth)
+  use-cases.md            end-to-end scenarios binding commands, policies, events, tests
 ```
+
+Every policy in `policies.md` carries **governance** fields — Owner, Source,
+Criticality, Risk, Priority, and a Decision status (✅ Enforced / 🟡 Validated /
+🔵 Proposed / ⚪ Out of Scope / ❌ Rejected). Phase 2A is *Business Rule
+Validation & Ownership*: validate the policy first, then approve → implement →
+test → evidence.
 
 ## Grounded in code — and honest about it
 

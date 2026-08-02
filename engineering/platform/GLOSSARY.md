@@ -28,6 +28,12 @@ here.
 | **Canonical Model** | The single official definition of the business model (`domain/model/`) | Everything else references it; nothing redefines it |
 | **Entity** | A thing with identity and lifecycle (Vehicle, Booking, Driver…) | Defined in `domain/model/entities.md` |
 | **Policy** | A business policy: what must/must not happen (P1…) | The source of truth in `domain/model/policies.md` |
+| **Policy owner** | The accountable person/role for a policy (Fleet Manager, Finance…) | Recorded per policy in `policies.md` |
+| **Policy source** | Where a policy comes from: Law, Business Requirement, Operational Practice, Internal Decision, Security Requirement | Recorded per policy in `policies.md` |
+| **Policy status** | The decision state of a policy: ✅ Enforced, 🟡 Validated, 🔵 Proposed, ⚪ Out of Scope, ❌ Rejected | See `domain/model/policies.md` |
+| **Policy risk** | Impact dimensions of a policy: Operational, Financial, Security, Legal, Customer Experience | Recorded per policy in `policies.md` |
+| **Policy priority** | Work-order tier (P0–P3), assigned by risk, not by policy number | See the priority matrix in `policies.md` |
+| **Use Case** | An end-to-end business scenario (UC1…) binding Commands → Policies → Events → Tests | Cataloged in `domain/model/use-cases.md` |
 | **Event** | A business fact, past tense (BookingPickedUp) | Cataloged in `domain/model/events.md` |
 | **Command** | An allowed action with a guard (CreateBooking) | Cataloged in `domain/model/commands.md` |
 | **Business Rule** | A product requirement stated in business language | Lives in `domain/<context>/business-rules.md` |
