@@ -43,6 +43,27 @@
       "status": "pass",
       "commit": "19a8d2f",
       "date": "2026-08-02"
+    },
+    {
+      "id": "verification/knowledge-consistency-2026-08-02",
+      "type": "review",
+      "status": "pass",
+      "commit": "7844963",
+      "date": "2026-08-02"
+    },
+    {
+      "id": "verification/capability-coverage-2026-08-02",
+      "type": "review",
+      "status": "pass",
+      "commit": "7844963",
+      "date": "2026-08-02"
+    },
+    {
+      "id": "traceability/vroom-rc1",
+      "type": "review",
+      "status": "pass",
+      "commit": "19a8d2f",
+      "date": "2026-08-02"
     }
   ]
 }

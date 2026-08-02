@@ -18,6 +18,13 @@ standard by code + security + test review, with the review result recorded.
 4. **Review result is recorded** (in the PR description or a review artifact),
    so evidence exists that review happened.
 
+## Coverage
+- Knowledge: `knowledge/testing/`.
+- Pattern: None — review is a process, not a code solution.
+- Checklist: `execution/checklists/code-review-checklist.md`.
+- Review step: review-pipeline (reviewer) — this capability *is* the review.
+- Gate: review-pipeline · Evidence: review artifacts.
+
 ## Gate
 `execution/pipelines/review-pipeline.md` — the ordered sequence from automated
 checks to human sign-off.

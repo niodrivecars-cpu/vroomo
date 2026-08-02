@@ -17,6 +17,13 @@ accident of accumulated commits.
    after the tag, re-tag; a stale tag is a release bug.
 4. **Verdict is recorded** — PASS with evidence, or not a release.
 
+## Coverage
+- Knowledge: `knowledge/hostinger/` (deploy env).
+- Pattern: None — release is a procedure; see `release-playbook.md`.
+- Checklist: `execution/checklists/release-checklist.md`.
+- Review step: release-playbook sign-off.
+- Gate: release-gate · Evidence: `evidence/releases/`.
+
 ## Evidence manifest
 `evidence/releases/<version>.json` — links gate results, test summary, k6
 artifacts, and the tagged commit.

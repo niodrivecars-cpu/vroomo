@@ -19,6 +19,13 @@ is checked against known vulnerability classes before it merges.
 5. **Security headers + CSRF + secure cookies** per `config/settings/production.py`.
 6. **Tenant isolation tests** are part of the suite, not optional.
 
+## Coverage
+- Knowledge: `knowledge/security/`.
+- Patterns: `multi-tenant/`, `audit/`, `signed-download/`.
+- Checklist: `execution/checklists/security-review-checklist.md`.
+- Review step: security-reviewer sub-agent sign-off.
+- Gate: security-gate · Evidence: `evidence/security/`.
+
 ## Gate
 `execution/gates/security-gate.md` — bandit `-ll`, pip-audit clean, security
 reviewer pass, IDOR/tenant tests green.

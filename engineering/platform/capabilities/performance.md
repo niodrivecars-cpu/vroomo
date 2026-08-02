@@ -22,6 +22,14 @@ not with an assumption that "it's probably fast enough."
 - attack: 415 checks, exit 0, p95 = 3.21 s.
 - 9/9 thresholds green in both runs.
 
+## Coverage
+- Knowledge: `knowledge/performance/` + `knowledge/load-testing/`.
+- Pattern: None — performance is measured, not patterned; the gate is the
+  method.
+- Checklist: `execution/gates/performance-gate.md`.
+- Review step: performance review on gate results.
+- Gate: performance-gate · Evidence: `evidence/performance/`.
+
 ## Gate
 `execution/gates/performance-gate.md` — exit 0 AND all thresholds green in both
 profiles.

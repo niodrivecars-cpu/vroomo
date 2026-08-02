@@ -8,6 +8,7 @@ claim without a recorded artifact is not verified.
 - `confidence-model.md` — how much to trust each type of evidence.
 - `risk-matrix.md` — categorizing and responding to residual risk.
 - `review-pipeline.md` — the human-in-the-loop part of verification.
+- `traceability/` — Business Traceability Gate snapshots (rule → test → evidence).
 
 ## The core idea
 Evidence tiers (see standard) map to confidence (see confidence model) which

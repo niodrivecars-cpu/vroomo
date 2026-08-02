@@ -37,6 +37,8 @@ patterns. This keeps the platform reusable: adding Nio later means adding
 ## Tooling integration
 
 - `opencode.jsonc` — MCP servers (postgres, playwright) and sub-agents.
-- `.opencode/agent/*` — django-verifier, security-reviewer, test-writer.
+- `.opencode/agent/*` — django-verifier, security-reviewer, test-writer,
+  business-rule-review, booking-domain-review.
 - `.github/workflows/ci.yml` — CI gate for every commit.
 - `docs/releases/` — project-level release artifacts (mirrored into evidence).
+- `GLOSSARY.md` — one term per concept, enforced by the Knowledge Consistency Gate.

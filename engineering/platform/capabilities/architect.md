@@ -20,6 +20,13 @@ understood — and every architectural decision leaves a written record.
 4. **Concurrency claims are provable.** If you claim a query is safe under
    concurrency, cite the test that proves it (Vroom: exclusivity smoke test).
 
+## Coverage
+- Knowledge: `knowledge/django/` + `platform/ARCHITECTURE.md`.
+- Pattern: None — this capability *is* the structure, not a code solution.
+- Checklist: `execution/templates/task-template.md`.
+- Review step: maintainer sign-off on ADRs.
+- Gate: release-gate · Evidence: ADRs + `platform/ARCHITECTURE.md`.
+
 ## Gate
 `execution/gates/release-gate.md` — the Django verifier passes or the change
 does not merge.

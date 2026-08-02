@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "verification/capability-coverage-2026-08-02",
+  "type": "review",
+  "status": "pass",
+  "date": "2026-08-02",
+  "commit": "7844963",
+  "summary": "Capability Coverage Gate run for Phase 1.5: every capability now has knowledge + pattern (or rationale) + checklist + review step + gate + evidence. Gaps closed: code-review-checklist, business-rule-review checklist, business-rule-review capability.",
+  "checks": [
+    { "name": "matrix-rows", "result": "pass", "detail": "6 capability rows in platform/capabilities/README.md" },
+    { "name": "slots-filled", "result": "pass", "detail": "No empty cells; 'None' only with explicit rationale" },
+    { "name": "references-resolve", "result": "pass", "detail": "All referenced artifacts exist" },
+    { "name": "review-step", "result": "pass", "detail": "Each capability maps to a reviewer/pipeline" },
+    { "name": "evidence", "result": "pass", "detail": "Each capability has evidence location (or plan for business-rule-review)" }
+  ],
+  "artifacts": [
+    { "path": "engineering/platform/capabilities/README.md", "kind": "report" },
+    { "path": "engineering/platform/CAPABILITIES.md", "kind": "report" }
+  ],
+  "notes": "Closed gaps: Review capability lacked a checklist (added code-review-checklist.md); added business-rule-review capability + business-rule-review-checklist.md."
+}
