@@ -1,0 +1,30 @@
+{
+  "$schema": "../schema.json",
+  "id": "verification/executable-knowledge-2026-08-02",
+  "type": "review",
+  "status": "pass",
+  "date": "2026-08-02",
+  "commit": "3498583",
+  "confidence": "gated",
+  "approval": { "role": "Principal Engineer", "date": "2026-08-02" },
+  "summary": "Meta Review Gate run (Phase 2A.6, Executable Knowledge): BRL upgraded to v2 (PREDICATE / SEVERITY / DECISION / ENFORCEMENT), the Engineering Compiler with an executable validator, and the Decision + Policy Graphs. Every Enforced policy is at ENFORCEMENT TESTED; validated-but-prose gaps are owned. Knowledge is now executable, not prose.",
+  "checks": [
+    { "name": "validator-runs", "result": "pass", "detail": "py engineering/kernel/compiler/validate_rules.py: 21 rules parsed, VALIDATOR PASS. Severity BLOCKER=7/ERROR=8/WARNING=4/INFO=2; Decision Enforced=8/Validated=10/Proposed=3; Enforcement TESTED=8/IMPLEMENTED=5/DOCUMENTED=5/PLANNED=3" },
+    { "name": "v2-rule-blocks", "result": "pass", "detail": "policies.md rewritten to BRL v2: PREDICATE replaces GUARD, DECISION+ENFORCEMENT replace Status, SEVERITY added; 21/21 blocks; IDs unique; no Enforced-below-IMPLEMENTED, no TESTED-but-not-Enforced" },
+    { "name": "release-blockers-owned", "result": "pass", "detail": "BLOCKER below TESTED reported (P1, P4, P15) and owned in ROADMAP 2B.1/2B.2, not silent" },
+    { "name": "engineering-compiler", "result": "pass", "detail": "kernel/engineering-compiler.md + compiler/validate_rules.py: Parser -> Validator -> Generator; generator artifacts specified (tests, threat model, checklist, docs, ADR refs, review questions)" },
+    { "name": "decision-graph", "result": "pass", "detail": "governance/adr/GRAPH.md: ADR-0001..0005 edges (affects ADR-0005, requires ADR-0004, etc.), RFC implements edge empty-until-first-RFC, derived not redefining" },
+    { "name": "policy-graph", "result": "pass", "detail": "verification/traceability/vroom-graph.md: P* -> Invariant -> Test -> Evidence -> Release; green chains vs owned gaps match traceability snapshot; 14 invariants referenced" },
+    { "name": "link-check", "result": "pass", "detail": "187 md files, 0 broken links" },
+    { "name": "ontology-consistency", "result": "pass", "detail": "ontology.md edges extended (implements/tested by/verified by/approved by/affects/superseded by) and derivation rule cited for the two graphs" }
+  ],
+  "artifacts": [
+    { "path": "engineering/kernel/rule-language.md", "kind": "report" },
+    { "path": "engineering/kernel/engineering-compiler.md", "kind": "report" },
+    { "path": "engineering/kernel/compiler/validate_rules.py", "kind": "report" },
+    { "path": "engineering/domain/model/policies.md", "kind": "report" },
+    { "path": "engineering/governance/adr/GRAPH.md", "kind": "report" },
+    { "path": "engineering/verification/traceability/vroom-graph.md", "kind": "report" }
+  ],
+  "notes": "The validator is the first Executable Knowledge artifact: a committed script that parses and validates the register. Generators land in 2B.2 (Rule Coverage). Reusability gate holds: Nio Drive inherits BRL v2, the compiler, and the graph shapes unchanged."
+}
