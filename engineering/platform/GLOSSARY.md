@@ -34,6 +34,15 @@ here.
 | **Policy risk** | Impact dimensions of a policy: Operational, Financial, Security, Legal, Customer Experience | Recorded per policy in `policies.md` |
 | **Policy priority** | Work-order tier (P0–P3), assigned by risk, not by policy number | See the priority matrix in `policies.md` |
 | **Use Case** | An end-to-end business scenario (UC1…) binding Commands → Policies → Events → Tests | Cataloged in `domain/model/use-cases.md` |
+| **Kernel** | The brain of the platform: how we think (mission, principles, decision tree, execution model, confidence, failure) | `engineering/kernel/` |
+| **Business Rule Language (BRL)** | The formal, machine-readable statement of a policy (rule block) from which invariants, tests, docs, playbooks, threat models, and code derive | Spec in `kernel/rule-language.md` |
+| **Ontology** | The formal relations between platform concepts (Entity → Aggregate → Policy → Rule → Invariant → Test → Evidence → Decision) | `kernel/ontology.md` |
+| **Capability Graph** | The relation map of capabilities (provides / depends_on / feeds) | `platform/capabilities/GRAPH.md` |
+| **Confidence** | How much a claim is trusted (Unverified → Recorded → Tested → Gated → Proven) | `kernel/confidence-model.md` |
+| **Evidence Engine** | The pipeline Evidence → Confidence → Risk → Decision → Approval | `execution/pipelines/evidence-pipeline.md` |
+| **Decision Engine** | The decision workflow Proposal → RFC → Discussion → ADR → Implementation → Evidence → Accepted | `execution/pipelines/decision-pipeline.md` |
+| **Meta Review** | Review of the platform itself (agents, prompts, knowledge, gates) | `engineering/meta/`, `execution/gates/meta-review-gate.md` |
+| **Drift** | The platform failing its own discipline (documentation drift, gate theater, evidence rot, …) | `kernel/failure-model.md` |
 | **Event** | A business fact, past tense (BookingPickedUp) | Cataloged in `domain/model/events.md` |
 | **Command** | An allowed action with a guard (CreateBooking) | Cataloged in `domain/model/commands.md` |
 | **Business Rule** | A product requirement stated in business language | Lives in `domain/<context>/business-rules.md` |

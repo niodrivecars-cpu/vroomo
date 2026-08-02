@@ -4,6 +4,10 @@ The **source of truth** for business policies. Phase 2A is **Business Rule
 Validation & Ownership**: the question is not "how do we implement everything"
 but "is each policy itself correct?" — then approve, implement, test, and prove.
 
+Every policy below carries a formal **rule block** (Business Rule Language,
+`kernel/rule-language.md`) from which invariants, tests, docs, and threat models
+derive.
+
 The cycle:
 
 ```text
@@ -42,14 +46,23 @@ Policy → Validate → Approve → Implement → Test → Evidence
 
 # P1 — Vehicle cannot be booked while under maintenance
 
+```rule
+ID: P1
+STATEMENT: A vehicle must not be booked while it is under maintenance
+GUARD: Vehicle.status != MAINTENANCE
+WHEN: Booking.create
+UNLESS: override.approved(role=manager)
+REQUIRES: role.manager
+EVIDENCE: — (missing)
+RISKS: Operational, Safety, Customer Experience
+PRIORITY: P0
+STATUS: Validated
+OWNER: Fleet Manager
+SOURCE: Operational Practice (Moroccan Rental Business Practice)
+```
+
 | Field | Value |
 |---|---|
-| Owner | Fleet Manager |
-| Criticality | Critical |
-| Source | Moroccan Rental Business Practice (safety) |
-| Risk | Operational · Safety · Customer Experience |
-| Priority | P0 |
-| Decision | 🟡 Validated |
 | Implementation | Missing — booking checks window overlap only (B1) |
 | Tests | Missing |
 
@@ -60,14 +73,23 @@ BookingCreated → 2D → Missing → —
 
 # P2 — Only active vehicles may be reserved
 
+```rule
+ID: P2
+STATEMENT: Only active vehicles may be reserved
+GUARD: Vehicle.status != OUT_OF_SERVICE AND Company.is_active == true
+WHEN: Booking.create
+UNLESS: —
+REQUIRES: —
+EVIDENCE: — (missing)
+RISKS: Operational, Customer Experience
+PRIORITY: P1
+STATUS: Validated
+OWNER: Fleet Manager
+SOURCE: Internal Decision
+```
+
 | Field | Value |
 |---|---|
-| Owner | Fleet Manager |
-| Criticality | High |
-| Source | Internal Decision |
-| Risk | Operational · Customer Experience |
-| Priority | P1 |
-| Decision | 🟡 Validated |
 | Implementation | Missing — `out_of_service`/inactive not consulted at booking |
 | Tests | Missing |
 
@@ -78,14 +100,23 @@ BookingCreated → 2D → Missing → —
 
 # P3 — A vehicle is effectively reserved from pickup to expected return
 
+```rule
+ID: P3
+STATEMENT: A vehicle is effectively reserved from pickup to expected return
+GUARD: effective_reserved(v) == exists(Booking b: b.vehicle == v AND b.status IN (confirmed, rented))
+WHEN: Booking.create, Booking.return
+UNLESS: —
+REQUIRES: —
+EVIDENCE: B1 (partial)
+RISKS: Operational, Customer Experience
+PRIORITY: P0
+STATUS: Validated
+OWNER: Fleet Manager
+SOURCE: Internal Decision
+```
+
 | Field | Value |
 |---|---|
-| Owner | Fleet Manager |
-| Criticality | High |
-| Source | Internal Decision |
-| Risk | Operational · Customer Experience |
-| Priority | P0 |
-| Decision | 🟡 Validated (derived behavior exists; not proven by dedicated test) |
 | Implementation | Present — derived from confirmed/rented bookings |
 | Tests | Missing (2D) |
 
@@ -96,14 +127,23 @@ BookingPickedUp/BookingReturned → 2D → view/query layer → k6 + suite (part
 
 # P4 — Driver license must be valid at pickup
 
+```rule
+ID: P4
+STATEMENT: Driver license must be valid at pickup
+GUARD: Driver.license_expiry > now
+WHEN: Booking.pickup
+UNLESS: override.approved(role=manager)
+REQUIRES: role.manager
+EVIDENCE: — (missing)
+RISKS: Legal, Operational
+PRIORITY: P1
+STATUS: Validated
+OWNER: Fleet Manager
+SOURCE: Law (regulatory)
+```
+
 | Field | Value |
 |---|---|
-| Owner | Fleet Manager |
-| Criticality | Critical |
-| Source | Moroccan Rental Business Practice (regulatory) |
-| Risk | Legal · Operational |
-| Priority | P1 |
-| Decision | 🟡 Validated |
 | Implementation | Missing — `license_expiry` stored, never checked |
 | Tests | Missing |
 
@@ -113,14 +153,23 @@ BookingPickedUp/BookingReturned → 2D → view/query layer → k6 + suite (part
 
 # P5 — Booking cannot finish before it starts
 
+```rule
+ID: P5
+STATEMENT: A booking cannot finish before it starts
+GUARD: Booking.end_date >= Booking.start_date
+WHEN: Booking.create
+UNLESS: —
+REQUIRES: —
+EVIDENCE: B3
+RISKS: Customer Experience, Operational
+PRIORITY: P2
+STATUS: Validated
+OWNER: Operations
+SOURCE: Internal Decision
+```
+
 | Field | Value |
 |---|---|
-| Owner | Operations |
-| Criticality | High |
-| Source | Internal Decision |
-| Risk | Customer Experience · Operational |
-| Priority | P2 |
-| Decision | 🟡 Validated |
 | Implementation | Present — form validation (B3) |
 | Tests | Missing (2D) |
 
@@ -130,14 +179,23 @@ BookingPickedUp/BookingReturned → 2D → view/query layer → k6 + suite (part
 
 # P6 — Mileage must never decrease
 
+```rule
+ID: P6
+STATEMENT: Mileage must never decrease
+GUARD: Booking.return_km >= Booking.pickup_km AND Vehicle.current_km >= max(Booking.return_km)
+WHEN: Booking.return
+UNLESS: —
+REQUIRES: —
+EVIDENCE: — (missing)
+RISKS: Financial, Fraud, Audit
+PRIORITY: P1
+STATUS: Validated
+OWNER: Fleet Manager
+SOURCE: Internal Decision
+```
+
 | Field | Value |
 |---|---|
-| Owner | Fleet Manager / Finance |
-| Criticality | High |
-| Source | Internal Decision |
-| Risk | Financial · Fraud · Audit |
-| Priority | P1 |
-| Decision | 🟡 Validated |
 | Implementation | Missing — `current_km`/`return_km` have no monotonic guard |
 | Tests | Missing |
 
@@ -148,14 +206,23 @@ BookingPickedUp/BookingReturned → 2D → view/query layer → k6 + suite (part
 
 # P7 — Money is Decimal(10,2) and non-negative
 
+```rule
+ID: P7
+STATEMENT: Money is Decimal(10,2) and non-negative
+GUARD: forall(m in money_fields): m >= 0 AND type(m) == Decimal(10,2)
+WHEN: Booking.create, Violation.create
+UNLESS: —
+REQUIRES: —
+EVIDENCE: B4
+RISKS: Financial
+PRIORITY: P2
+STATUS: Validated
+OWNER: Finance
+SOURCE: Internal Decision
+```
+
 | Field | Value |
 |---|---|
-| Owner | Finance |
-| Criticality | High |
-| Source | Internal Decision |
-| Risk | Financial |
-| Priority | P2 |
-| Decision | 🟡 Validated |
 | Implementation | Present — model/form validation (B4) |
 | Tests | Missing (2D) |
 
@@ -166,15 +233,23 @@ BookingPickedUp/BookingReturned → 2D → view/query layer → k6 + suite (part
 
 # P8 — Deposit cannot exceed the booking value
 
+```rule
+ID: P8
+STATEMENT: Deposit cannot exceed the booking value
+GUARD: Booking.deposit <= Booking.value
+WHEN: Booking.create
+UNLESS: decision pending — a security deposit may exceed one rental's value
+REQUIRES: —
+EVIDENCE: — (missing)
+RISKS: Financial, Customer Experience
+PRIORITY: P2
+STATUS: Proposed
+OWNER: Finance
+SOURCE: Engineering Proposal
+```
+
 | Field | Value |
 |---|---|
-| Owner | Finance |
-| Criticality | Medium |
-| Source | Engineering Proposal |
-| Risk | Financial · Customer Experience |
-| Priority | P2 |
-| Decision | 🔵 Proposed — a security deposit may legitimately exceed one rental's
-value (high-value vehicle, long window); needs a domain decision |
 | Implementation | Missing |
 | Tests | Missing |
 
@@ -184,14 +259,23 @@ value (high-value vehicle, long window); needs a domain decision |
 
 # P9 — Violation total = fine + surcharge
 
+```rule
+ID: P9
+STATEMENT: Violation total equals fine plus surcharge
+GUARD: Violation.total_due == Violation.fine_amount + Violation.majoration_amount
+WHEN: Violation.create
+UNLESS: —
+REQUIRES: —
+EVIDENCE: violation-model-test
+RISKS: Financial, Legal
+PRIORITY: P2
+STATUS: Enforced
+OWNER: Finance
+SOURCE: Law (fine majoration)
+```
+
 | Field | Value |
 |---|---|
-| Owner | Finance |
-| Criticality | High |
-| Source | Law (fine majoration) |
-| Risk | Financial · Legal |
-| Priority | P2 |
-| Decision | ✅ Enforced |
 | Implementation | Present — `total_due` property |
 | Tests | Present |
 
@@ -202,14 +286,23 @@ suite
 
 # P10 — Violation is overdue past deadline and unpaid
 
+```rule
+ID: P10
+STATEMENT: A violation is overdue past its deadline and unpaid
+GUARD: Violation.is_overdue == (now > Violation.payment_deadline AND Violation.status != PAID)
+WHEN: Violation.create
+UNLESS: —
+REQUIRES: —
+EVIDENCE: — (missing)
+RISKS: Legal, Financial
+PRIORITY: P2
+STATUS: Validated
+OWNER: Finance
+SOURCE: Internal Decision
+```
+
 | Field | Value |
 |---|---|
-| Owner | Finance |
-| Criticality | High |
-| Source | Internal Decision |
-| Risk | Legal · Financial |
-| Priority | P2 |
-| Decision | 🟡 Validated |
 | Implementation | Present — `is_overdue` property |
 | Tests | Missing (2D) |
 
@@ -220,14 +313,23 @@ suite
 
 # P11 — Every entity is tenant-scoped; cross-tenant access denied
 
+```rule
+ID: P11
+STATEMENT: Every entity is tenant-scoped; cross-tenant access is denied
+GUARD: forall(query): query.tenant == session.tenant
+WHEN: ALL
+UNLESS: —
+REQUIRES: —
+EVIDENCE: idor-tests, k6
+RISKS: Security
+PRIORITY: P0
+STATUS: Enforced
+OWNER: Platform
+SOURCE: Security Requirement
+```
+
 | Field | Value |
 |---|---|
-| Owner | Platform / Security |
-| Criticality | Critical |
-| Source | Security Requirement |
-| Risk | Security |
-| Priority | P0 |
-| Decision | ✅ Enforced |
 | Implementation | Present — `TenantScopedModel` + view-layer scoping |
 | Tests | Present — IDOR + k6 |
 
@@ -238,14 +340,23 @@ suite + k6 → RC1 evidence
 
 # P12 — Documents are private and expire
 
+```rule
+ID: P12
+STATEMENT: Documents are private and expire
+GUARD: VehicleDocument.access == PRIVATE AND link.ttl <= MAX_TTL
+WHEN: Document.download
+UNLESS: —
+REQUIRES: —
+EVIDENCE: signed-download-tests
+RISKS: Security, Legal
+PRIORITY: P1
+STATUS: Enforced
+OWNER: Platform
+SOURCE: Security Requirement
+```
+
 | Field | Value |
 |---|---|
-| Owner | Platform / Security |
-| Criticality | Critical |
-| Source | Security Requirement |
-| Risk | Security · Legal |
-| Priority | P1 |
-| Decision | ✅ Enforced |
 | Implementation | Present — signed URLs with TTL |
 | Tests | Present |
 
@@ -256,14 +367,23 @@ signed/expired/tampered tests → suite + k6 `dl-*` → RC1 evidence
 
 # P13 — Revoked links stop working
 
+```rule
+ID: P13
+STATEMENT: Revoked download links stop working
+GUARD: link.valid == (download_token_version unchanged)
+WHEN: Document.download
+UNLESS: —
+REQUIRES: —
+EVIDENCE: revoke-test
+RISKS: Security
+PRIORITY: P1
+STATUS: Enforced
+OWNER: Platform
+SOURCE: Security Requirement
+```
+
 | Field | Value |
 |---|---|
-| Owner | Platform / Security |
-| Criticality | Critical |
-| Source | Security Requirement |
-| Risk | Security |
-| Priority | P1 |
-| Decision | ✅ Enforced |
 | Implementation | Present — `download_token_version` |
 | Tests | Present |
 
@@ -274,14 +394,23 @@ DocumentLinksRevoked → revoke test → suite → RC1 evidence
 
 # P14 — Superseded document files are removed best-effort
 
+```rule
+ID: P14
+STATEMENT: Superseded document files are removed best-effort
+GUARD: on_replace(VehicleDocument) => delete(old_file)
+WHEN: Document.upload
+UNLESS: best-effort — storage errors are logged, not fatal
+REQUIRES: —
+EVIDENCE: — (missing)
+RISKS: Operational
+PRIORITY: P3
+STATUS: Validated
+OWNER: Engineering
+SOURCE: Internal Decision
+```
+
 | Field | Value |
 |---|---|
-| Owner | Engineering |
-| Criticality | Low |
-| Source | Internal Decision |
-| Risk | Operational |
-| Priority | P3 |
-| Decision | 🟡 Validated |
 | Implementation | Present — `VehicleDocument.save/delete` best-effort cleanup |
 | Tests | Missing (2D) |
 
@@ -292,14 +421,23 @@ suite
 
 # P15 — Vehicle status stays consistent with active bookings
 
+```rule
+ID: P15
+STATEMENT: Vehicle status stays consistent with active bookings
+GUARD: (NOT exists(active booking) => Vehicle.status != RENTED) AND (Vehicle.status == MAINTENANCE => NOT exists(active booking))
+WHEN: Vehicle.set_status
+UNLESS: —
+REQUIRES: —
+EVIDENCE: — (missing)
+RISKS: Operational, Financial
+PRIORITY: P0
+STATUS: Validated
+OWNER: Fleet Manager
+SOURCE: Internal Decision
+```
+
 | Field | Value |
 |---|---|
-| Owner | Fleet Manager |
-| Criticality | Critical |
-| Source | Internal Decision |
-| Risk | Operational · Financial |
-| Priority | P0 |
-| Decision | 🟡 Validated |
 | Implementation | Missing — status edits can contradict a booking window |
 | Tests | Missing |
 
@@ -310,15 +448,23 @@ suite
 
 # P16 — An expired document blocks rental
 
+```rule
+ID: P16
+STATEMENT: An expired document blocks rental
+GUARD: VehicleDocument.is_expired == true => NOT Booking.create
+WHEN: Booking.create
+UNLESS: decision pending — may not apply to all doc types (e.g. vignette)
+REQUIRES: —
+EVIDENCE: — (missing)
+RISKS: Legal, Operational, Customer Experience
+PRIORITY: P1
+STATUS: Proposed
+OWNER: Fleet Manager
+SOURCE: Engineering Proposal
+```
+
 | Field | Value |
 |---|---|
-| Owner | Fleet Manager |
-| Criticality | Medium |
-| Source | Engineering Proposal (compliance consideration) |
-| Risk | Legal · Operational · Customer Experience |
-| Priority | P1 |
-| Decision | 🔵 Proposed — blocking may be wrong for some doc types (e.g. vignette);
-needs a per-type decision |
 | Implementation | Missing |
 | Tests | Missing |
 
@@ -329,14 +475,23 @@ needs a per-type decision |
 
 # P17 — License plates and CINs are unique
 
+```rule
+ID: P17
+STATEMENT: License plates and CINs are unique
+GUARD: unique(Vehicle.plate) AND unique(Driver.cin)
+WHEN: Vehicle.create, Driver.create
+UNLESS: —
+REQUIRES: —
+EVIDENCE: model-unique-tests
+RISKS: Legal, Operational
+PRIORITY: P1
+STATUS: Enforced
+OWNER: Fleet Manager
+SOURCE: Internal Decision
+```
+
 | Field | Value |
 |---|---|
-| Owner | Fleet Manager |
-| Criticality | High |
-| Source | Internal Decision |
-| Risk | Legal · Operational |
-| Priority | P1 |
-| Decision | ✅ Enforced (globally) |
 | Implementation | Present — `unique=True` |
 | Tests | Present — model tests |
 
@@ -347,15 +502,23 @@ tests → suite
 
 # P18 — Plates/CINs unique per company
 
+```rule
+ID: P18
+STATEMENT: License plates and CINs are unique per company
+GUARD: unique(Vehicle.plate, Company) AND unique(Driver.cin, Company)
+WHEN: Vehicle.create, Driver.create
+UNLESS: decision pending — global uniqueness is safer; needs multi-tenant expansion decision
+REQUIRES: —
+EVIDENCE: — (missing)
+RISKS: Operational
+PRIORITY: P3
+STATUS: Proposed
+OWNER: Fleet Manager
+SOURCE: Engineering Proposal
+```
+
 | Field | Value |
 |---|---|
-| Owner | Fleet Manager |
-| Criticality | Medium |
-| Source | Engineering Proposal |
-| Risk | Operational |
-| Priority | P3 |
-| Decision | 🔵 Proposed — global uniqueness is safer; per-company needs a
-multi-tenant expansion decision |
 | Implementation | Missing |
 | Tests | Missing |
 
@@ -365,14 +528,23 @@ multi-tenant expansion decision |
 
 # P19 — Violations auto-link to the active booking driver
 
+```rule
+ID: P19
+STATEMENT: Violations auto-link to the active booking driver
+GUARD: Violation.driver == active_booking(Violation.vehicle).driver
+WHEN: Violation.create
+UNLESS: —
+REQUIRES: —
+EVIDENCE: auto-link-test
+RISKS: Legal, Operational
+PRIORITY: P2
+STATUS: Enforced
+OWNER: Operations
+SOURCE: Internal Decision
+```
+
 | Field | Value |
 |---|---|
-| Owner | Operations |
-| Criticality | High |
-| Source | Internal Decision |
-| Risk | Legal · Operational |
-| Priority | P2 |
-| Decision | ✅ Enforced |
 | Implementation | Present — view logic |
 | Tests | Present |
 
@@ -383,14 +555,23 @@ ViolationRecorded → auto-link test → suite
 
 # P20 — Two non-cancelled bookings of one vehicle never overlap
 
+```rule
+ID: P20
+STATEMENT: Two non-cancelled bookings of one vehicle never overlap
+GUARD: NOT exists(Booking b2: b2.vehicle == v AND b2.status IN (confirmed, rented) AND overlaps(b2, new_booking))
+WHEN: Booking.create
+UNLESS: —
+REQUIRES: —
+EVIDENCE: k6.sameVehicleBooking, B1
+RISKS: Operational, Financial, Customer Experience
+PRIORITY: P0
+STATUS: Enforced
+OWNER: Fleet Manager
+SOURCE: Operational Practice (double booking)
+```
+
 | Field | Value |
 |---|---|
-| Owner | Fleet Manager |
-| Criticality | Critical |
-| Source | Moroccan Rental Business Practice (double-booking) |
-| Risk | Operational · Financial · Customer Experience |
-| Priority | P0 |
-| Decision | ✅ Enforced |
 | Implementation | Present — check-then-insert + retry (ADR 0005) |
 | Tests | Present — k6 `sameVehicleBooking`; adjacent-window unit test needed (2D) |
 
@@ -401,14 +582,23 @@ ViolationRecorded → auto-link test → suite
 
 # P21 — Derived states are computed, never stored
 
+```rule
+ID: P21
+STATEMENT: Derived states are computed, never stored
+GUARD: NOT exists(stored derived field) AND transitions via service layer only
+WHEN: ALL
+UNLESS: —
+REQUIRES: —
+EVIDENCE: derivation-tests
+RISKS: Operational
+PRIORITY: P0
+STATUS: Enforced
+OWNER: Platform
+SOURCE: Internal Decision
+```
+
 | Field | Value |
 |---|---|
-| Owner | Platform |
-| Criticality | High |
-| Source | Internal Decision |
-| Risk | Operational |
-| Priority | P0 |
-| Decision | ✅ Enforced |
 | Implementation | Present — `is_late`, `is_due`, `is_overdue`, `is_expired` |
 | Tests | Present (derivations covered; per-entity tests in 2D) |
 
@@ -428,7 +618,8 @@ VehicleDocument → state commands → — → derivation tests → suite
 | ❌ Rejected | 0 | — |
 
 ## Phase 2A acceptance
-Every policy has owner, source, decision, risk, priority, and chain — verified by
-the Business Completeness Gate. Validated-but-missing policies (P1, P2, P4, P6,
-P15) then move through Approve → Implement → Test → Evidence. Proposed policies
-(P8, P16, P18) get a domain decision.
+Every policy has owner, source, decision, risk, priority, and a formal rule
+block — verified by the Business Completeness Gate. Validated-but-missing
+policies (P1, P2, P4, P6, P15) then move through Approve → Implement → Test →
+Evidence. Proposed policies (P8, P16, P18) get a domain decision via the
+Decision Engine (`execution/pipelines/decision-pipeline.md`).

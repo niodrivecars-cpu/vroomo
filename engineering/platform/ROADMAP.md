@@ -61,6 +61,28 @@ Four parts:
       entity, Invoice/Payment in scope
 - [ ] Reconcile `knowledge/business/` with the canonical policies
 
+### 2A.5. Engineering Kernel & Rule Engine
+The platform becomes self-governing before rule expansion continues — stops
+Engineering Drift (see `kernel/failure-model.md`) so the platform can be reused
+for Nio Drive without restructuring.
+
+- [x] Engineering Kernel (`kernel/`): mission, principles, decision-tree,
+      execution-model, confidence-model, failure-model
+- [x] Business Rule Language (`kernel/rule-language.md`) — every policy P1–P21
+      carries a formal `rule` block (GUARD / WHEN / UNLESS / EVIDENCE / RISKS /
+      PRIORITY / STATUS / OWNER / SOURCE)
+- [x] Engineering Ontology (`kernel/ontology.md`) — formal relations between
+      every platform concept
+- [x] Capability Graph (`platform/capabilities/GRAPH.md`) — provides /
+      depends_on / feeds relations
+- [x] Evidence Engine (`execution/pipelines/evidence-pipeline.md`) —
+      Evidence → Confidence → Risk → Decision → Approval (+ schema fields)
+- [x] Decision Engine (`execution/pipelines/decision-pipeline.md` +
+      decision-checklist) — Proposal → RFC → Discussion → ADR → Evidence → Accepted
+- [x] Meta Engineering (`meta/` + `meta-review-gate.md`) — agents, prompts,
+      knowledge, hallucination, duplication, consistency
+- [x] Meta review evidence manifest (`evidence/verification/kernel-2026-08-02.json`)
+
 ### 2B. Invariant Specification
 - [ ] Convert every policy/invariant decision to a numbered invariant (B1…, F1…)
 - [ ] Complete `domain/model/state-machines.md` for every decision
@@ -76,7 +98,7 @@ Four parts:
 - [ ] Known gaps to close first: B3 (window validity), B4 (money non-negative),
       B5 (state machine), B6 (PROTECT), B1 "adjacent windows", F5 (file
       hygiene), maintenance-due, violation derived-state, plus new policies
-      enforced in 2A (P1, P2, P4, P6, P8, P15)
+      enforced from 2A (P1, P2, P4, P6, P15)
 - [ ] Full closure: every invariant green for the commit
 
 ## Phase 3 — Observability

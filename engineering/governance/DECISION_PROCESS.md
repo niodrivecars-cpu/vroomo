@@ -1,6 +1,9 @@
 # Decision Process
 
-When to write an ADR vs an RFC, and how each flows.
+When to write an ADR vs an RFC, and how each flows. This is the threshold
+guidance for the Decision Engine (`execution/pipelines/decision-pipeline.md`),
+which orchestrates the full lifecycle Proposal → RFC → Discussion → Decision →
+ADR → Implementation → Evidence → Verification → Accepted.
 
 ## ADR — Architecture Decision Record
 

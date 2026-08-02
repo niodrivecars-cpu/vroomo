@@ -17,6 +17,24 @@
     },
     "date": { "type": "string", "format": "date" },
     "commit": { "type": "string", "description": "Git commit the evidence was generated against" },
+    "confidence": {
+      "type": "string",
+      "enum": ["unverified", "recorded", "tested", "gated", "proven"],
+      "description": "Evidence Engine step 2 — how much the claim is trusted (kernel/confidence-model.md). No confidence = a record, not a verdict."
+    },
+    "approval": {
+      "type": "object",
+      "properties": {
+        "role": { "type": "string" },
+        "date": { "type": "string", "format": "date" }
+      },
+      "required": ["role", "date"],
+      "description": "Evidence Engine step 5 — approval is a role, not a person."
+    },
+    "risk": {
+      "type": "string",
+      "description": "Residual risk reference (verification/risk-matrix.md row) accepted for the stage."
+    },
     "superseded_by": { "type": "string" },
     "summary": { "type": "string" },
     "checks": {
