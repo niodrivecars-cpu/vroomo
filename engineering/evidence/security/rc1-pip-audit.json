@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "security/rc1-pip-audit",
+  "type": "security",
+  "status": "pass",
+  "date": "2026-08-02",
+  "commit": "19a8d2f",
+  "summary": "pip-audit on requirements.txt and requirements-dev.txt found no known vulnerabilities.",
+  "checks": [{ "name": "pip-audit", "result": "pass", "detail": "No known vulnerabilities found" }],
+  "artifacts": [{ "path": "docs/releases/v1.0.0-rc1/verification.md", "kind": "report" }]
+}

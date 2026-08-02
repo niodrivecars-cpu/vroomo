@@ -1,0 +1,30 @@
+{
+  "$schema": "../schema.json",
+  "id": "releases/v1.0.0-rc1",
+  "type": "release",
+  "status": "pass",
+  "date": "2026-08-02",
+  "commit": "19a8d2f",
+  "summary": "Release Candidate 1: multi-tenant fleet management with security hardening, signed private downloads, rate limiting, i18n (ar/fr/en), proxy-aware client IP, load-testing framework, and full verification gate. Tag v1.0.0-rc1 points at this commit.",
+  "checks": [
+    { "name": "ruff", "result": "pass", "detail": "All checks passed, exit 0" },
+    { "name": "bandit", "result": "pass", "detail": "-ll, exit 0" },
+    { "name": "pip-audit", "result": "pass", "detail": "No known vulnerabilities found" },
+    { "name": "migrations", "result": "pass", "detail": "No changes detected" },
+    { "name": "test-suite", "result": "pass", "detail": "278 tests OK (792.077s)" },
+    { "name": "collectstatic", "result": "pass", "detail": "130 static files" },
+    { "name": "check-deploy", "result": "pass", "detail": "exit 0, 1 warning (CI placeholder SECRET_KEY length)" },
+    { "name": "k6-default", "result": "pass", "detail": "exit 0, 9/9 thresholds, p95 980.07ms, 356/358 checks" },
+    { "name": "k6-attack", "result": "pass", "detail": "exit 0, 9/9 thresholds, p95 3.21s, 414/415 checks" },
+    { "name": "post-run-audit", "result": "pass", "detail": "46 bookings, 0 overlapping pairs, 0 rate-limit denials" }
+  ],
+  "artifacts": [
+    { "path": "docs/releases/v1.0.0-rc1/verification.md", "kind": "report" },
+    { "path": "docs/releases/v1.0.0-rc1/release-report.md", "kind": "report" },
+    { "path": "docs/releases/v1.0.0-rc1/k6-default-output.txt", "kind": "log" },
+    { "path": "docs/releases/v1.0.0-rc1/k6-default-summary.json", "kind": "json" },
+    { "path": "docs/releases/v1.0.0-rc1/k6-attack-output.txt", "kind": "log" },
+    { "path": "docs/releases/v1.0.0-rc1/k6-attack-summary.json", "kind": "json" }
+  ],
+  "notes": "Residual: 2/1 k6 check failures were the SQLite write-lock artifact (HTTP 200, no row persisted) — error thresholds stayed 0. compilemessages skipped locally (msgfmt absent); catalog integrity covered by test suite. Full risk matrix in engineering/verification/risk-matrix.md."
+}

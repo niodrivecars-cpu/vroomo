@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vroom.dev/schemas/evidence-manifest",
+  "title": "Evidence Manifest",
+  "description": "A recorded proof artifact for a gate or release on the Engineering Platform.",
+  "type": "object",
+  "required": ["id", "type", "status", "date", "commit"],
+  "properties": {
+    "id": { "type": "string", "description": "Stable identifier, e.g. releases/v1.0.0-rc1" },
+    "type": {
+      "type": "string",
+      "enum": ["release", "security", "performance", "testing", "review"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pass", "fail", "blocked", "superseded"]
+    },
+    "date": { "type": "string", "format": "date" },
+    "commit": { "type": "string", "description": "Git commit the evidence was generated against" },
+    "superseded_by": { "type": "string" },
+    "summary": { "type": "string" },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "result"],
+        "properties": {
+          "name": { "type": "string" },
+          "result": { "type": "string" },
+          "detail": { "type": "string" }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "kind"],
+        "properties": {
+          "path": { "type": "string" },
+          "kind": { "enum": ["log", "json", "report", "screenshot"] }
+        }
+      }
+    },
+    "notes": { "type": "string" }
+  }
+}

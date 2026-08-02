@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema.json",
+  "id": "performance/rc1-attack",
+  "type": "performance",
+  "status": "pass",
+  "date": "2026-08-02",
+  "commit": "19a8d2f",
+  "summary": "k6 attack run (fraud/abuse profile): exit 0, all 9 thresholds green, p95 http_req_duration 3.21s, 414/415 checks (1 SQLite-lock artifact). Post-run audit: 46 bookings, 0 overlapping pairs, 0 rate-limit denials.",
+  "checks": [
+    { "name": "exit-code", "result": "pass", "detail": "0" },
+    { "name": "thresholds", "result": "pass", "detail": "9/9 green" },
+    { "name": "http_req_duration", "result": "pass", "detail": "p(95)=3.21s < 5000" },
+    { "name": "post-run-audit", "result": "pass", "detail": "0 overlaps, 0 rate-limit denials" }
+  ],
+  "artifacts": [
+    { "path": "docs/releases/v1.0.0-rc1/k6-attack-output.txt", "kind": "log" },
+    { "path": "docs/releases/v1.0.0-rc1/k6-attack-summary.json", "kind": "json" }
+  ]
+}

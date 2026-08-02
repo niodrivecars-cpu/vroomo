@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "security/rc1-bandit",
+  "type": "security",
+  "status": "pass",
+  "date": "2026-08-02",
+  "commit": "19a8d2f",
+  "summary": "bandit -r fleet config -q -ll passed with no HIGH/MEDIUM findings.",
+  "checks": [{ "name": "bandit", "result": "pass", "detail": "exit 0" }],
+  "artifacts": [{ "path": "docs/releases/v1.0.0-rc1/verification.md", "kind": "report" }]
+}

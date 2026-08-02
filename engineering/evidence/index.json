@@ -1,0 +1,48 @@
+{
+  "generated": "2026-08-02",
+  "schema": "engineering/evidence/schema.json",
+  "entries": [
+    {
+      "id": "releases/v1.0.0-rc1",
+      "type": "release",
+      "status": "pass",
+      "commit": "19a8d2f",
+      "date": "2026-08-02"
+    },
+    {
+      "id": "security/rc1-bandit",
+      "type": "security",
+      "status": "pass",
+      "commit": "19a8d2f",
+      "date": "2026-08-02"
+    },
+    {
+      "id": "security/rc1-pip-audit",
+      "type": "security",
+      "status": "pass",
+      "commit": "19a8d2f",
+      "date": "2026-08-02"
+    },
+    {
+      "id": "testing/rc1-suite",
+      "type": "testing",
+      "status": "pass",
+      "commit": "19a8d2f",
+      "date": "2026-08-02"
+    },
+    {
+      "id": "performance/rc1-default",
+      "type": "performance",
+      "status": "pass",
+      "commit": "19a8d2f",
+      "date": "2026-08-02"
+    },
+    {
+      "id": "performance/rc1-attack",
+      "type": "performance",
+      "status": "pass",
+      "commit": "19a8d2f",
+      "date": "2026-08-02"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "testing/rc1-suite",
+  "type": "testing",
+  "status": "pass",
+  "date": "2026-08-02",
+  "commit": "19a8d2f",
+  "summary": "Full fleet test suite passed: 278 tests OK in 792.077s against config.test_settings (in-memory SQLite).",
+  "checks": [{ "name": "manage.py test fleet", "result": "pass", "detail": "Ran 278 tests ... OK" }],
+  "artifacts": [{ "path": "docs/releases/v1.0.0-rc1/verification.md", "kind": "report" }]
+}

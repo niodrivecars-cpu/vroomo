@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema.json",
+  "id": "performance/rc1-default",
+  "type": "performance",
+  "status": "pass",
+  "date": "2026-08-02",
+  "commit": "19a8d2f",
+  "summary": "k6 default smoke run: exit 0, all 9 thresholds green, p95 http_req_duration 980.07ms, 356/358 checks (2 SQLite-lock artifacts).",
+  "checks": [
+    { "name": "exit-code", "result": "pass", "detail": "0" },
+    { "name": "thresholds", "result": "pass", "detail": "9/9 green" },
+    { "name": "http_req_duration", "result": "pass", "detail": "p(95)=980.07ms < 5000" }
+  ],
+  "artifacts": [
+    { "path": "docs/releases/v1.0.0-rc1/k6-default-output.txt", "kind": "log" },
+    { "path": "docs/releases/v1.0.0-rc1/k6-default-summary.json", "kind": "json" }
+  ]
+}
