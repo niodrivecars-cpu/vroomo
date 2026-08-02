@@ -47,14 +47,14 @@ Chain: **Rule → Invariant → Code → Test → Evidence**. Legend in `README.
 
 | # | Gap | Context | Owner (tracked in) |
 |---|---|---|---|
-| G1 | B3 reference test (window validity) | booking | Phase 2D |
-| G2 | B4 reference test (money non-negative) | booking/pricing | Phase 2D |
-| G3 | B5 reference test (state machine) | booking | Phase 2D |
-| G4 | B6 reference test (PROTECT) | booking | Phase 2D |
-| G5 | B1 "adjacent windows allowed" unit test | booking | Phase 2D |
-| G6 | F5 file-hygiene test | fleet | Phase 2D |
-| G7 | maintenance-due derived-state test | fleet | Phase 2D |
-| G8 | violation derived-state test | fleet | Phase 2D |
+| G1 | B3 reference test (window validity) | booking | Phase 2B.2 |
+| G2 | B4 reference test (money non-negative) | booking/pricing | Phase 2B.2 |
+| G3 | B5 reference test (state machine) | booking | Phase 2B.3 |
+| G4 | B6 reference test (PROTECT) | booking | Phase 2B.2 |
+| G5 | B1 "adjacent windows allowed" unit test | booking | Phase 2B.2 |
+| G6 | F5 file-hygiene test | fleet | Phase 2B.2 |
+| G7 | maintenance-due derived-state test | fleet | Phase 2B.2 |
+| G8 | violation derived-state test | fleet | Phase 2B.2 |
 | G9 | expired-doc-blocks-rental policy | fleet | Phase 2A |
 | G10 | per-company uniqueness of plates/CINs | fleet | Phase 2A |
 | G11 | rate computation from daily_rate | pricing | Phase 2A |

@@ -36,6 +36,12 @@ here.
 | **Use Case** | An end-to-end business scenario (UC1…) binding Commands → Policies → Events → Tests | Cataloged in `domain/model/use-cases.md` |
 | **Kernel** | The brain of the platform: how we think (mission, principles, decision tree, execution model, confidence, failure) | `engineering/kernel/` |
 | **Business Rule Language (BRL)** | The formal, machine-readable statement of a policy (rule block) from which invariants, tests, docs, playbooks, threat models, and code derive | Spec in `kernel/rule-language.md` |
+| **Predicate** | The formal boolean expression of a rule (`NOT exists(Booking b: overlaps(b, new))`) — the invariant form, one of the three rule dimensions | BRL v2, replaces v1's `GUARD` |
+| **Severity** | The break-impact of a rule: `BLOCKER` · `ERROR` · `WARNING` · `INFO` — a `BLOCKER` below `TESTED` blocks a release | BRL v2 field |
+| **Enforcement** | The implementation reality of a rule: `PLANNED` · `DOCUMENTED` · `IMPLEMENTED` · `TESTED` — independent of `DECISION` | BRL v2 field |
+| **Engineering Compiler** | The machine that turns a rule block into every downstream artifact: Parser → Validator → Generator → (tests, threat model, checklist, docs, ADR references, review questions) | `kernel/engineering-compiler.md`, executable at `kernel/compiler/validate_rules.py` |
+| **Decision Graph** | The relation map of architecture decisions: ADR → `affects` / `superseded by` → ADR, ADR → `implements` → RFC | `governance/adr/GRAPH.md` |
+| **Policy Graph** | The end-to-end proof chain per policy: P* → `implements` → Invariant → `tested by` → Test → `verified by` → Evidence → `approved by` → Release | `verification/traceability/vroom-graph.md` |
 | **Ontology** | The formal relations between platform concepts (Entity → Aggregate → Policy → Rule → Invariant → Test → Evidence → Decision) | `kernel/ontology.md` |
 | **Capability Graph** | The relation map of capabilities (provides / depends_on / feeds) | `platform/capabilities/GRAPH.md` |
 | **Confidence** | How much a claim is trusted (Unverified → Recorded → Tested → Gated → Proven) | `kernel/confidence-model.md` |

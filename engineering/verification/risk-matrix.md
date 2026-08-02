@@ -21,7 +21,7 @@ stage.
 |---|---|---|---|---|
 | SQLite dev artifact masks concurrency behavior | High | Possible | Review | Mitigated: ADR 0005 retry + Postgres validation plan |
 | Missing per-company uniqueness (plates/CINs) | Medium | Unlikely | Track | Tracked in Business Rules Review |
-| No production observability yet | High | Unlikely | Track | Phase 3 (Sentry/metrics) |
+| No production observability yet | High | Unlikely | Track | Phase 4 (Sentry/metrics) |
 | Business rules not yet fully reference-tested | High | Possible | Review | Phase 2 (Business Rules Review) |
 | Full CSP deferred (Report-Only) | Medium | Unlikely | Track | Roadmap |
 | No production load data on Postgres | Medium | Possible | Review | Pilot phase measurement |

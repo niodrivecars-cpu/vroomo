@@ -27,6 +27,11 @@ Canonical Model. Source: `domain/model/`. Legend: ✅ complete · ⚠️ partial
 | ⚪ Out of Scope | 0 | — |
 | ❌ Rejected | 0 | — |
 
+Every policy also carries BRL v2 dimensions (SEVERITY / DECISION / ENFORCEMENT)
+validated by `kernel/compiler/validate_rules.py` — see
+`domain/model/policies.md` and the Policy Graph
+(`verification/traceability/vroom-graph.md`).
+
 ## Use Case coverage (traceability)
 
 | UC | Scenario | Status |
@@ -43,16 +48,16 @@ Canonical Model. Source: `domain/model/`. Legend: ✅ complete · ⚠️ partial
 
 | # | Gap | Phase |
 |---|---|---|
-| C1 | P1/P2/P15: vehicle availability not enforced at booking | 2A + 2D |
-| C2 | P4: driver license validity not checked | 2A + 2D |
-| C3 | P6: mileage monotonicity not enforced | 2A + 2D |
-| C4 | P8: deposit ≤ booking value not enforced | 2A + 2D |
+| C1 | P1/P2/P15: vehicle availability not enforced at booking | 2B.1 + 2B.2 |
+| C2 | P4: driver license validity not checked | 2B.1 + 2B.2 |
+| C3 | P6: mileage monotonicity not enforced | 2B.1 + 2B.2 |
+| C4 | P8: deposit ≤ booking value not enforced | 2A (decision) + 2B.2 |
 | C5 | P16: expired-doc-blocks-rental decision | 2A |
 | C6 | P18: per-company uniqueness decision | 2A |
 | C7 | Customer as entity or value object | 2A |
 | C8 | Invoice/Payment in scope for v1 | 2A |
-| C9 | Violation pay/dispute commands | 2B/2C |
-| C10 | B3–B6, F5, is_due, is_overdue reference tests | 2D |
+| C9 | Violation pay/dispute commands | 2B.2/2B.3 |
+| C10 | B3–B6, F5, is_due, is_overdue reference tests | 2B.2 |
 
 ## Verdict
 Model inventoried and **governed**: every policy has owner, source, status,

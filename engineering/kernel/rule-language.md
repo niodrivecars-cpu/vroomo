@@ -1,11 +1,10 @@
-# Business Rule Language (BRL)
+# Business Rule Language (BRL) — v2
 
 A **formal, machine-readable statement of every business policy** — the engine
 of the platform. From one rule block we derive: invariants, reference tests,
-documentation, playbooks, threat models, and (where possible) code.
-
-A policy in prose ("P1: no booking during maintenance") is a *human* statement.
-A rule block is the *formal* statement the platform executes against.
+documentation, playbooks, threat models, ADR references, review questions, and
+(where possible) code. A policy is *described* by prose; a rule block is
+*executed* by the Engineering Compiler (`kernel/engineering-compiler.md`).
 
 ## Syntax
 
@@ -13,16 +12,18 @@ Each policy carries exactly one rule block, fenced in a Markdown `rule` block:
 
 ````markdown
 ```rule
-ID: P1
-STATEMENT: A vehicle must not be booked while it is under maintenance
-GUARD: Vehicle.status != MAINTENANCE
+ID: P20
+STATEMENT: Two non-cancelled bookings of one vehicle never overlap
+PREDICATE: NOT exists(Booking b: b.vehicle == v AND b.status IN (confirmed, rented) AND overlaps(b, new_booking))
 WHEN: Booking.create
-UNLESS: override.approved(role=manager)
-REQUIRES: role.manager
-EVIDENCE: B1-tests
-RISKS: Operational, Safety, Customer Experience
+UNLESS: —
+REQUIRES: —
+EVIDENCE: k6.sameVehicleBooking, B1-tests
+RISKS: Operational, Financial, Customer Experience
 PRIORITY: P0
-STATUS: Validated
+SEVERITY: BLOCKER
+DECISION: Enforced
+ENFORCEMENT: TESTED
 OWNER: Fleet Manager
 SOURCE: Operational Practice
 ```
@@ -34,48 +35,84 @@ SOURCE: Operational Practice
 |---|---|---|
 | `ID` | yes | `P<number>`, unique |
 | `STATEMENT` | yes | business language, no implementation jargon |
-| `GUARD` | yes | boolean expression (see below) |
+| `PREDICATE` | yes | **formal boolean expression** (see grammar) — the invariant form |
 | `WHEN` | yes | comma-separated trigger commands from `domain/model/commands.md`; `ALL` = every command |
 | `UNLESS` | no | override clauses, `override.approved(role=<role>)` |
 | `REQUIRES` | no | roles/evidence that must exist before operating or waiving |
 | `EVIDENCE` | yes | comma-separated test/evidence ids from `domain/<ctx>/test-matrix.md` or `evidence/`; `—` = gap |
 | `RISKS` | yes | tags from `{Operational, Financial, Security, Legal, Customer Experience}` + specific flags (e.g. `Fraud`, `Audit`, `Safety`) |
 | `PRIORITY` | yes | `P0`–`P3` (work order, distinct from policy ID) |
-| `STATUS` | yes | `Enforced` · `Validated` · `Proposed` · `Out of Scope` · `Rejected` |
+| `SEVERITY` | yes | `BLOCKER` · `ERROR` · `WARNING` · `INFO` (impact → action) |
+| `DECISION` | yes | `Enforced` · `Validated` · `Proposed` · `Out of Scope` · `Rejected` (business decision state) |
+| `ENFORCEMENT` | yes | `PLANNED` · `DOCUMENTED` · `IMPLEMENTED` · `TESTED` (implementation reality) |
 | `OWNER` | yes | accountable role/person |
 | `SOURCE` | yes | `Law` · `Business Requirement` · `Operational Practice` · `Internal Decision` · `Security Requirement` · `Engineering Proposal` |
 
-## GUARD grammar
+## The three dimensions of a rule
 
-`GUARD` is a boolean expression over canonical entities and fields
-(`domain/model/entities.md`):
+| Dimension | Question | Values | What an agent does with it |
+|---|---|---|---|
+| `DECISION` | Is the policy *agreed*? | Enforced / Validated / Proposed / Out of Scope / Rejected | Proposed → run the Decision Engine; Validated → approve-then-implement |
+| `ENFORCEMENT` | Is the policy *real* in the system? | PLANNED / DOCUMENTED / IMPLEMENTED / TESTED | TESTED → claim it; below → it is a gap, owned not silent |
+| `SEVERITY` | What happens if it *breaks*? | BLOCKER / ERROR / WARNING / INFO | BLOCKER → gate the build; ERROR → blocking issue; WARNING → issue; INFO → note |
+
+`DECISION` and `ENFORCEMENT` are independent: a policy can be `Validated`
+(agreed) but `DOCUMENTED` (not implemented). The old single `Status` field
+conflated the two — that was the v1 weakness.
+
+## SEVERITY semantics
+
+| Severity | If violated | Default action |
+|---|---|---|
+| `BLOCKER` | corrupts a core invariant (isolation, exclusivity, money, legal) | blocks build/release until `ENFORCEMENT: TESTED` |
+| `ERROR` | breaks a milestone requirement | blocking issue for the phase; fix or decide |
+| `WARNING` | degrades quality | opens an issue, does not block |
+| `INFO` | aspirational / hygiene | informational only |
+
+A `BLOCKER` with `ENFORCEMENT: PLANNED|DOCUMENTED` is a **release blocker** by
+definition — the Business Completeness Gate fails the stage until it reaches
+`TESTED` (or is formally re-scoped).
+
+## PREDICATE grammar
+
+`PREDICATE` is a boolean expression over canonical entities and fields
+(`domain/model/entities.md`), written in the invariant form **"holds at all
+times"**:
 
 - Comparisons: `==`, `!=`, `<`, `<=`, `>`, `>=`
 - Booleans: `AND`, `OR`, `NOT`
-- Quantifiers: `exists(Entity e: pred)`, `forall(Entity e: pred)`
+- Quantifiers: `exists(Entity e: pred)`, `forall(Entity e: pred)`, `unique(field[, scope])`
 - Field references: `Entity.field` (e.g. `Vehicle.status`, `Booking.return_km`)
+- Derived helpers: `effective_reserved(v)`, `active_booking(v)`, `overlaps(b1, b2)`,
+  `is_due`, `is_overdue`, `is_expired`
 
-Expressions read as **"this must hold at all times"** (the invariant form). The
-`WHEN` clause scopes where the guard is asserted.
+`WHEN` scopes where the predicate is asserted; the predicate itself is global.
 
-## Derivation rule
+## Derivation & compilation
 
-Changing a rule block propagates, in order:
+Changing a rule block propagates through the **Engineering Compiler**
+(`kernel/engineering-compiler.md`):
 
-1. **Ontology** (`kernel/ontology.md`) — the relations the rule participates in
-2. **Invariant** (`domain/<ctx>/invariants.md`) — restate `GUARD` as B#/F#
-3. **Test** (`domain/<ctx>/test-matrix.md`) — every `EVIDENCE` id gets a row
-4. **Implementation** — enforce the guard in the service layer
-5. **Evidence** — record proof at the implementing commit
+```text
+Rule ─→ Parser ─→ Validator ─→ Generator ─→ Artifacts
+                                       ├── tests          (from PREDICATE + EVIDENCE)
+                                       ├── threat model   (from RISKS + SEVERITY)
+                                       ├── checklist      (from ALL fields)
+                                       ├── documentation  (STATEMENT + WHEN)
+                                       ├── ADR references (from OWNER/DECISION)
+                                       └── review questions (from UNLESS + REQUIRES)
+```
 
 A rule whose `EVIDENCE` references a test that does not exist is a **gap**
-(owned, never silent). A `STATUS: Validated` rule must move to `Enforced` only
-after its evidence exists and a gate ran.
+(owned, never silent). `DECISION: Enforced` requires `ENFORCEMENT` ≥
+`IMPLEMENTED`; full closure is `ENFORCEMENT: TESTED`.
 
 ## Conformance
 
-- The Business Completeness Gate (checks 7–8) requires every policy to have a
-  rule block with a valid `STATUS` and resolvable `EVIDENCE`.
-- The Business Rule Review checklist verifies `GUARD` terms reference only
-  canonical entities/fields.
-- No two rule blocks may share an `ID`, and no policy may exist without a block.
+- **Validator**: `engineering/kernel/compiler/validate_rules.py` parses every
+  rule block and enforces: required fields, enum values, `ID` uniqueness, and
+  the cross-checks above. Run it before any rule change lands.
+- **Gate**: the Business Completeness Gate (checks 7–8) requires a valid v2
+  rule block per policy and no `BLOCKER` left below `TESTED` for a release.
+- **Review**: the Business Rule Review checklist verifies `PREDICATE` terms
+  reference only canonical entities/fields.

@@ -33,7 +33,7 @@ This is the **entry gate for Phase 2**: it runs against the Canonical Model
 | 5 | Gaps owned | every 🔲/🧾 row is tracked in the roadmap with an owner |
 | 6 | Canonical discipline | no entity redefined outside `domain/model/entities.md` |
 | 7 | Use Case coverage | every UC is reachable from a command; every policy referenced by ≥1 UC |
-| 8 | Policy governance | every policy has Owner · Source · Status · Risk · Priority · chain (Policy → Invariant → Entity → Command → Event → Tests → Implementation → Evidence) |
+| 8 | Policy governance | every policy has Owner · Source · Decision · Enforcement · Severity · Risk · Priority · chain (Policy → Rule → Invariant → Entity → Command → Event → Tests → Implementation → Evidence), and every `Enforced` policy is at `ENFORCEMENT ≥ IMPLEMENTED` |
 
 ## Output
 
@@ -49,7 +49,8 @@ enforced, all invariants green) is Phase 2's deliverable; the gate passes 1.6
 when the completeness matrix is accurate and no gap is silent.
 
 ## Pass criteria (Phase 2A)
-The model is **governed**: every policy has owner, source, decision status, risk,
-and priority (checks 7–8), and every Critical/P0 policy has an owned path to
-implementation + tests.
+The model is **governed**: every policy has owner, source, decision, enforcement,
+severity, risk, and priority (checks 7–8), and every `Enforced` policy is at
+`ENFORCEMENT ≥ IMPLEMENTED` (2A.6). Any `BLOCKER` left below `TESTED` is a
+release blocker, owned in the roadmap.
 

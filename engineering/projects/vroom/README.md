@@ -8,8 +8,8 @@ It is a multi-tenant fleet management SaaS (Arabic RTL, i18n ar/fr/en).
 - RC1 evidence: `docs/releases/v1.0.0-rc1/` (verification, release report,
   k6 outputs + summaries).
 - Structured manifests: `engineering/evidence/releases/v1.0.0-rc1.json`.
-- Roadmap: RC1 done → Business Rules Review (Phase 2) → Observability (Phase 3)
-  → Push/Merge + v1.0.0 + Pilot. See `engineering/platform/ROADMAP.md`.
+- Roadmap: RC1 done → Business Rules Review (Phase 2) → Autonomous Engineering
+  (Phase 3) → Push/Merge + v1.0.0 + Pilot. See `engineering/platform/ROADMAP.md`.
 
 ## How to work on Vroom
 1. Read `engineering/knowledge/` for Django/Postgres/security/performance/test

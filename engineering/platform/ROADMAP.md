@@ -45,7 +45,7 @@ builds on one agreed model, not scattered code inferences.
 The goal is a **source of truth** for business rules, traced to code, tests,
 and evidence. Built **on the canonical model** — discovery asks "is every policy
 (P1–P21) valid, owned, and proven?" rather than "are there missing rules?".
-Four parts:
+Ordered parts:
 
 ### 2A. Business Rule Validation & Ownership
 - [x] Governance register in `domain/model/policies.md`: every policy has
@@ -53,13 +53,11 @@ Four parts:
       (✅ Enforced / 🟡 Validated / 🔵 Proposed / ⚪ Out of Scope / ❌ Rejected)
 - [x] Use Cases in `domain/model/use-cases.md` (UC1–UC12) binding
       Use Case → Commands → Policies → Events → Tests
-- [ ] Validate → approve every 🟡 Validated policy, then implement + test the
-      P0/P1 set: P1 (maintenance blocks booking), P2 (active-only),
-      P4 (license validity), P6 (mileage monotonic), P15 (status ↔ bookings)
 - [ ] Decide every 🔵 Proposed question: P8 (deposit ≤ value), P16
       (expired-doc blocks rental), P18 (per-company uniqueness), Customer as
       entity, Invoice/Payment in scope
 - [ ] Reconcile `knowledge/business/` with the canonical policies
+- [ ] Approve the validated-but-prose P0/P1 set — implementation happens in 2B.1
 
 ### 2A.5. Engineering Kernel & Rule Engine
 The platform becomes self-governing before rule expansion continues — stops
@@ -69,8 +67,8 @@ for Nio Drive without restructuring.
 - [x] Engineering Kernel (`kernel/`): mission, principles, decision-tree,
       execution-model, confidence-model, failure-model
 - [x] Business Rule Language (`kernel/rule-language.md`) — every policy P1–P21
-      carries a formal `rule` block (GUARD / WHEN / UNLESS / EVIDENCE / RISKS /
-      PRIORITY / STATUS / OWNER / SOURCE)
+      carries a formal `rule` block (PREDICATE / WHEN / UNLESS / EVIDENCE /
+      RISKS / PRIORITY / SEVERITY / DECISION / ENFORCEMENT / OWNER / SOURCE)
 - [x] Engineering Ontology (`kernel/ontology.md`) — formal relations between
       every platform concept
 - [x] Capability Graph (`platform/capabilities/GRAPH.md`) — provides /
@@ -83,32 +81,87 @@ for Nio Drive without restructuring.
       knowledge, hallucination, duplication, consistency
 - [x] Meta review evidence manifest (`evidence/verification/kernel-2026-08-02.json`)
 
-### 2B. Invariant Specification
-- [ ] Convert every policy/invariant decision to a numbered invariant (B1…, F1…)
+### 2A.6. Executable Knowledge
+Knowledge stops being prose: rule blocks are the single input, the Engineering
+Compiler is the machine, graphs are the queryable view. The Decision Graph and
+Policy Graph are **derived** — they never define new facts.
+
+- [x] BRL v2 (`kernel/rule-language.md`) — the three dimensions: DECISION
+      (agreed?) independent of ENFORCEMENT (real?), plus SEVERITY (break impact)
+- [x] Engineering Compiler (`kernel/engineering-compiler.md`) — Parser →
+      Validator → Generator → Artifacts (tests, threat model, checklist, docs,
+      ADR references, review questions)
+- [x] Validator executable: `kernel/compiler/validate_rules.py` — parses
+      P1–P21, enforces fields/enums/uniqueness/decision↔enforcement, reports
+      release blockers (PASS)
+- [x] `policies.md` rewritten to v2 rule blocks (21/21), every Enforced policy
+      at TESTED, validated gaps owned
+- [x] Architecture Decision Graph (`governance/adr/GRAPH.md`) — ADR → affects /
+      superseded by / implements → RFC
+- [x] Policy Graph (`verification/traceability/vroom-graph.md`) — P* →
+      implements → Invariant → tested by → Test → verified by → Evidence →
+      approved by → Release
+- [ ] Generate phase: per-rule test templates, threat models, checklists from
+      the rule object (picks up in 2B.2)
+- [ ] First RFC through the Decision Engine (none exist yet) to exercise the
+      ADR graph `implements` edge
+
+### 2B. Rule Engineering
+Rules become executable artifacts in four ordered parts. Each part keeps the
+source of truth: Rule → Invariant → Test → Evidence.
+
+### 2B.1. Invariant Specification
+- [ ] Convert every policy/invariant decision to a numbered invariant (B1…, F1…),
+      including the prose-only validated set: P1 (maintenance blocks booking),
+      P2 (active-only), P4 (license validity), P6 (mileage monotonic), P15
+      (status ↔ bookings)
 - [ ] Complete `domain/model/state-machines.md` for every decision
 - [ ] Complete edge-case catalogs per context
 
-### 2C. Traceability
+### 2B.2. Rule Coverage
+The per-rule compile loop: Rule → Code → Test → Evidence → Review → Release.
+- [ ] For each rule: enforce in code, pin with a reference test, produce
+      evidence, review the diff, keep the rule at TESTED
+- [ ] Generators from 2A.6 produce the test templates; reference tests close
+      G1–G8 (B3, B4, B5, B6, B1-adjacent, F5, maintenance-due, violation
+      derived-state)
 - [ ] Close the Rule → Model → View → Test → Evidence chain for every invariant
 - [ ] Maintain the snapshot at `verification/traceability/vroom-<stage>.md`
-- [ ] Re-run the Business Traceability Gate; 0 unowned gaps
+      and re-run the Business Traceability Gate; 0 unowned gaps
 
-### 2D. Reference Tests
-- [ ] Write reference tests for every invariant
-- [ ] Known gaps to close first: B3 (window validity), B4 (money non-negative),
-      B5 (state machine), B6 (PROTECT), B1 "adjacent windows", F5 (file
-      hygiene), maintenance-due, violation derived-state, plus new policies
-      enforced from 2A (P1, P2, P4, P6, P15)
-- [ ] Full closure: every invariant green for the commit
+### 2B.3. Business State Machines
+Transition-level proof: each transition → guard → rule → test → evidence.
+- [ ] State machines compiled per entity: Booking, Vehicle, Maintenance,
+      Violation, VehicleDocument
+- [ ] Every transition in `domain/model/state-machines.md` has a guard bound to
+      a rule, a reference test, and evidence
 
-## Phase 3 — Observability
+### 2B.4. Scenario Library
+End-to-end scenarios compiled from use cases (UC1–UC12) — e.g. Customer books →
+Late return → Damaged → Insurance → Repair → Available.
+- [ ] `domain/model/scenarios.md` — each scenario threads its use case, rules,
+      state transitions, tests, and evidence
+- [ ] Scenario coverage vs use cases: every UC has at least one scenario with a
+      reference test
+
+## Phase 3 — Autonomous Engineering
+
+The platform drives its own rule → planning → agents → review → evidence →
+decision → merge loop; humans approve decisions, not diffs.
+
+- [ ] Rule-driven planning: a change enters as a rule/requirement, not a diff
+- [ ] Agent loop with a decidable goal and a judge independent of the builder
+- [ ] Automated evidence capture per change (confidence field set, not claimed)
+- [ ] Merge gated on evidence + Meta Review, not on human inspection alone
+
+## Phase 4 — Observability
 
 - [ ] Structured JSON logging + correlation IDs
 - [ ] Sentry error tracking
 - [ ] Metrics (Prometheus/Grafana) if volume justifies
 - [ ] SLA/SLO definitions and dashboards
 
-## Phase 4 — Platform harden
+## Phase 5 — Platform harden
 
 - [ ] RFC/ADR index automation (check for missing records on changed architecture)
 - [ ] Evidence CI job (re-run gates, refresh evidence/index.json)

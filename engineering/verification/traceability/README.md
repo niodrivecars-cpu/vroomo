@@ -13,6 +13,8 @@ roadmap — the gate passes only when no gap is silent.
 
 ## Files
 - `<project>-<stage>.md` — the snapshot matrix + gap list.
+- `<project>-graph.md` — the Policy Graph view (P* → Invariant → Test →
+  Evidence → Release) derived from the snapshot + `domain/model/policies.md`.
 - Evidence: `evidence/traceability/<project>-<stage>.json`.
 
 ## Legend

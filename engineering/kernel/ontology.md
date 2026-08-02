@@ -25,12 +25,19 @@ kernel, the rule language, and the glossary — it is never written in parallel.
 | Command | guarded by | Invariant |
 | Command | emits | Event |
 | Policy | expressed as | Rule (BRL block) |
+| Rule | compiled by | Engineering Compiler (→ tests, threat model, checklist, docs, ADR refs, review questions) |
 | Rule | maps to | Invariant |
+| Policy | implements | Invariant |
 | Invariant | enforced by | Test |
-| Test | produces | Evidence |
+| Test | tested by | Reference test |
+| Test | verified by | Evidence |
 | Evidence | raises | Confidence |
+| Evidence | approved by | Release |
 | Risk | tags | Policy |
 | RFC | proposes | Decision |
+| ADR | implements | RFC |
+| ADR | affects | ADR |
+| ADR | superseded by | ADR |
 | ADR | records | Decision |
 | Decision | references | Evidence |
 | Capability | provides | Skill |
@@ -45,8 +52,10 @@ kernel, the rule language, and the glossary — it is never written in parallel.
 
 ```text
 Policy → Rule → Invariant → Test → Evidence → Confidence → Decision
-   │                                    │                     │
- Entity/Command/Event ←── traceability ──┘                     └→ ADR → Implementation
+   │      (BRL)                              │                     │
+  └─ Policy Graph ────────────────────────────┘                     └→ ADR → Implementation
+              P* ─implements→ Invariant ─tested by→ Test ─verified by→ Evidence ─approved by→ Release
+              ADR ─affects/superseded by→ ADR ─implements→ RFC  (Decision Graph)
 ```
 
 Traceability means following this chain without a missing link. A missing link
@@ -56,6 +65,8 @@ is an owned gap (kernel `failure-model.md`, drift mode 4).
 1. Every node has exactly one defining document. A relation not listed here is
    either unsupported or must be added to the ontology first.
 2. Derivation: graphs, matrices, and generated artifacts follow from these
-   edges — they never define new relations.
+   edges — they never define new relations. The Decision Graph
+   (`governance/adr/GRAPH.md`) and the Policy Graph
+   (`verification/traceability/vroom-graph.md`) are such derivations.
 3. When the glossary adds a term, the ontology is checked for its relations;
    when the rule language changes, the ontology's edges are re-validated.

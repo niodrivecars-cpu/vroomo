@@ -2,7 +2,8 @@
 
 Sequential, immutable decisions about the systems built on this platform.
 Highest number is the most recent. Superseded records stay with a
-`Status: superseded by NNNN` pointer.
+`Status: superseded by NNNN` pointer. The relation map (affects / superseded by
+/ implements / requires) lives in `GRAPH.md`.
 
 | # | Title | Status | Date |
 |---|---|---|---|

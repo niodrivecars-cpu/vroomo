@@ -2,7 +2,7 @@
 
 The canonical state machines. Per-context files in `domain/<ctx>/` link here;
 they do not redefine states. **Forbidden transitions are as important as legal
-ones** — each is tested in Phase 2D.
+ones** — each is tested in Phase 2B.3.
 
 Legend: `→` legal transition · `✗` forbidden transition · `(derived)` computed
 from data, never stored.
