@@ -1,0 +1,29 @@
+{
+  "$schema": "../schema.json",
+  "id": "verification/kernel-2026-08-02",
+  "type": "review",
+  "status": "pass",
+  "date": "2026-08-02",
+  "commit": "067e184",
+  "confidence": "gated",
+  "approval": { "role": "Principal Engineer", "date": "2026-08-02" },
+  "summary": "Meta Review Gate run (Phase 2A.5): Engineering Kernel, Rule Language, Ontology, Capability Graph, Evidence Engine, Decision Engine, and Meta layer built and reviewed against the kernel's own failure model. All drift modes have a detector; no silent gaps.",
+  "checks": [
+    { "name": "agents-start-at-kernel", "result": "pass", "detail": "decision-tree.md routes every task; kernel wins on conflict (agent-quality criterion 1)" },
+    { "name": "prompts-scoped-current", "result": "pass", "detail": "capabilities reference live gates/pipelines; no stale paths introduced" },
+    { "name": "knowledge-sourced", "result": "pass", "detail": "kernel/meta docs reference canonical files; no unanchored claims" },
+    { "name": "no-duplicated-truth", "result": "pass", "detail": "kernel/confidence-model.md complements, does not duplicate, verification/confidence-model.md (explicit pointer)" },
+    { "name": "consistent-terminology", "result": "pass", "detail": "new glossary terms (Kernel, BRL, Ontology, Confidence, Drift...) used consistently" },
+    { "name": "failure-model-covered", "result": "pass", "detail": "all 9 drift modes in failure-model.md have a detector in meta/ or gates/" },
+    { "name": "rule-blocks", "result": "pass", "detail": "21/21 policies in domain/model/policies.md carry a rule block; IDs unique; STATUS valid" },
+    { "name": "evidence-engine", "result": "pass", "detail": "schema.json extended with confidence/approval/risk; this manifest uses them (first proof)" }
+  ],
+  "artifacts": [
+    { "path": "engineering/kernel/", "kind": "report" },
+    { "path": "engineering/meta/", "kind": "report" },
+    { "path": "engineering/execution/gates/meta-review-gate.md", "kind": "report" },
+    { "path": "engineering/platform/capabilities/GRAPH.md", "kind": "report" },
+    { "path": "engineering/domain/model/policies.md", "kind": "report" }
+  ],
+  "notes": "This manifest is itself the first Evidence-Engine artifact: confidence=gated (a gate evaluated), approval as role not person. Reusability gate: a platform that passes its own meta review can host the next project (Nio Drive) without restructuring."
+}

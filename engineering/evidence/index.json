@@ -73,6 +73,13 @@
       "date": "2026-08-02"
     },
     {
+      "id": "verification/kernel-2026-08-02",
+      "type": "review",
+      "status": "pass",
+      "commit": "067e184",
+      "date": "2026-08-02"
+    },
+    {
       "id": "traceability/vroom-rc1",
       "type": "review",
       "status": "pass",
