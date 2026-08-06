@@ -1,0 +1,30 @@
+{
+  "$schema": "../schema.json",
+  "id": "verification/deployment-automation-2026-08-06",
+  "type": "review",
+  "status": "pass",
+  "date": "2026-08-06",
+  "commit": "e2e8d85",
+  "confidence": "gated",
+  "approval": { "role": "Principal Engineer", "date": "2026-08-06" },
+  "summary": "Deployment Automation review (Phase 4): CI coverage + GHCR image, tag-triggered CD with automatic rollback, zero-downtime graceful reload, and quantified DR/monitoring documentation. Operations moves from manual-SSH to automated shipping. Docker build was not executed locally (daemon offline); Dockerfile follows the documented stack and YAML/bash were validated instead.",
+  "checks": [
+    { "name": "ci-gate", "result": "pass", "detail": "ci.yml: ruff, bandit, pip-audit, migration-drift check, compilemessages, tests with coverage (coverage.xml artifact), collectstatic, check --deploy; runs on main and release/1.0" },
+    { "name": "cd-pipeline", "result": "pass", "detail": "cd.yml: tag v* -> appleboy/ssh-action -> scripts/deploy.sh <ref> -> /health/ probe -> scripts/rollback.sh on failure; rollback is app-only (no migration reversal, documented)" },
+    { "name": "docker-image", "result": "pass", "detail": "Dockerfile (python:3.12-slim, gettext+libmagic, gunicorn config.wsgi) + .dockerignore; CI builds and pushes to GHCR on push. Local build not run: docker daemon offline on dev box" },
+    { "name": "zero-downtime", "result": "pass", "detail": "deploy.sh now reloads gracefully (systemctl reload -> HUP via ExecReload) with restart fallback; docs §3 ExecReload + §11 limits stated honestly (no zero-downtime DB strategy yet)" },
+    { "name": "dr-objectives", "result": "pass", "detail": "docs §12: RPO <= 15 min target vs current daily-backup reality (up to 24h) called out; RTO <= 30 min achievable via tested restore; quarterly drill mandated" },
+    { "name": "post-deploy-monitoring", "result": "pass", "detail": "docs §13 checklist: gunicorn, journal, redis, postgres connections, disk, TLS expiry, rate-limit keying, audit IP; Celery honestly marked not-in-stack" },
+    { "name": "validation", "result": "pass", "detail": "workflow YAML valid (pyyaml); deploy.sh/rollback.sh/healthcheck.sh pass bash -n; BRL validator PASS; 187 md files 0 broken links" },
+    { "name": "roadmap", "result": "pass", "detail": "Phase 4 retitled Deployment Automation & Observability; new items checked; WAL archiving + blue/green left open as next work" }
+  ],
+  "artifacts": [
+    { "path": ".github/workflows/ci.yml", "kind": "report" },
+    { "path": ".github/workflows/cd.yml", "kind": "report" },
+    { "path": "Dockerfile", "kind": "report" },
+    { "path": "scripts/deploy.sh", "kind": "report" },
+    { "path": "docs/deployment.md", "kind": "report" },
+    { "path": "engineering/platform/ROADMAP.md", "kind": "report" }
+  ],
+  "notes": "Activation blocker: the repo has no git remote yet, so GitHub Actions will not run until origin is added and the branch/tags are pushed (docs/deployment.md §14 covers secrets and server prerequisites). No secrets were introduced; the GITHUB_TOKEN default is used for GHCR."
+}
