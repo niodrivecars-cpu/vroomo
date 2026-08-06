@@ -59,8 +59,18 @@ run_manage compilemessages --ignore venv
 echo "==> Running production checks"
 run_manage check --deploy
 
-echo "==> Restarting $SERVICE"
-sudo systemctl restart "$SERVICE"
+echo "==> Reloading $SERVICE (graceful, zero-downtime)"
+if sudo systemctl is-active --quiet "$SERVICE"; then
+    # HUP (ExecReload) lets gunicorn finish in-flight requests before respawning
+    # workers. Falls back to a full restart if the unit has no ExecReload.
+    if ! sudo systemctl reload "$SERVICE"; then
+        echo "==> Reload unsupported; falling back to restart"
+        sudo systemctl restart "$SERVICE"
+    fi
+else
+    echo "==> Service inactive; starting"
+    sudo systemctl restart "$SERVICE"
+fi
 sudo systemctl --no-pager --lines=20 status "$SERVICE"
 
 echo "==> Probing /health/"

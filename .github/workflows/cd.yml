@@ -1,0 +1,77 @@
+name: CD
+
+# Deploys a release tag to production via SSH, then health-checks. If either
+# step fails, it rolls back to the previously deployed ref.
+#
+# Requires repo secrets (Settings -> Secrets and variables -> Actions):
+#   DEPLOY_HOST       the production server hostname/IP
+#   DEPLOY_USER       the deploy user (must be able to sudo systemctl)
+#   DEPLOY_SSH_KEY    a private SSH key authorized on the server for DEPLOY_USER
+#   APP_DIR           absolute path to the checkout, e.g. /opt/vroom/vroom
+#   ENV_FILE          absolute path to the production .env, e.g. /opt/vroom/.env
+#
+# Server prerequisites: the checkout has an `origin` remote, the deploy user has
+# passwordless sudo for systemctl, and scripts/deploy.sh runs cleanly once
+# (see docs/deployment.md, sections "Continuous Delivery" and "Zero-downtime").
+
+on:
+  push:
+    tags:
+      - "v*"
+
+concurrency:
+  group: cd-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy tag via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          command_timeout: 30m
+          script: |
+            set -euo pipefail
+            cd "$APP_DIR"
+            echo "==> Deploying $GITHUB_REF_NAME"
+            bash scripts/deploy.sh "$APP_DIR" "$ENV_FILE" "$GITHUB_REF_NAME"
+        env:
+          APP_DIR: ${{ secrets.APP_DIR }}
+          ENV_FILE: ${{ secrets.ENV_FILE }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+
+      - name: Verify /health/ after deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            set -euo pipefail
+            cd "$APP_DIR"
+            bash scripts/healthcheck.sh "$ENV_FILE"
+        env:
+          APP_DIR: ${{ secrets.APP_DIR }}
+          ENV_FILE: ${{ secrets.ENV_FILE }}
+
+      - name: Rollback on failure
+        if: failure()
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            set -euo pipefail
+            cd "$APP_DIR"
+            echo "==> Deployment or health check failed; rolling back"
+            bash scripts/rollback.sh "$APP_DIR" "$ENV_FILE"
+        env:
+          APP_DIR: ${{ secrets.APP_DIR }}
+          ENV_FILE: ${{ secrets.ENV_FILE }}

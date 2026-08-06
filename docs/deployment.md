@@ -91,14 +91,18 @@ ExecStart=/opt/vroom/vroom/venv/bin/gunicorn \
     --workers 4 \
     --bind 127.0.0.1:8000 \
     --access-logfile - \
-    --error-logfile - \
-    config.wsgi:application
+    --error-logfile -
+ExecReload=/bin/kill -HUP $MAINPID
 Restart=on-failure
 RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
 ```
+
+`ExecReload` makes `systemctl reload` send gunicorn a SIGHUP — a **graceful
+reload** that finishes in-flight requests before respawning workers. This is
+what gives zero-downtime deploys (see §11).
 
 Tune `--workers` to `(2 × CPU cores) + 1`. Enable it:
 
@@ -275,3 +279,101 @@ media archive. It must run with the application stopped.
   (`settings.SECURITY_RATE_LIMITS`).
 - The firewall should expose only ports 22, 80, 443. PostgreSQL and Redis must
   bind to 127.0.0.1 only.
+
+## 11. Zero-downtime deployment
+
+`deploy.sh` reloads gunicorn **gracefully** instead of restarting it. With the
+`ExecReload=/bin/kill -HUP $MAINPID` line in the systemd unit (see §3),
+`systemctl reload` tells gunicorn to stop accepting new work on old workers,
+finish in-flight requests, then respawn workers from the new code — in-flight
+requests are not dropped. `deploy.sh` falls back to a full restart only when the
+unit lacks `ExecReload` or the service was inactive.
+
+Sequence per deploy (service stays serving throughout):
+
+```
+checkout REF → pip install → migrate → collectstatic → compilemessages
+   → check --deploy → systemctl reload (graceful) → /health/ probe
+```
+
+Honest limits:
+- **Schema changes**: `migrate` runs while old code is still serving, so a
+  migration that drops/renames a column used by the old code can error
+  mid-deploy. For such releases, take a maintenance window or use the
+  expand/contract pattern (additive migration → deploy → cleanup migration in
+  the next release). This project has no zero-downtime DB strategy yet.
+- **Static files**: `collectstatic` writes new files atomically per file;
+  nginx serves either old or new — no 404 window in practice.
+
+## 12. Disaster recovery objectives
+
+| Objective | Target | Current reality |
+|---|---|---|
+| **RPO** (Recovery Point Objective) — max acceptable data loss | ≤ 15 min | ⚠️ Daily backup at 03:00 → up to 24 h of loss. **Meet the target with Postgres WAL archiving** (continuous_archive + base backups), or hourly `backup.sh`. |
+| **RTO** (Recovery Time Objective) — max acceptable downtime | ≤ 30 min | ✅ Achievable: `scripts/restore.sh` restores DB + media and redeploys; practice it so the 30-min window holds. |
+
+Run the recovery drill on a scratch server each quarter. An untested backup is
+a hope (§8). RPO is the harder constraint: closing it requires WAL archiving,
+which is planned in the deployment roadmap (`engineering/platform/ROADMAP.md`,
+Phase 4).
+
+## 13. Post-deploy monitoring checklist
+
+After a successful `/health/` probe, verify operational health — not just that
+the app answers:
+
+| Check | Command | Healthy |
+|---|---|---|
+| Gunicorn workers up, no respawn loop | `systemctl status vroom` | 4 workers active, `Restart` count stable |
+| Recent request errors | `sudo journalctl -u vroom --since "5 minutes ago" | grep -i error` | none |
+| Redis reachable | `redis-cli -h 127.0.0.1 ping` | `PONG` |
+| Cache round-trip | `redis-cli -h 127.0.0.1 get __vroom_probe__` (set then get) | value returned |
+| PostgreSQL connections within limit | `psql -U vroom -h 127.0.0.1 vroom -c "SELECT count(*) FROM pg_stat_activity;"` | well below `max_connections` |
+| Disk space | `df -h /opt /var/lib/postgresql /var/log` | < 80% used |
+| TLS certificate validity | `openssl s_client -connect vroom.example.com:443 -servername vroom.example.com </dev/null 2>/dev/null | openssl x509 -noout -enddate` | expiry > 30 days away |
+| Rate-limit keying | login attempt from a second client IP is not throttled | only the real culprit is throttled |
+| Audit trail | an `AuditLog` entry shows the real client IP (not 127.0.0.1) | real IP recorded |
+
+Notes:
+- **Celery is not part of this stack** (no async task queue today) — there are
+  no celery workers/beat to check. If a task queue is introduced, this checklist
+  grows: worker count, queue depth, beat schedule.
+- `/health/` (public) returns HTTP 200 only when DB and cache are reachable —
+  point the uptime monitor there.
+
+## 14. Continuous delivery (CD)
+
+A tag push (`v1.0.1`, `v1.1.0`, …) triggers `.github/workflows/cd.yml`, which
+SSHes to the server and runs `scripts/deploy.sh`, then probes `/health/`; on any
+failure it runs `scripts/rollback.sh`. CI (`.github/workflows/ci.yml`) gates
+every push/PR with ruff, bandit, pip-audit, migration-drift check,
+compilemessages, the test suite with coverage, collectstatic, `check --deploy`,
+and a Docker image build/push to GHCR.
+
+To enable it:
+
+1. Add the GitHub remote and push: `git remote add origin <repo-url>` then push
+   `main`/`release/1.0` and any `v*` tags.
+2. Configure the actions secrets: `DEPLOY_HOST`, `DEPLOY_USER`,
+   `DEPLOY_SSH_KEY` (private key authorized for the deploy user),
+   `APP_DIR` (`/opt/vroom/vroom`), `ENV_FILE` (`/opt/vroom/.env`).
+3. The server checkout must have an `origin` remote reachable for
+   `git fetch --tags origin` (deploy.sh §2). Set it up once:
+   `git remote add origin <repo-url>`.
+4. The deploy user needs passwordless sudo for `systemctl`. Either add them to
+   the systemd group scope or allowlist exactly this:
+
+   ```bash
+   # /etc/sudoers.d/vroom-deploy
+   vroom ALL=(root) NOPASSWD: /usr/bin/systemctl reload vroom, /usr/bin/systemctl restart vroom, /usr/bin/systemctl status vroom, /usr/bin/systemctl is-active vroom
+   ```
+
+5. Tag a release: `git tag -a v1.0.1 -m "..." && git push origin v1.0.1`. The
+   release playbook (`engineering/execution/playbooks/release-playbook.md`)
+   still governs *when* a tag is created; CD automates *shipping* it.
+
+Rollback behaviour: because `deploy.sh` records the previous ref in
+`.deploy-state` and `rollback.sh` re-checks it out, the CD failure path restores
+the last good ref automatically. Migrations are **not** reversed by rollback —
+an app-only regression is safe; a schema disaster goes through
+`scripts/restore.sh` (see §9).

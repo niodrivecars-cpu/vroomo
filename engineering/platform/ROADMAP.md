@@ -154,12 +154,28 @@ decision → merge loop; humans approve decisions, not diffs.
 - [ ] Automated evidence capture per change (confidence field set, not claimed)
 - [ ] Merge gated on evidence + Meta Review, not on human inspection alone
 
-## Phase 4 — Observability
+## Phase 4 — Deployment Automation & Observability
 
+Deployment stops being manual: a tag ships itself, the DR story is quantified,
+and production is observable.
+
+- [x] CI pipeline (`github/workflows/ci.yml`) — ruff, bandit, pip-audit,
+      migration-drift, tests with coverage, collectstatic, `check --deploy`
+- [x] Docker image (`Dockerfile` + build/push to GHCR in CI)
+- [x] CD pipeline (`github/workflows/cd.yml`) — tag `v*` → SSH →
+      `scripts/deploy.sh` → `/health/` → automatic `scripts/rollback.sh`
+- [x] Zero-downtime deploys — graceful reload (`ExecReload` HUP) in
+      `scripts/deploy.sh` + docs
+- [x] Disaster recovery objectives documented (RPO ≤ 15 min target / RTO
+      ≤ 30 min) with the current-reality gap called out in `docs/deployment.md`
+- [x] Post-deploy monitoring checklist in `docs/deployment.md`
+- [ ] Close RPO: Postgres WAL archiving + base backups (daily `backup.sh` = 24 h
+      loss window today)
 - [ ] Structured JSON logging + correlation IDs
 - [ ] Sentry error tracking
 - [ ] Metrics (Prometheus/Grafana) if volume justifies
 - [ ] SLA/SLO definitions and dashboards
+- [ ] Blue/Green deployment (when volume justifies two app slots)
 
 ## Phase 5 — Platform harden
 
