@@ -180,6 +180,12 @@ Production target moved from the VPS layout to **Hostinger Business shared**
 - [x] MySQL/MariaDB as production DB (`PyMySQL` replaces `psycopg2`) with
       PostgreSQL still supported by backup/restore scripts (scheme-branching)
 - [x] CI suite runs on MySQL 8 service container; local runs keep SQLite
+- [x] `PyMySQL>=1.2.0` pinned — 1.1.1 reports `version_info=(1,4,6)` and fails
+      Django's `mysqlclient >= 2.2.1` import gate; MySQL backend verified to load
+      (2026-08-07)
+- [x] Release docs: `docs/releases/v1.0-release-checklist.md`,
+      `docs/deployment/preflight-checklist.md`,
+      `docs/deployment/post-deploy-validation.md`
 - [x] `passenger_wsgi.py` entry point + `scripts/deploy-hostinger.sh`
       (git → venv → migrate → collectstatic → compilemessages → check --deploy →
       `tmp/restart.txt` → `/health/`)
@@ -189,6 +195,9 @@ Production target moved from the VPS layout to **Hostinger Business shared**
 - [x] Docs: `docs/deployment/hostinger-business.md` (canonical),
       `docs/platform-support.md` (Hostinger vs VPS matrix)
 - [x] ADR-0006 — Production deployment strategy — Hostinger shared hosting
+- [x] Local dev DB switched to MySQL 8 (`docker-compose.yml`, `setup.ps1`,
+      `README.md` no longer reference Postgres); explicit migration note added to
+      `knowledge/mysql/overview.md` so no new dev assumes a Postgres dependency
 - [ ] Verify hPanel actually exposes a **Python App** option (blocking first
       deploy); create the MySQL DB and app in hPanel
 - [ ] First real deploy via hPanel Git auto-deploy + `deploy-hostinger.sh`
