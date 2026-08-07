@@ -195,6 +195,10 @@ Production target moved from the VPS layout to **Hostinger Business shared**
 - [x] Docs: `docs/deployment/hostinger-business.md` (canonical),
       `docs/platform-support.md` (Hostinger vs VPS matrix)
 - [x] ADR-0006 — Production deployment strategy — Hostinger shared hosting
+- [x] ADR-0007 — GitHub as the single source of truth (PR + CI gated, tag-based
+      releases, no manual production deploys)
+- [x] GitHub onboarding docs: `docs/github/` (create repo, branch strategy,
+      CI, Hostinger auto-deploy, first release, troubleshooting)
 - [x] Local dev DB switched to MySQL 8 (`docker-compose.yml`, `setup.ps1`,
       `README.md` no longer reference Postgres); explicit migration note added to
       `knowledge/mysql/overview.md` so no new dev assumes a Postgres dependency

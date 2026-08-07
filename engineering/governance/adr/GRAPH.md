@@ -24,6 +24,7 @@ graph LR
   ADR3[ADR-0003 proxy-aware client IP] -->|affects| ADR4[ADR-0004]
   ADR4[ADR-0004 rate limiting] -->|requires| ADR3[ADR-0003]
   ADR1[ADR-0001 SQLite dev / Postgres prod] -->|superseded by| ADR6[ADR-0006 Hostinger deployment strategy]
+  ADR6[ADR-0006 Hostinger deployment strategy] -->|requires| ADR7[ADR-0007 GitHub as single source of truth]
 ```
 
 ## Decision list
@@ -36,7 +37,8 @@ graph LR
 | ADR-0003 | Proxy-aware client IP resolution | affects ADR-0004 | Rate limiting keys off the real client IP |
 | ADR-0004 | Rate limiting on auth and downloads | requires ADR-0003 | Needs trustworthy client IP to key limits |
 | ADR-0005 | SQLite write-lock retry for concurrent booking | affects ADR-0001 | Retry mitigates dev-mode write locks |
-| ADR-0006 | Production deployment strategy — Hostinger shared hosting | supersedes ADR-0001 | Passenger + MySQL + in-memory cache; CI mirrors MySQL |
+| ADR-0006 | Production deployment strategy — Hostinger shared hosting | supersedes ADR-0001; requires ADR-0007 | Passenger + MySQL + in-memory cache; CI mirrors MySQL |
+| ADR-0007 | GitHub as the single source of truth | required by ADR-0006 | PR + CI gated changes, tag-anchored releases |
 
 ## Rules
 1. No edge exists without a record; a decision not in the graph is unrecorded.

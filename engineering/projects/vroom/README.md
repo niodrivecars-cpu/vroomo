@@ -23,5 +23,5 @@ It is a multi-tenant fleet management SaaS (Arabic RTL, i18n ar/fr/en).
 ## Where things live
 - Source: `fleet/`, `config/`, `tests/`, `templates/`, `docs/`.
 - Platform (how we build): `engineering/platform/`.
-- Decisions: `engineering/governance/` (ADRs 0001–0005).
+- Decisions: `engineering/governance/` (ADRs 0001–0007).
 - Evidence: `engineering/evidence/`.

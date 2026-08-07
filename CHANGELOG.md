@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- GitHub onboarding guides — `docs/github/` (create repo, branch strategy, CI,
+  Hostinger auto-deploy, first release, troubleshooting).
+- ADR 0007 — GitHub as the single source of truth (PR + CI gated changes,
+  tag-anchored releases, no manual production deploys).
 - (planned) Sentry error tracking — documented, not yet configured.
 - (planned) Hourly backups to close the RPO window on shared hosting.
 
