@@ -159,6 +159,8 @@ decision → merge loop; humans approve decisions, not diffs.
 Deployment stops being manual: a tag ships itself, the DR story is quantified,
 and production is observable.
 
+### 4A. CI/CD foundation (VPS era)
+
 - [x] CI pipeline (`github/workflows/ci.yml`) — ruff, bandit, pip-audit,
       migration-drift, tests with coverage, collectstatic, `check --deploy`
 - [x] Docker image (`Dockerfile` + build/push to GHCR in CI)
@@ -169,10 +171,38 @@ and production is observable.
 - [x] Disaster recovery objectives documented (RPO ≤ 15 min target / RTO
       ≤ 30 min) with the current-reality gap called out in `docs/deployment.md`
 - [x] Post-deploy monitoring checklist in `docs/deployment.md`
-- [ ] Close RPO: Postgres WAL archiving + base backups (daily `backup.sh` = 24 h
-      loss window today)
-- [ ] Structured JSON logging + correlation IDs
-- [ ] Sentry error tracking
+
+### 4B. Hostinger production pivot (current)
+
+Production target moved from the VPS layout to **Hostinger Business shared**
+(Passenger + MySQL, no sudo/systemd/Docker/Redis). CI mirrors the new backend.
+
+- [x] MySQL/MariaDB as production DB (`PyMySQL` replaces `psycopg2`) with
+      PostgreSQL still supported by backup/restore scripts (scheme-branching)
+- [x] CI suite runs on MySQL 8 service container; local runs keep SQLite
+- [x] `passenger_wsgi.py` entry point + `scripts/deploy-hostinger.sh`
+      (git → venv → migrate → collectstatic → compilemessages → check --deploy →
+      `tmp/restart.txt` → `/health/`)
+- [x] `cd.yml` retired → preserved at `docs/legacy/cd-vps-reference.yml`;
+      Docker image build removed from CI (Dockerfile kept for local dev)
+- [x] `SECURE_SSL_REDIRECT` env-tunable for shared-hosting proxy variance
+- [x] Docs: `docs/deployment/hostinger-business.md` (canonical),
+      `docs/platform-support.md` (Hostinger vs VPS matrix)
+- [x] ADR-0006 — Production deployment strategy — Hostinger shared hosting
+- [ ] Verify hPanel actually exposes a **Python App** option (blocking first
+      deploy); create the MySQL DB and app in hPanel
+- [ ] First real deploy via hPanel Git auto-deploy + `deploy-hostinger.sh`
+- [ ] Enable `TRUSTED_PROXY_IPS` for the Hostinger proxy (rate limiting keys
+      off the real client IP) once the host's proxy IPs are confirmed
+- [ ] Decide whether MariaDB-vs-MySQL on Hostinger needs a pin (CI uses MySQL 8)
+
+### 4C. Observability & DR on shared hosting
+
+- [ ] Sentry error tracking (documented in `hostinger-business.md` §9; not yet
+      configured — add `sentry-sdk`, DSN setting, init)
+- [ ] Close RPO: hourly `backup.sh` + tested restores (Hostinger has no WAL
+      archiving; daily backup = 24 h loss window today)
+- [ ] Structured JSON logging + correlation IDs (Passenger log)
 - [ ] Metrics (Prometheus/Grafana) if volume justifies
 - [ ] SLA/SLO definitions and dashboards
 - [ ] Blue/Green deployment (when volume justifies two app slots)

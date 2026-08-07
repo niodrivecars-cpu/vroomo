@@ -13,22 +13,26 @@ jobs:
   test:
     runs-on: ubuntu-latest
     services:
-      postgres:
-        image: postgres:16
+      mysql:
+        image: mysql:8.0
         env:
-          POSTGRES_DB: vroom_ci
-          POSTGRES_USER: vroom
-          POSTGRES_PASSWORD: vroom
+          MYSQL_DATABASE: vroom_ci
+          MYSQL_USER: vroom
+          MYSQL_PASSWORD: vroom
+          MYSQL_ROOT_PASSWORD: root
         ports:
-          - 5432:5432
+          - 3306:3306
         options: >-
-          --health-cmd "pg_isready -U vroom -d vroom_ci"
+          --health-cmd "mysqladmin ping -h 127.0.0.1 -proot"
           --health-interval 10s
           --health-timeout 5s
-          --health-retries 5
+          --health-retries 10
     env:
       # All base settings have safe defaults, so tests run without a .env file.
       PYTHONDONTWRITEBYTECODE: "1"
+      # Mirror the production database (MySQL on Hostinger) — CI must run the
+      # suite on the same backend the app ships with.
+      DATABASE_URL: mysql://vroom:vroom@127.0.0.1:3306/vroom_ci
 
     steps:
       - uses: actions/checkout@v4
@@ -84,45 +88,5 @@ jobs:
           DEBUG: "False"
           ALLOWED_HOSTS: ci.example.com
           CSRF_TRUSTED_ORIGINS: https://ci.example.com
-          DATABASE_URL: postgres://vroom:vroom@localhost:5432/vroom_ci
+          DATABASE_URL: mysql://vroom:vroom@127.0.0.1:3306/vroom_ci
         run: python -m manage check --deploy
-
-  docker-build:
-    runs-on: ubuntu-latest
-    needs: test
-    permissions:
-      contents: read
-      packages: write
-    outputs:
-      image: ${{ steps.meta.outputs.tags }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: docker/setup-buildx-action@v3
-
-      - name: Image metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository }}
-          tags: |
-            type=ref,event=tag
-            type=sha,prefix=vroom-
-
-      - name: Log in to GHCR (push only)
-        if: github.event_name == 'push'
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: ${{ github.event_name == 'push' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max

@@ -1,6 +1,7 @@
 # ADR 0001: SQLite dev / Postgres production split
 
-- **Status:** Accepted
+- **Status:** Superseded by 0006 (production database changed to MySQL; the
+  SQLite-dev half still stands)
 - **Date:** 2026-07
 - **Author:** Vroom team
 

@@ -26,7 +26,11 @@ if errors:
 DEBUG = False
 
 # ---- HTTPS & Security Headers ----
-SECURE_SSL_REDIRECT = True
+# On a TLS-terminating reverse proxy (nginx / LiteSpeed) keep True. If the
+# host does not forward X-Forwarded-Proto (e.g. some shared-hosting Passenger
+# setups), set SECURE_SSL_REDIRECT=False to avoid a redirect loop and rely on
+# the host-level HTTPS redirect instead.
+SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=True, cast=bool)
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_HSTS_SECONDS = 31_536_000
@@ -41,7 +45,7 @@ SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SAMESITE = 'Lax'
 
-# ---- Proxy trust (nginx terminates TLS and forwards the original scheme) ----
+# ---- Proxy trust (a TLS-terminating proxy forwards the original scheme) ----
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # ---- Session expiry ----

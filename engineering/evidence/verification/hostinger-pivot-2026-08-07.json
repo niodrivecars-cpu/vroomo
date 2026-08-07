@@ -1,0 +1,31 @@
+{
+  "$schema": "../schema.json",
+  "id": "verification/hostinger-pivot-2026-08-07",
+  "type": "review",
+  "status": "pass",
+  "date": "2026-08-07",
+  "commit": "HEAD",
+  "confidence": "recorded",
+  "summary": "Hostinger production pivot review (Phase 4B): production database switched to MySQL via PyMySQL, CI now runs the suite on a MySQL 8 service container (mirroring production), the app gains a Passenger entry point and a shared-hosting deploy script, the VPS CD workflow is retired to docs/legacy/, and docs/platform-support.md + docs/deployment/hostinger-business.md document the target. Supersedes the deployment-automation review (VPS/Postgres/nginx era).",
+  "checks": [
+    { "name": "database-driver", "result": "pass", "detail": "requirements.txt: psycopg2-binary removed; PyMySQL==1.1.1 + cryptography==45.0.4 added. config/__init__.py calls pymysql.install_as_MySQLdb(). base.py fallback builds a mysql:// URL. PostgreSQL still handled by backup/restore via scheme branching." },
+    { "name": "ci-mirrors-production", "result": "pass", "detail": "ci.yml: postgres service replaced by mysql:8.0; job-level DATABASE_URL=mysql://...; test_settings.py uses DATABASE_URL when set, SQLite in-memory locally; check --deploy runs against MySQL URL." },
+    { "name": "cd-retired", "result": "pass", "detail": "cd.yml moved to docs/legacy/cd-vps-reference.yml (git mv, preserved). docker-build job removed from ci.yml. Dockerfile retained for local dev only." },
+    { "name": "shared-hosting-deploy", "result": "pass", "detail": "passenger_wsgi.py at repo root; scripts/deploy-hostinger.sh (no sudo/systemd/Docker): git checkout -> venv pip install -> migrate -> collectstatic -> compilemessages -> check --deploy -> touch tmp/restart.txt -> https health probe. Scripts pass bash -n." },
+    { "name": "https-and-proxy", "result": "pass", "detail": "production.py: SECURE_SSL_REDIRECT env-tunable (default True) for shared-hosting proxy variance; .env.production.example documents empty TRUSTED_PROXY_IPS (REMOTE_ADDR fallback) on shared hosting." },
+    { "name": "docs", "result": "pass", "detail": "docs/deployment/hostinger-business.md (canonical guide incl. monitoring + Sentry documented-not-configured); docs/platform-support.md (feature matrix Hostinger vs VPS); docs/deployment.md pointer at top marks the VPS layout as reference." },
+    { "name": "governance", "result": "pass", "detail": "ADR-0006 (production deployment strategy) accepted; ADR-0001 marked superseded (Postgres-prod half); README table + GRAPH updated. ROADMAP Phase 4 split into 4A/4B/4C with 4B marked current." },
+    { "name": "validation", "result": "pass", "detail": "workflow YAML valid; bash -n on deploy-hostinger.sh, backup.sh, restore.sh; local test suite passes on SQLite via config.test_settings; evidence JSON valid. MySQL CI run requires a push to GitHub Actions to execute." }
+  ],
+  "artifacts": [
+    { "path": ".github/workflows/ci.yml", "kind": "report" },
+    { "path": "docs/legacy/cd-vps-reference.yml", "kind": "report" },
+    { "path": "passenger_wsgi.py", "kind": "report" },
+    { "path": "scripts/deploy-hostinger.sh", "kind": "report" },
+    { "path": "docs/platform-support.md", "kind": "report" },
+    { "path": "docs/deployment/hostinger-business.md", "kind": "report" },
+    { "path": "engineering/governance/adr/adr-0006-production-deployment-strategy.md", "kind": "report" },
+    { "path": "engineering/platform/ROADMAP.md", "kind": "report" }
+  ],
+  "notes": "Blockers before first real deploy: (1) confirm hPanel actually exposes a Python App option on the Business plan (manual verification), (2) create the MySQL DB and Python App in hPanel, (3) push to origin so GitHub Actions executes the MySQL CI run (no remote configured yet). Sentry remains documented-only (Phase 4C)."
+}

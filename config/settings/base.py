@@ -73,7 +73,7 @@ if DATABASE_URL:
 else:
     DATABASES = {
         'default': dict(dj_database_url.parse(
-            f"postgres://{config('DB_USER')}:{config('DB_PASSWORD')}@{config('DB_HOST')}:{config('DB_PORT')}/{config('DB_NAME')}",
+            f"mysql://{config('DB_USER')}:{config('DB_PASSWORD')}@{config('DB_HOST')}:{config('DB_PORT')}/{config('DB_NAME')}",
             conn_max_age=600,
             conn_health_checks=True,
         )),

@@ -1,5 +1,12 @@
 # Vroom — Production Deployment Guide
 
+> **Production reference:** the app now ships on **Hostinger Business shared**
+> hosting. See [`docs/deployment/hostinger-business.md`](deployment/hostinger-business.md)
+> for the active deployment path (MySQL, Passenger, no Docker in CI). This page
+> documents the **VPS layout** (Ubuntu + PostgreSQL + Redis + gunicorn + nginx)
+> kept as an alternative/reference, and the platform support matrix lives in
+> [`docs/platform-support.md`](platform-support.md).
+
 Targets Release 1.0 RC1. This guide covers a single-server deployment on
 Ubuntu 24.04 LTS with PostgreSQL 16+, Redis 7+, Gunicorn, and nginx as a
 TLS-terminating reverse proxy.
@@ -343,12 +350,21 @@ Notes:
 
 ## 14. Continuous delivery (CD)
 
+> **Status:** the GitHub Actions CD workflow (`cd.yml`) was retired when the
+> production target moved to Hostinger shared hosting. It is preserved as a VPS
+> reference at `docs/legacy/cd-vps-reference.yml` (tag `v*` → SSH →
+> `scripts/deploy.sh` → `/health/` → `scripts/rollback.sh` on failure). The
+> Hostinger path uses hPanel Git auto-deploy + `scripts/deploy-hostinger.sh`
+> instead (see `docs/deployment/hostinger-business.md`).
+
+The VPS CD layout below documents the historical/alternative path:
+
 A tag push (`v1.0.1`, `v1.1.0`, …) triggers `.github/workflows/cd.yml`, which
 SSHes to the server and runs `scripts/deploy.sh`, then probes `/health/`; on any
 failure it runs `scripts/rollback.sh`. CI (`.github/workflows/ci.yml`) gates
 every push/PR with ruff, bandit, pip-audit, migration-drift check,
-compilemessages, the test suite with coverage, collectstatic, `check --deploy`,
-and a Docker image build/push to GHCR.
+compilemessages, the test suite with coverage (against **MySQL**), collectstatic,
+and `check --deploy`.
 
 To enable it:
 

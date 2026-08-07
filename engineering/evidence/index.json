@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-02",
+  "generated": "2026-08-07",
   "schema": "engineering/evidence/schema.json",
   "entries": [
     {
@@ -89,9 +89,17 @@
     {
       "id": "verification/deployment-automation-2026-08-06",
       "type": "review",
-      "status": "pass",
+      "status": "superseded",
       "commit": "e2e8d85",
-      "date": "2026-08-06"
+      "date": "2026-08-06",
+      "superseded_by": "verification/hostinger-pivot-2026-08-07"
+    },
+    {
+      "id": "verification/hostinger-pivot-2026-08-07",
+      "type": "review",
+      "status": "pass",
+      "commit": "HEAD",
+      "date": "2026-08-07"
     },
     {
       "id": "traceability/vroom-rc1",
