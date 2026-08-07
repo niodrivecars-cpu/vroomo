@@ -1,12 +1,17 @@
 # Hostinger Knowledge
 
-Deployment environment specifics for Vroom's VPS.
+Deployment environment specifics for Vroom.
 
 ## Layout
-- nginx on `127.0.0.1` proxying to gunicorn (same host). `TRUSTED_PROXY_IPS=127.0.0.1`
-  must be set so client IPs resolve correctly (ADR 0003).
-- Python 3 + venv; app served by gunicorn; static via collectstatic.
-- Postgres 16 (docker compose or host install).
+- Hostinger **Business shared hosting** — the app runs as a Python App via
+  Passenger (hPanel → Websites → Manage → Python App). The VPS layout is kept as
+  a historical alternative (`docs/deployment.md`).
+- Passenger serves the app from `passenger_wsgi.py`; static via collectstatic.
+- MySQL/MariaDB created in hPanel (Databases → MySQL Databases); the app
+  connects via `DATABASE_URL=mysql://...` (PyMySQL shim, see
+  `knowledge/mysql/overview.md`). Postgres is no longer a production dependency
+  (ADR 0006).
+- No Redis on shared hosting: `CACHE_URL` stays empty (in-memory cache).
 
 ## Operations
 - Deploy: `scripts/deploy.sh`; rollback: `scripts/rollback.sh`.

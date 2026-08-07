@@ -23,7 +23,7 @@ succeed — this is the load proof for the exclusivity guard (ADR 0005).
 ## Known dev artifacts
 - 2/1 residual check failures in RC1 runs were the SQLite write-lock artifact
   (HTTP 200, no row persisted), not application failures; error thresholds stayed
-  0. Postgres never hits this path.
+  0. MySQL (production) never hits this path.
 - Under `ATTACK=1`, download VUs can collide on one user and trip the 20/h
   download limit — `authDownloads` iterations are capped (9) to stay under it.
 

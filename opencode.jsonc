@@ -8,12 +8,13 @@
 
   "mcp": {
     "postgres": {
-      // Postgres MCP Pro (crystaldba). Needs `uv` installed and the Docker
-      // postgres:16 service up (docker compose up -d). DATABASE_URI is
-      // interpolated from the .env project values.
+      // Legacy: Postgres MCP (crystaldba). The production and dev database is
+      // now MySQL 8 (ADR 0006, 2026-08-07); the postgres:16 Docker service was
+      // replaced by mysql:8.0, so this server has nothing to connect to.
+      // Kept disabled until a MySQL inspection MCP is configured.
       "type": "local",
       "command": ["uvx", "postgres-mcp", "--access-mode=unrestricted"],
-      "enabled": true,
+      "enabled": false,
       "environment": {
         "DATABASE_URI": "postgresql://vroomo:vroomo@localhost:5432/vroomo"
       }

@@ -7,7 +7,7 @@ Highest number is the most recent. Superseded records stay with a
 
 | # | Title | Status | Date |
 |---|---|---|---|
-| 0001 | SQLite dev / Postgres production split | Accepted | 2026-07 |
+| 0001 | SQLite dev / Postgres production split | Superseded by 0006 | 2026-07 |
 | 0002 | Private document downloads via signed, expiry-gated URLs | Accepted | 2026-07 |
 | 0003 | Proxy-aware client IP resolution | Accepted | 2026-07 |
 | 0004 | Rate limiting on auth and downloads | Accepted | 2026-07 |

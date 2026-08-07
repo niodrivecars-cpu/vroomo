@@ -16,7 +16,7 @@ security review before merge.
 ## 3. Concurrency claims must be proven
 If code claims to be safe under concurrency (exclusivity, rate limits, unique
 constraints), a test must prove it under load. Assumptions here are where bugs
-hide (SQLite ignores `select_for_update`; Postgres is the production truth).
+hide (SQLite ignores `select_for_update`; MySQL is the production truth).
 
 ## 4. Proof before release
 A release is backed by evidence: static analysis, security scans, tests, and

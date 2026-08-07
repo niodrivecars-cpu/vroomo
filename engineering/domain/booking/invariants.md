@@ -13,7 +13,7 @@ Invariants hold at all times. Each maps to a reference test (`test-matrix.md`).
 
 ## Notes
 - B1 is the load-critical invariant. On SQLite it is proven via the
-  `withSqliteRetry` artifact handling; on Postgres, `select_for_update` is the
-  production-grade guard (ADR 0005).
+  `withSqliteRetry` artifact handling; on MySQL/InnoDB (production and CI),
+  `select_for_update` is the production-grade guard (ADR 0005).
 - B2 is the isolation invariant — its failure is a security incident, tested
   both unit-level and under load (`tenant_isolation_violation == 0`).

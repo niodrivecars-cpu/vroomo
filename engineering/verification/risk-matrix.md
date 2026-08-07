@@ -19,12 +19,12 @@ stage.
 ## Known Vroom risks (at RC1)
 | Risk | Impact | Likelihood | Cell | Decision |
 |---|---|---|---|---|
-| SQLite dev artifact masks concurrency behavior | High | Possible | Review | Mitigated: ADR 0005 retry + Postgres validation plan |
+| SQLite dev artifact masks concurrency behavior | High | Possible | Review | Mitigated: ADR 0005 retry + MySQL validation in CI |
 | Missing per-company uniqueness (plates/CINs) | Medium | Unlikely | Track | Tracked in Business Rules Review |
 | No production observability yet | High | Unlikely | Track | Phase 4 (Sentry/metrics) |
 | Business rules not yet fully reference-tested | High | Possible | Review | Phase 2 (Business Rules Review) |
 | Full CSP deferred (Report-Only) | Medium | Unlikely | Track | Roadmap |
-| No production load data on Postgres | Medium | Possible | Review | Pilot phase measurement |
+| No production load data on MySQL | Medium | Possible | Review | Pilot phase measurement |
 
 ## Acceptance criteria
 A release stage is "accepted" when no cell is **Block** for that stage, and all

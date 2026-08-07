@@ -16,7 +16,7 @@ Bootstrap RTL UI.
 
 ## When NOT to use
 - Server-side logic, business rules, or DB behavior — that's the Django test
-  suite and postgres MCP.
+  suite (and the MySQL dev DB).
 - Static code questions — read the repo.
 - Full load testing — that's k6, not the browser.
 

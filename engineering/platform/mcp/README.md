@@ -8,7 +8,7 @@ call order, common mistakes, and examples.
 
 | Server | Purpose | When to use |
 |---|---|---|
-| `postgres` | Live database inspection via postgres-mcp | Schema/query/debugging against the running DB |
+| `postgres` | **Legacy/disabled** — DB is now MySQL 8 (ADR 0006) | Not used; see `postgres.md` |
 | `playwright` | Browser automation for E2E/visual verification | RTL UI, form flows, accessibility checks |
 
 ## Not yet configured (planned)
@@ -26,7 +26,9 @@ call order, common mistakes, and examples.
    browser behavior — yes. Design judgment — that belongs to the engineer.
 2. **Check the resource first.** If a question can be answered from the repo,
    read the repo; MCP is for what the repo cannot tell you.
-3. **Call order for a DB-dependent change:** context7 (library docs) → postgres
-   (schema) → test-writer (tests) → django-verifier (gate).
-4. **Never assume an MCP is up.** Postgres MCP needs Docker + the DB running;
-   playwright needs `npx` + a browser. Verify before relying on it.
+3. **Call order for a DB-dependent change:** context7 (library docs) → MySQL
+   inspection (once an MCP is configured) → test-writer (tests) →
+   django-verifier (gate).
+4. **Never assume an MCP is up.** An inspection MCP needs the DB running (MySQL
+   dev container via `docker compose up -d`); playwright needs `npx` + a browser.
+   Verify before relying on it.

@@ -18,7 +18,7 @@ cp .env.example .env
 # 2. تشغيل الإعداد الكامل
 .\setup.ps1
 # أو خطوة بخطوة:
-.\setup.ps1 db       # PostgreSQL عبر Docker
+.\setup.ps1 db       # MySQL 8 عبر Docker
 .\setup.ps1 migrate  # ترحيل قاعدة البيانات
 .\setup.ps1 superuser# إنشاء مشرف
 .\setup.ps1 run      # تشغيل الخادم
@@ -53,10 +53,10 @@ python manage.py runserver
 | `SECRET_KEY` | مفتاح التشفير (غيّره للإنتاج) |
 | `DEBUG` | `True` للتطوير، `False` للإنتاج |
 | `DB_NAME` | اسم قاعدة البيانات |
-| `DB_USER` | مستخدم PostgreSQL |
-| `DB_PASSWORD` | كلمة مرور PostgreSQL |
-| `DB_HOST` | مضيف PostgreSQL (`localhost`) |
-| `DB_PORT` | منفذ PostgreSQL (`5432`) |
+| `DB_USER` | مستخدم MySQL |
+| `DB_PASSWORD` | كلمة مرور MySQL |
+| `DB_HOST` | مضيف MySQL (`localhost`) |
+| `DB_PORT` | منفذ MySQL (`3306`) |
 | `ALLOWED_HOSTS` | أسماء النطاقات المسموحة |
 | `ADMIN_EMAIL` | بريد المدير للتنبيهات |
 | `EMAIL_HOST_USER` | بريد Gmail للإرسال |

@@ -4,7 +4,8 @@ How this platform proves correctness.
 
 ## What it is
 A layered testing strategy: unit → integration → security → load, each with its
-own evidence. Tests run fast on SQLite and truthfully on Postgres.
+own evidence. Tests run fast on SQLite and truthfully on MySQL (CI runs the
+suite against MySQL 8, mirroring production — see `docs/platform-support.md`).
 
 ## How it fits
 - 278 tests in `fleet/tests/` covering models, views, rate limits, client IP,

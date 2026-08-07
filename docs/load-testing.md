@@ -168,7 +168,7 @@ scripts handle this explicitly:
   `invalid-feedback` error block (rendered by django-bootstrap5's
   `field_errors.html`), so it is never mistaken for a lock artifact.
 - This is a test-environment accommodation: `database is locked` cannot happen
-  on PostgreSQL, which is why the retry is scoped to the scripts, not the app.
+  on MySQL/InnoDB, which is why the retry is scoped to the scripts, not the app.
 
 ## Post-run verification (audit trail)
 
@@ -223,7 +223,7 @@ expose this.
 
 **How the app guarantees exclusivity.** Since the RC1 gate, `booking_create`
 (and `booking_edit`) wrap the check-and-insert in `transaction.atomic()` and
-lock the vehicle row with `select_for_update()`. On PostgreSQL (production)
+lock the vehicle row with `select_for_update()`. On MySQL/InnoDB (production)
 this serializes concurrent booking attempts for the same vehicle: the second
 request blocks on the row lock, then re-runs the overlap SELECT and sees the
 winner, so it renders the conflict form instead of double-booking.
@@ -235,7 +235,7 @@ a request that would lose the race either re-checks after the winner commits
 which the view catches and degrades to a plain form re-render (200). Either way
 it does not become a second confirmed booking, so the gate's "exactly one
 winner" assertion holds on SQLite too — but the *serialization* itself is only
-verifiable on PostgreSQL. Unit tests
+verifiable on MySQL (the CI suite runs against MySQL 8). Unit tests
 (`fleet/tests/test_views.py`) assert the lock is acquired on both the create
 and edit paths.
 
@@ -254,7 +254,7 @@ overlapping confirmed bookings. That includes:
 - `count == 0` → no request won, so the race never reached the view (e.g. a
   request was dropped before the INSERT, a session/login failure, or the
   window collided with another booking).
-- `count > 1` → two overlapping bookings were committed. On PostgreSQL this
+- `count > 1` → two overlapping bookings were committed. On MySQL this
   means the `select_for_update` guard regressed (or the lock was removed); on
   SQLite it can only mean the overlap SELECT itself regressed, since the lock
   is a no-op there.

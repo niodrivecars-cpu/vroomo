@@ -20,7 +20,8 @@ topic/
 | Topic | Scope |
 |---|---|
 | `django/` | Framework conventions, settings split, middleware, ORM |
-| `postgres/` | Production DB truth, concurrency, migrations |
+| `mysql/` | Production DB truth, concurrency, migrations (since 2026-08, ADR 0006) |
+| `postgres/` | Legacy reference — the VPS-era production DB; superseded by `mysql/` |
 | `redis/` | Caching (planned) |
 | `security/` | Threat model, headers, rate limiting, audit |
 | `performance/` | What makes it slow, what to measure |

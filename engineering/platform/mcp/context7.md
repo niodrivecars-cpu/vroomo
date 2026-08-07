@@ -1,7 +1,7 @@
 # context7 MCP
 
 Live, up-to-date library documentation for any framework/SDK (React, Django,
-Postgres, k6, ...).
+MySQL, k6, ...).
 
 ## When to use
 - API syntax, configuration, version migration, setup, debugging a library issue.

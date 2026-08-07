@@ -6,7 +6,7 @@ ships inside the product; it governs how the product is built and proven.
 ## The five concerns
 
 1. **Knowledge** (`knowledge/`) — what we know. A reference library written once,
-   reused everywhere. Organized by technology (django, postgres) and by domain
+   reused everywhere. Organized by technology (django, mysql) and by domain
    (fleet, booking). Each topic: `overview`, `pitfalls`, `best-practices`,
    `references`.
 
@@ -36,7 +36,7 @@ patterns. This keeps the platform reusable: adding Nio later means adding
 
 ## Tooling integration
 
-- `opencode.jsonc` — MCP servers (postgres, playwright) and sub-agents.
+- `opencode.jsonc` — MCP servers (postgres now disabled — DB is MySQL; playwright) and sub-agents.
 - `.opencode/agent/*` — django-verifier, security-reviewer, test-writer,
   business-rule-review, booking-domain-review.
 - `.github/workflows/ci.yml` — CI gate for every commit.

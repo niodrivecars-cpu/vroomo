@@ -1,9 +1,10 @@
 # Backup / Restore Runbook
 
-Database and file continuity on the VPS.
+Database and file continuity on the host (MySQL/MariaDB on Hostinger shared).
 
 ## Backup (`scripts/backup.sh`)
-- Postgres dump + media files.
+- MySQL dump + media files (`mysqldump`; the script branches on the
+  `DATABASE_URL` scheme — `pg_dump` only as a legacy path).
 - Take before any migration or deploy.
 - Retain per a policy (start with daily + pre-deploy).
 

@@ -12,7 +12,7 @@ It is a multi-tenant fleet management SaaS (Arabic RTL, i18n ar/fr/en).
   (Phase 3) → Push/Merge + v1.0.0 + Pilot. See `engineering/platform/ROADMAP.md`.
 
 ## How to work on Vroom
-1. Read `engineering/knowledge/` for Django/Postgres/security/performance/test
+1. Read `engineering/knowledge/` for Django/MySQL/security/performance/test
    context and the business knowledge (`knowledge/business/`).
 2. Check `engineering/domain/` for business rules and invariants before touching
    `fleet/models.py`.

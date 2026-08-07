@@ -175,3 +175,31 @@ Until then, errors are visible in the Passenger log and via the email
   `docs/deployment.md` §11).
 - **RPO:** daily backup ≈ up to 24 h of loss (Hostinger shared has no WAL
   archiving). Acceptable for launch; document the RPO in the DR table.
+
+## 11. MySQL compatibility — explicit declaration
+
+> **This project no longer depends on PostgreSQL.** The production database is
+> MySQL/MariaDB (ADR 0006, 2026-08-07). State it here so no new developer
+> assumes the old VPS/Postgres stack.
+
+Verified against `fleet/models.py`, every migration in `fleet/migrations/`, and
+all query usage:
+
+- **No Postgres-only schema features:** no `JSONField`/`JSONB`, `ArrayField`,
+  `HStoreField`, `GinIndex`/`GIST`, `Unaccent`, `CheckConstraint`,
+  `UniqueConstraint`, `db_table`, or custom indexes — only portable field types
+  (`BigAutoField`, `CharField`, `IntegerField`, `DecimalField`, `DateField`,
+  `DateTimeField`, `BooleanField`, `TextField`, `ForeignKey`, `OneToOneField`).
+- **No raw SQL / `connection.cursor()`** — all data access goes through the ORM
+  with portable lookups and aggregates.
+- **Booking exclusivity** (`select_for_update` in `fleet/views.py`) is supported
+  on MySQL/InnoDB; the same one-booking-per-vehicle-window rule holds and is
+  covered by the CI suite (MySQL 8) and the preflight check.
+- **Money columns** are `DecimalField` → MySQL `DECIMAL(10,2)` — safe for
+  currency math.
+- **Driver pin:** `requirements.txt` pins `PyMySQL>=1.2.0`. Do not downgrade to
+  1.1.1 — it reports `version_info=(1,4,6)`, which fails Django's
+  `mysqlclient >= 2.2.1` import gate, so the app cannot start against MySQL.
+
+If a future change introduces a Postgres-only feature, it must be flagged in
+review against this section and `docs/platform-support.md`.

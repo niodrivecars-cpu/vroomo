@@ -3,12 +3,12 @@ param(
 )
 
 function Start-Database {
-    Write-Host "Starting PostgreSQL via Docker..." -ForegroundColor Cyan
+    Write-Host "Starting MySQL 8 via Docker..." -ForegroundColor Cyan
     docker compose up -d
     if ($?) {
-        Write-Host "PostgreSQL is running on port 5432" -ForegroundColor Green
+        Write-Host "MySQL is running on port 3306" -ForegroundColor Green
     } else {
-        Write-Host "Failed to start PostgreSQL. Is Docker running?" -ForegroundColor Red
+        Write-Host "Failed to start MySQL. Is Docker running?" -ForegroundColor Red
         exit 1
     }
 }

@@ -31,8 +31,22 @@ kept as a reference path.
 
 ## Notes
 
+> **Migration note (2026-08-07): PostgreSQL → MySQL is complete.** The project
+> **no longer depends on PostgreSQL**. Verified across `fleet/models.py`, all
+> migrations, and query usage: no `JSONField`/`JSONB`, `ArrayField`,
+> `HStoreField`, `GinIndex`/`GIST`, `Unaccent`, raw SQL, `CheckConstraint`,
+> `UniqueConstraint`, or custom indexes — only portable field types and ORM
+> queries. Booking exclusivity (`select_for_update` in `fleet/views.py`) works
+> on MySQL/InnoDB and is proven in CI (MySQL 8). Local dev and CI mirror this:
+> `docker-compose.yml`, `setup.ps1`, and `README.md` use MySQL, and the full
+> history is in `engineering/knowledge/mysql/overview.md` + ADR 0006.
+
 - **DB driver:** `psycopg2-binary` was replaced by `PyMySQL` as the single
-  driver. PostgreSQL is still supported at the settings level and the
+  driver. **Pin `PyMySQL>=1.2.0`** — it reports a mysqlclient-compatible
+  `version_info` (`(2,2,8)`) that satisfies Django's `mysqlclient >= 2.2.1`
+  import gate. `PyMySQL==1.1.1` (reports `(1,4,6)`) makes the MySQL backend
+  fail at import time with `ImproperlyConfigured`, so the CI MySQL run must use
+  the pin above. PostgreSQL is still supported at the settings level and the
   backup/restore scripts branch on the `DATABASE_URL` scheme, but MySQL is the
   tested production path.
 - **CI parity:** the CI suite runs against MySQL 8 in a GitHub Actions service

@@ -1,7 +1,7 @@
 # Performance — Pitfalls
 
-- **SQLite vs Postgres latency** — dev numbers (SQLite) understate Postgres
-  network/connection cost; benchmark on Postgres for real conclusions.
+- **SQLite vs MySQL latency** — dev numbers (SQLite) understate MySQL
+  network/connection cost; benchmark on MySQL for real conclusions.
 - **Indexing tenant scoping columns** — a `company_id` filter without an index
   degrades with tenant data growth.
 - **Loading entire documents into memory** — large signed downloads stream; don't

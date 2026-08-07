@@ -6,7 +6,8 @@ Rules that consistently worked on Vroom.
 - Split settings: base / test / production; keep env secrets out of code.
 - Test settings: `:memory:` SQLite, MD5 password hashers (fast tests),
   `InMemoryStorage` (no disk) — see `config/settings/test.py`.
-- Production: `DEBUG=False`, `SECURE_*` cookies, security headers, Postgres URL.
+- Production: `DEBUG=False`, `SECURE_*` cookies, security headers, MySQL URL
+  (`DATABASE_URL=mysql://...`, PyMySQL shim in `config/__init__.py`).
 
 ## Structure
 - Keep views thin; push cross-cutting concerns into helpers
