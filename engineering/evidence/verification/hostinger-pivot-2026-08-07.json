@@ -4,7 +4,7 @@
   "type": "review",
   "status": "pass",
   "date": "2026-08-07",
-  "commit": "HEAD",
+  "commit": "6a853bf",
   "confidence": "recorded",
   "summary": "Hostinger production pivot review (Phase 4B): production database switched to MySQL via PyMySQL, CI now runs the suite on a MySQL 8 service container (mirroring production), the app gains a Passenger entry point and a shared-hosting deploy script, the VPS CD workflow is retired to docs/legacy/, and docs/platform-support.md + docs/deployment/hostinger-business.md document the target. Supersedes the deployment-automation review (VPS/Postgres/nginx era).",
   "checks": [
