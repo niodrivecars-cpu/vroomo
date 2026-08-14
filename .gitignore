@@ -12,8 +12,14 @@ build/
 .env
 .env.production
 .venv/
+.venv*/
 venv/
 env/
+
+# Coverage
+.coverage
+coverage.xml
+htmlcov/
 
 # Deploy state
 .deploy-state
