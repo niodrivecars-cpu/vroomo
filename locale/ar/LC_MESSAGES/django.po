@@ -854,3 +854,75 @@ msgstr "نسخ الرابط"
 
 msgid "Temporary download link"
 msgstr "رابط تحميل مؤقت"
+
+msgid "Fleet"
+msgstr "الأسطول"
+
+msgid "Main navigation"
+msgstr "التنقل الرئيسي"
+
+msgid "Multi-tenant fleet & car rental management system"
+msgstr "نظام إدارة أسطول السيارات والإيجار متعدد المستأجرين"
+
+msgid "Overview"
+msgstr "نظرة عامة"
+
+msgid "Toggle navigation"
+msgstr "تبديل التنقل"
+
+msgid "Create your first booking to get started"
+msgstr "أنشئ حجزك الأول للبدء"
+
+msgid "No bookings yet"
+msgstr "لا توجد حجوزات بعد"
+
+msgid "All bookings are on schedule"
+msgstr "جميع الحجوزات في موعدها"
+
+msgid "All vehicles are in good shape"
+msgstr "جميع المركبات في حالة جيدة"
+
+msgid "days"
+msgstr "أيام"
+
+msgid "No documents expiring soon"
+msgstr "لا توجد مستندات تنتهي قريبًا"
+
+msgid "Inactive"
+msgstr "غير نشط"
+
+msgid "Total fines"
+msgstr "إجمالي الغرامات"
+
+msgid "Add drivers to link them to bookings"
+msgstr "أضف السائقين لربطهم بالحجوزات"
+
+msgid "No drivers yet"
+msgstr "لا يوجد سائقون بعد"
+
+msgid "Access Denied"
+msgstr "تم رفض الوصول"
+
+msgid "Maintenance history will appear here"
+msgstr "سجل الصيانة سيظهر هنا"
+
+msgid "First page"
+msgstr "الصفحة الأولى"
+
+msgid "Last page"
+msgstr "الصفحة الأخيرة"
+
+msgid "Next page"
+msgstr "الصفحة التالية"
+
+msgid "Previous page"
+msgstr "الصفحة السابقة"
+
+msgid "No vehicles yet"
+msgstr "لا توجد مركبات بعد"
+
+msgid "Start by adding your first vehicle to your fleet"
+msgstr "ابدأ بإضافة مركبتك الأولى إلى أسطولك"
+
+msgid "Your fleet has a clean record"
+msgstr "أسطولك بسجل نظيف"

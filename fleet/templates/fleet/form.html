@@ -1,13 +1,23 @@
 {% extends 'fleet/base.html' %}
 {% load i18n django_bootstrap5 %}
 
-{% block content %}
-<h2 class="mb-4">{{ title }}</h2>
+{% block page_title %}{{ title }}{% endblock %}
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {% bootstrap_form form %}
-    <button type="submit" class="btn btn-success">{% translate "Save" %}</button>
-    <a href="javascript:history.back()" class="btn btn-secondary">{% translate "Cancel" %}</a>
-</form>
+{% block content %}
+<div class="fade-up" style="max-width: 48rem;">
+    <h2 class="mb-4">{{ title }}</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary px-4">{% translate "Save" %}</button>
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary">{% translate "Cancel" %}</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

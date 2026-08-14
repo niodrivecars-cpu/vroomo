@@ -2,66 +2,94 @@
 {% load i18n %}
 {% load humanize vroom_extras %}
 
+{% block page_title %}{% translate "Violations" %}{% endblock %}
+
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0">{% translate "Violations" %}</h2>
-    <a href="{% url 'fleet:violation_create' %}" class="btn btn-success">{% translate "Add Violation" %}</a>
+<div class="d-flex justify-content-between align-items-center mb-4 fade-up">
+    <div>
+        <h2 class="mb-0">{% translate "Violations" %}</h2>
+        {% if violations %}
+        <span class="text-muted small">{{ violations.paginator.count }} {% translate "Violations" %}</span>
+        {% endif %}
+    </div>
+    <a href="{% url 'fleet:violation_create' %}" class="btn btn-primary">{% translate "Add Violation" %}</a>
 </div>
 
 {% if violations %}
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>{% translate "Vehicle" %}</th>
-            <th>{% translate "Driver" %}</th>
-            <th>{% translate "Type" %}</th>
-            <th>{% translate "Date" %}</th>
-            <th>{% translate "Fine" %}</th>
-            <th>{% translate "Total" %}</th>
-            <th>{% translate "Status" %}</th>
-            <th>{% translate "Actions" %}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for v in violations %}
-        <tr class="{% if v.is_overdue %}table-danger{% endif %}">
-            <td><span class="ltr">{{ v.vehicle.license_plate }}</span></td>
-            <td>
-                {% if v.driver %}
-                    {{ v.driver.first_name }} {{ v.driver.last_name }}
-                {% else %}
-                    <span class="text-danger fw-bold">{% translate "Not specified" %}</span>
-                {% endif %}
-            </td>
-            <td>{{ v.get_violation_type_display }}</td>
-            <td>{{ v.violation_date|date:"SHORT_DATETIME_FORMAT" }}</td>
-            <td>{{ v.fine_amount|currency:LANGUAGE_CODE }}</td>
-            <td>{{ v.total_due|currency:LANGUAGE_CODE }}</td>
-            <td>
-                {% if v.status == 'paid' %}
-                    <span class="badge bg-success">{{ v.get_status_display }}</span>
-                {% elif v.status == 'overdue' %}
-                    <span class="badge bg-danger">{{ v.get_status_display }}</span>
-                {% elif v.status == 'disputed' %}
-                    <span class="badge bg-warning">{{ v.get_status_display }}</span>
-                {% else %}
-                    <span class="badge bg-secondary">{{ v.get_status_display }}</span>
-                {% endif %}
-            </td>
-            <td>
-                <a href="{% url 'fleet:violation_edit' v.pk %}" class="btn btn-sm btn-outline-warning">{% translate "Edit" %}</a>
-                <form method="post" action="{% url 'fleet:violation_delete' v.pk %}" style="display:inline">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('{% translate "Confirm deletion?" %}')">{% translate "Delete" %}</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<p class="fw-bold">{% blocktranslate with total=total_fines|currency:LANGUAGE_CODE %}Total fines: {{ total }}{% endblocktranslate %}</p>
+<div class="table-responsive fade-up">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>{% translate "Vehicle" %}</th>
+                <th>{% translate "Driver" %}</th>
+                <th>{% translate "Type" %}</th>
+                <th>{% translate "Date" %}</th>
+                <th>{% translate "Fine" %}</th>
+                <th>{% translate "Total" %}</th>
+                <th>{% translate "Status" %}</th>
+                <th>{% translate "Actions" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for v in violations %}
+            <tr class="{% if v.is_overdue %}table-danger{% endif %}">
+                <td><span class="ltr font-monospace">{{ v.vehicle.license_plate }}</span></td>
+                <td>
+                    {% if v.driver %}
+                        {{ v.driver.first_name }} {{ v.driver.last_name }}
+                    {% else %}
+                        <span class="badge bg-secondary">{% translate "Not specified" %}</span>
+                    {% endif %}
+                </td>
+                <td>{{ v.get_violation_type_display }}</td>
+                <td>{{ v.violation_date|date:"SHORT_DATETIME_FORMAT" }}</td>
+                <td class="font-monospace">{{ v.fine_amount|currency:LANGUAGE_CODE }}</td>
+                <td class="font-monospace fw-medium">{{ v.total_due|currency:LANGUAGE_CODE }}</td>
+                <td>
+                    {% if v.status == 'paid' %}
+                        <span class="badge bg-success"><span class="status-dot" style="background: var(--accent);"></span>{{ v.get_status_display }}</span>
+                    {% elif v.status == 'overdue' %}
+                        <span class="badge bg-danger"><span class="status-dot" style="background: var(--danger);"></span>{{ v.get_status_display }}</span>
+                    {% elif v.status == 'disputed' %}
+                        <span class="badge bg-warning"><span class="status-dot" style="background: var(--warn);"></span>{{ v.get_status_display }}</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ v.get_status_display }}</span>
+                    {% endif %}
+                </td>
+                <td class="text-nowrap">
+                    <a href="{% url 'fleet:violation_edit' v.pk %}" class="btn btn-sm btn-outline-secondary">{% translate "Edit" %}</a>
+                    <form method="post" action="{% url 'fleet:violation_delete' v.pk %}" style="display:inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('{% translate "Confirm deletion?" %}')">{% translate "Delete" %}</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% if total_fines %}
+<div class="d-flex justify-content-end fade-up">
+    <div class="card stat-card stat-danger" style="min-width: 16rem;">
+        <div class="card-body d-flex align-items-center gap-3">
+            <div class="stat-icon mb-0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div>
+                <div class="stat-value" style="font-size: 1.5rem;">{{ total_fines|currency:LANGUAGE_CODE }}</div>
+                <div class="stat-label">{% translate "Total fines" %}</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% else %}
-<p class="text-muted">{% translate "No violations" %}</p>
+<div class="empty-state fade-up">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+    <h5>{% translate "No violations" %}</h5>
+    <p class="mb-3">{% translate "Your fleet has a clean record" %}</p>
+    <a href="{% url 'fleet:violation_create' %}" class="btn btn-primary">{% translate "Add Violation" %}</a>
+</div>
 {% endif %}
 {% include 'fleet/pagination.html' %}
 {% endblock %}

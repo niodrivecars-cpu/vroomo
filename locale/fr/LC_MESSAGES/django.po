@@ -860,3 +860,75 @@ msgstr "Copier le lien"
 
 msgid "Temporary download link"
 msgstr "Lien de téléchargement temporaire"
+
+msgid "Fleet"
+msgstr "Parc"
+
+msgid "Main navigation"
+msgstr "Navigation principale"
+
+msgid "Multi-tenant fleet & car rental management system"
+msgstr "Système de gestion de parc automobile et de location multi-locataires"
+
+msgid "Overview"
+msgstr "Aperçu"
+
+msgid "Toggle navigation"
+msgstr "Basculer la navigation"
+
+msgid "Create your first booking to get started"
+msgstr "Créez votre première réservation pour commencer"
+
+msgid "No bookings yet"
+msgstr "Aucune réservation pour le moment"
+
+msgid "All bookings are on schedule"
+msgstr "Toutes les réservations sont dans les délais"
+
+msgid "All vehicles are in good shape"
+msgstr "Tous les véhicules sont en bon état"
+
+msgid "days"
+msgstr "jours"
+
+msgid "No documents expiring soon"
+msgstr "Aucun document n'expire bientôt"
+
+msgid "Inactive"
+msgstr "Inactif"
+
+msgid "Total fines"
+msgstr "Total des amendes"
+
+msgid "Add drivers to link them to bookings"
+msgstr "Ajoutez des conducteurs pour les lier aux réservations"
+
+msgid "No drivers yet"
+msgstr "Aucun conducteur pour le moment"
+
+msgid "Access Denied"
+msgstr "Accès refusé"
+
+msgid "Maintenance history will appear here"
+msgstr "L'historique de maintenance apparaîtra ici"
+
+msgid "First page"
+msgstr "Première page"
+
+msgid "Last page"
+msgstr "Dernière page"
+
+msgid "Next page"
+msgstr "Page suivante"
+
+msgid "Previous page"
+msgstr "Page précédente"
+
+msgid "No vehicles yet"
+msgstr "Aucun véhicule pour le moment"
+
+msgid "Start by adding your first vehicle to your fleet"
+msgstr "Commencez par ajouter votre premier véhicule à votre parc"
+
+msgid "Your fleet has a clean record"
+msgstr "Votre parc a un dossier impeccable"

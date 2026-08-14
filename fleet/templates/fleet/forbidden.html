@@ -1,9 +1,14 @@
 {% extends 'fleet/base.html' %}
 {% load i18n %}
+{% block page_title %}{% translate "Access Denied" %}{% endblock %}
 {% block content %}
-<div class="text-center mt-5">
-    <h1 class="display-1 text-danger">403</h1>
-    <p class="lead">{{ message }}</p>
+<div class="empty-state fade-up" style="padding: 5rem 1.5rem;">
+    <div class="stat-icon mb-3 mx-auto" style="background: var(--danger-soft); color: var(--danger); width: 4rem; height: 4rem; display: grid; place-items: center; border-radius: var(--radius);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width: 2rem; height: 2rem;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </div>
+    <h1 class="display-6 fw-bold" style="color: var(--danger);">403</h1>
+    <h5 class="mb-2">{% translate "Access Denied" %}</h5>
+    <p class="mb-4">{{ message }}</p>
     <a href="{% url 'fleet:dashboard' %}" class="btn btn-primary">{% translate "Back to Dashboard" %}</a>
 </div>
 {% endblock %}

@@ -2,91 +2,119 @@
 {% load i18n %}
 {% load humanize vroom_extras %}
 
+{% block page_title %}{% translate "Booking Details" %}{% endblock %}
+
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0">{% translate "Booking Details" %}</h2>
-    <a href="{% url 'fleet:booking_edit' booking.pk %}" class="btn btn-warning">{% translate "Edit" %}</a>
+<div class="d-flex justify-content-between align-items-center mb-4 fade-up">
+    <div>
+        <h2 class="mb-0">{% translate "Booking Details" %}</h2>
+        {% if booking.vehicle %}
+        <span class="text-muted small">{{ booking.vehicle }}</span>
+        {% endif %}
+    </div>
+    <a href="{% url 'fleet:booking_edit' booking.pk %}" class="btn btn-outline-secondary">{% translate "Edit" %}</a>
 </div>
 
-<div class="card">
+<div class="card fade-up">
     <div class="card-body">
-        <div class="row mb-3">
+        <div class="row g-4 mb-4">
             <div class="col-md-6">
-                <strong>{% translate "Customer" %}:</strong> {{ booking.customer_name }}
-            </div>
-            <div class="col-md-6">
-                <strong>{% translate "Customer Phone" %}:</strong> {{ booking.customer_phone }}
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <strong>{% translate "Vehicle" %}:</strong> {{ booking.vehicle }}
+                <div class="text-muted small mb-1">{% translate "Customer" %}</div>
+                <div class="fw-medium">{{ booking.customer_name }}</div>
             </div>
             <div class="col-md-6">
-                <strong>{% translate "Driver" %}:</strong> {{ booking.driver }}
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <strong>{% translate "Pickup Date" %}:</strong> {{ booking.pickup_date|date:"SHORT_DATETIME_FORMAT" }}
+                <div class="text-muted small mb-1">{% translate "Customer Phone" %}</div>
+                <div class="fw-medium"><span class="ltr">{{ booking.customer_phone }}</span></div>
             </div>
             <div class="col-md-6">
-                <strong>{% translate "Expected Return" %}:</strong> {{ booking.expected_return|date:"SHORT_DATETIME_FORMAT" }}
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <strong>{% translate "Actual Return" %}:</strong>
-                {% if booking.actual_return %}
-                    {{ booking.actual_return|date:"SHORT_DATETIME_FORMAT" }}
-                {% else %}
-                    —
-                {% endif %}
+                <div class="text-muted small mb-1">{% translate "Vehicle" %}</div>
+                <div class="fw-medium">{{ booking.vehicle }}</div>
             </div>
             <div class="col-md-6">
-                <strong>{% translate "Status" %}:</strong>
-                {% if booking.status == 'confirmed' %}
-                    <span class="badge bg-secondary">{% translate "Confirmed" %}</span>
-                {% elif booking.status == 'rented' %}
-                    <span class="badge bg-primary">{% translate "Rented" %}</span>
-                {% elif booking.status == 'returned' %}
-                    <span class="badge bg-success">{% translate "Returned" %}</span>
-                {% elif booking.status == 'late' %}
-                    <span class="badge bg-danger">{% translate "Late" %}</span>
-                {% elif booking.status == 'cancelled' %}
-                    <span class="badge bg-dark">{% translate "Cancelled" %}</span>
-                {% endif %}
+                <div class="text-muted small mb-1">{% translate "Driver" %}</div>
+                <div class="fw-medium">{{ booking.driver|default:"—" }}</div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <strong>{% translate "Amount" %}:</strong> {{ booking.total_amount|currency:LANGUAGE_CODE }}
+            <div class="col-md-6">
+                <div class="text-muted small mb-1">{% translate "Pickup Date" %}</div>
+                <div class="fw-medium">{{ booking.pickup_date|date:"SHORT_DATETIME_FORMAT" }}</div>
             </div>
-            <div class="col-md-4">
-                <strong>{% translate "Deposit" %}:</strong> {{ booking.deposit|currency:LANGUAGE_CODE }}
+            <div class="col-md-6">
+                <div class="text-muted small mb-1">{% translate "Expected Return" %}</div>
+                <div class="fw-medium">{{ booking.expected_return|date:"SHORT_DATETIME_FORMAT" }}</div>
             </div>
-            <div class="col-md-4">
-                <strong>{% translate "Kilometers" %}:</strong> {{ booking.pickup_km|intcomma }} → {{ booking.return_km|default:"—" }}
+            <div class="col-md-6">
+                <div class="text-muted small mb-1">{% translate "Actual Return" %}</div>
+                <div class="fw-medium">
+                    {% if booking.actual_return %}
+                        {{ booking.actual_return|date:"SHORT_DATETIME_FORMAT" }}
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="text-muted small mb-1">{% translate "Status" %}</div>
+                <div>
+                    {% if booking.status == 'confirmed' %}
+                        <span class="badge bg-secondary">{% translate "Confirmed" %}</span>
+                    {% elif booking.status == 'rented' %}
+                        <span class="badge bg-primary"><span class="status-dot" style="background: var(--brand);"></span>{% translate "Rented" %}</span>
+                    {% elif booking.status == 'returned' %}
+                        <span class="badge bg-success"><span class="status-dot" style="background: var(--accent);"></span>{% translate "Returned" %}</span>
+                    {% elif booking.status == 'late' %}
+                        <span class="badge bg-danger"><span class="status-dot" style="background: var(--danger);"></span>{% translate "Late" %}</span>
+                    {% elif booking.status == 'cancelled' %}
+                        <span class="badge bg-secondary">{% translate "Cancelled" %}</span>
+                    {% endif %}
+                </div>
             </div>
         </div>
 
-        <hr>
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="card stat-card stat-brand" style="border: none; background: var(--surface-2);">
+                    <div class="card-body">
+                        <div class="stat-label mb-1">{% translate "Amount" %}</div>
+                        <div class="stat-value" style="font-size: 1.5rem;">{{ booking.total_amount|currency:LANGUAGE_CODE }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card stat-warn" style="border: none; background: var(--surface-2);">
+                    <div class="card-body">
+                        <div class="stat-label mb-1">{% translate "Deposit" %}</div>
+                        <div class="stat-value" style="font-size: 1.5rem;">{{ booking.deposit|currency:LANGUAGE_CODE }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card stat-accent" style="border: none; background: var(--surface-2);">
+                    <div class="card-body">
+                        <div class="stat-label mb-1">{% translate "Kilometers" %}</div>
+                        <div class="stat-value ltr font-monospace" style="font-size: 1.5rem;">{{ booking.pickup_km|intcomma }} → {{ booking.return_km|default:"—" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        {% if booking.status == 'confirmed' %}
-            <form method="post" action="{% url 'fleet:booking_pickup' booking.pk %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-success">{% translate "Record Pickup" %}</button>
-            </form>
-        {% elif booking.status == 'rented' %}
-            <form method="post" action="{% url 'fleet:booking_return' booking.pk %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-primary">{% translate "Record Return" %}</button>
-            </form>
-        {% elif booking.status == 'returned' %}
-            <p class="text-success fw-bold">{% translate "Returned" %} ✓</p>
-        {% endif %}
+        <hr class="my-4">
 
-        <a href="{% url 'fleet:booking_list' %}" class="btn btn-outline-secondary mt-3">{% translate "Back to list" %}</a>
+        <div class="d-flex flex-wrap gap-2">
+            {% if booking.status == 'confirmed' %}
+                <form method="post" action="{% url 'fleet:booking_pickup' booking.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">{% translate "Record Pickup" %}</button>
+                </form>
+            {% elif booking.status == 'rented' %}
+                <form method="post" action="{% url 'fleet:booking_return' booking.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">{% translate "Record Return" %}</button>
+                </form>
+            {% elif booking.status == 'returned' %}
+                <span class="badge bg-success" style="font-size: 1rem; padding: 0.6rem 1rem;">{% translate "Returned" %}</span>
+            {% endif %}
+            <a href="{% url 'fleet:booking_list' %}" class="btn btn-outline-secondary">{% translate "Back to list" %}</a>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -849,3 +849,75 @@ msgstr "Copy link"
 
 msgid "Temporary download link"
 msgstr "Temporary download link"
+
+msgid "Fleet"
+msgstr ""
+
+msgid "Main navigation"
+msgstr ""
+
+msgid "Multi-tenant fleet & car rental management system"
+msgstr ""
+
+msgid "Overview"
+msgstr ""
+
+msgid "Toggle navigation"
+msgstr ""
+
+msgid "Create your first booking to get started"
+msgstr ""
+
+msgid "No bookings yet"
+msgstr ""
+
+msgid "All bookings are on schedule"
+msgstr ""
+
+msgid "All vehicles are in good shape"
+msgstr ""
+
+msgid "days"
+msgstr ""
+
+msgid "No documents expiring soon"
+msgstr ""
+
+msgid "Inactive"
+msgstr ""
+
+msgid "Total fines"
+msgstr ""
+
+msgid "Add drivers to link them to bookings"
+msgstr ""
+
+msgid "No drivers yet"
+msgstr ""
+
+msgid "Access Denied"
+msgstr ""
+
+msgid "Maintenance history will appear here"
+msgstr ""
+
+msgid "First page"
+msgstr ""
+
+msgid "Last page"
+msgstr ""
+
+msgid "Next page"
+msgstr ""
+
+msgid "Previous page"
+msgstr ""
+
+msgid "No vehicles yet"
+msgstr ""
+
+msgid "Start by adding your first vehicle to your fleet"
+msgstr ""
+
+msgid "Your fleet has a clean record"
+msgstr ""

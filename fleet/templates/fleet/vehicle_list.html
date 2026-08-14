@@ -2,56 +2,70 @@
 {% load i18n %}
 {% load humanize vroom_extras %}
 
+{% block page_title %}{% translate "Vehicles" %}{% endblock %}
+
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0">{% translate "Vehicles" %}</h2>
-    <a href="{% url 'fleet:vehicle_create' %}" class="btn btn-success">{% translate "Add Vehicle" %}</a>
+<div class="d-flex justify-content-between align-items-center mb-4 fade-up">
+    <div>
+        <h2 class="mb-0">{% translate "Vehicles" %}</h2>
+        {% if vehicles %}
+        <span class="text-muted small">{{ vehicles.paginator.count }} {% translate "Vehicles" %}</span>
+        {% endif %}
+    </div>
+    <a href="{% url 'fleet:vehicle_create' %}" class="btn btn-primary">{% translate "Add Vehicle" %}</a>
 </div>
 
 {% if vehicles %}
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>{% translate "License Plate" %}</th>
-            <th>{% translate "Make" %}</th>
-            <th>{% translate "Model" %}</th>
-            <th>{% translate "Year" %}</th>
-            <th>{% translate "Status" %}</th>
-            <th>{% translate "Kilometers" %}</th>
-            <th>{% translate "Daily Rate" %}</th>
-            <th>{% translate "Actions" %}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for v in vehicles %}
-        <tr>
-            <td><span class="ltr">{{ v.license_plate }}</span></td>
-            <td>{{ v.make }}</td>
-            <td>{{ v.model }}</td>
-            <td>{{ v.year }}</td>
-            <td>
-                {% if v.status == 'available' %}
-                    <span class="badge bg-success">{% translate "Available" %}</span>
-                {% elif v.status == 'rented' %}
-                    <span class="badge bg-primary">{% translate "Rented" %}</span>
-                {% elif v.status == 'maintenance' %}
-                    <span class="badge bg-warning">{% translate "Maintenance" %}</span>
-                {% elif v.status == 'out_of_service' %}
-                    <span class="badge bg-danger">{% translate "Out of Service" %}</span>
-                {% endif %}
-            </td>
-            <td>{{ v.current_km|intcomma }}</td>
-            <td>{{ v.daily_rate|currency:LANGUAGE_CODE }}</td>
-            <td>
-                <a href="{% url 'fleet:vehicle_detail' v.pk %}" class="btn btn-sm btn-outline-primary">{% translate "View" %}</a>
-                <a href="{% url 'fleet:vehicle_edit' v.pk %}" class="btn btn-sm btn-outline-warning">{% translate "Edit" %}</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="table-responsive fade-up">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>{% translate "License Plate" %}</th>
+                <th>{% translate "Make" %}</th>
+                <th>{% translate "Model" %}</th>
+                <th>{% translate "Year" %}</th>
+                <th>{% translate "Status" %}</th>
+                <th>{% translate "Kilometers" %}</th>
+                <th>{% translate "Daily Rate" %}</th>
+                <th>{% translate "Actions" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for v in vehicles %}
+            <tr>
+                <td><span class="ltr font-monospace">{{ v.license_plate }}</span></td>
+                <td>{{ v.make }}</td>
+                <td>{{ v.model }}</td>
+                <td>{{ v.year }}</td>
+                <td>
+                    {% if v.status == 'available' %}
+                        <span class="badge bg-success"><span class="status-dot" style="background: var(--accent);"></span>{% translate "Available" %}</span>
+                    {% elif v.status == 'rented' %}
+                        <span class="badge bg-primary"><span class="status-dot" style="background: var(--brand);"></span>{% translate "Rented" %}</span>
+                    {% elif v.status == 'maintenance' %}
+                        <span class="badge bg-warning"><span class="status-dot" style="background: var(--warn);"></span>{% translate "Maintenance" %}</span>
+                    {% elif v.status == 'out_of_service' %}
+                        <span class="badge bg-danger"><span class="status-dot" style="background: var(--danger);"></span>{% translate "Out of Service" %}</span>
+                    {% endif %}
+                </td>
+                <td>{{ v.current_km|intcomma }}</td>
+                <td class="font-monospace">{{ v.daily_rate|currency:LANGUAGE_CODE }}</td>
+                <td class="text-nowrap">
+                    <a href="{% url 'fleet:vehicle_detail' v.pk %}" class="btn btn-sm btn-outline-primary">{% translate "View" %}</a>
+                    <a href="{% url 'fleet:vehicle_edit' v.pk %}" class="btn btn-sm btn-outline-secondary">{% translate "Edit" %}</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% else %}
-<p class="text-muted">{% translate "No vehicles" %}</p>
+<div class="empty-state fade-up">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17h14M5 17a2 2 0 1 1-4 0M5 17a2 2 0 1 0-4 0M19 17a2 2 0 1 1-4 0M19 17a2 2 0 1 0-4 0M3 9l1-4h12l2 5h3"/></svg>
+    <h5>{% translate "No vehicles yet" %}</h5>
+    <p class="mb-3">{% translate "Start by adding your first vehicle to your fleet" %}</p>
+    <a href="{% url 'fleet:vehicle_create' %}" class="btn btn-primary">{% translate "Add Vehicle" %}</a>
+</div>
 {% endif %}
 {% include 'fleet/pagination.html' %}
 {% endblock %}

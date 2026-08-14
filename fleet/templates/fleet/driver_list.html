@@ -3,50 +3,64 @@
 {% load humanize vroom_extras %}
 {% get_current_language as LANG %}
 
+{% block page_title %}{% translate "Drivers" %}{% endblock %}
+
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0">{% translate "Drivers" %}</h2>
-    <a href="{% url 'fleet:driver_create' %}" class="btn btn-success">{% translate "Add Driver" %}</a>
+<div class="d-flex justify-content-between align-items-center mb-4 fade-up">
+    <div>
+        <h2 class="mb-0">{% translate "Drivers" %}</h2>
+        {% if drivers %}
+        <span class="text-muted small">{{ drivers.paginator.count }} {% translate "Drivers" %}</span>
+        {% endif %}
+    </div>
+    <a href="{% url 'fleet:driver_create' %}" class="btn btn-primary">{% translate "Add Driver" %}</a>
 </div>
 
 {% if drivers %}
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>{% translate "Full Name" %}</th>
-            <th>{% translate "CIN number" %}</th>
-            <th>{% translate "Phone" %}</th>
-            <th>{% translate "License Number" %}</th>
-            <th>{% translate "License Expiry" %}</th>
-            <th>{% translate "Active" %}</th>
-            <th>{% translate "Actions" %}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for d in drivers %}
-        <tr>
-            <td>{{ d.first_name }} {{ d.last_name }}</td>
-            <td><span class="ltr">{{ d.cin }}</span></td>
-            <td><span class="ltr">{{ d.phone }}</span></td>
-            <td><span class="ltr">{{ d.license_number }}</span></td>
-            <td>{{ d.license_expiry|date:"SHORT_DATE_FORMAT" }}</td>
-            <td>
-                {% if d.is_active %}
-                    <span class="text-success fw-bold">✓</span>
-                {% else %}
-                    <span class="text-danger fw-bold">✗</span>
-                {% endif %}
-            </td>
-            <td>
-                <a href="{% url 'fleet:driver_detail' d.pk %}" class="btn btn-sm btn-outline-primary">{% translate "View" %}</a>
-                <a href="{% url 'fleet:driver_edit' d.pk %}" class="btn btn-sm btn-outline-warning">{% translate "Edit" %}</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="table-responsive fade-up">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>{% translate "Full Name" %}</th>
+                <th>{% translate "CIN number" %}</th>
+                <th>{% translate "Phone" %}</th>
+                <th>{% translate "License Number" %}</th>
+                <th>{% translate "License Expiry" %}</th>
+                <th>{% translate "Active" %}</th>
+                <th>{% translate "Actions" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in drivers %}
+            <tr>
+                <td class="fw-medium">{{ d.first_name }} {{ d.last_name }}</td>
+                <td><span class="ltr font-monospace">{{ d.cin }}</span></td>
+                <td><span class="ltr font-monospace">{{ d.phone }}</span></td>
+                <td><span class="ltr font-monospace">{{ d.license_number }}</span></td>
+                <td>{{ d.license_expiry|date:"SHORT_DATE_FORMAT" }}</td>
+                <td>
+                    {% if d.is_active %}
+                        <span class="badge bg-success"><span class="status-dot" style="background: var(--accent);"></span>{% translate "Active" %}</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{% translate "Inactive" %}</span>
+                    {% endif %}
+                </td>
+                <td class="text-nowrap">
+                    <a href="{% url 'fleet:driver_detail' d.pk %}" class="btn btn-sm btn-outline-primary">{% translate "View" %}</a>
+                    <a href="{% url 'fleet:driver_edit' d.pk %}" class="btn btn-sm btn-outline-secondary">{% translate "Edit" %}</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% else %}
-<p class="text-muted">{% translate "No drivers" %}</p>
+<div class="empty-state fade-up">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>
+    <h5>{% translate "No drivers yet" %}</h5>
+    <p class="mb-3">{% translate "Add drivers to link them to bookings" %}</p>
+    <a href="{% url 'fleet:driver_create' %}" class="btn btn-primary">{% translate "Add Driver" %}</a>
+</div>
 {% endif %}
 {% include 'fleet/pagination.html' %}
 {% endblock %}

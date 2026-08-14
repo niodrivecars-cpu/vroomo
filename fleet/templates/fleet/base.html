@@ -1,51 +1,380 @@
 {% load i18n %}
 {% get_current_language as LANGUAGE_CODE %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_CODE == 'ar' %}rtl{% else %}ltr{% endif %}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Vroom - {% translate 'Multi-tenant fleet & car rental management system' %}">
+    <title>{% block title %}Vroom{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
     {% if LANGUAGE_CODE == 'ar' %}
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" integrity="sha384-H/PXvO0xEWTm8iBNgh80SgSMVcZWIA+8NNCPBd2DvOWB1CxhTe8vj+AFjMHCvZ6M" crossorigin="anonymous">
     {% else %}
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     {% endif %}
     <style>
+        :root {
+            --brand: #2563EB;
+            --brand-dark: #1D4ED8;
+            --brand-soft: #EFF6FF;
+            --accent: #059669;
+            --accent-dark: #047857;
+            --accent-soft: #ECFDF5;
+            --warn: #D97706;
+            --warn-soft: #FFFBEB;
+            --danger: #DC2626;
+            --danger-soft: #FEF2F2;
+            --bg: #F8FAFC;
+            --surface: #FFFFFF;
+            --surface-2: #F1F5F9;
+            --ink: #0F172A;
+            --ink-muted: #64748B;
+            --border: #E2E8F0;
+            --ring: rgba(37, 99, 235, 0.35);
+            --radius: 0.75rem;
+            --radius-sm: 0.5rem;
+            --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+            --shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
+            --font-sans: 'Fira Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'Fira Code', ui-monospace, 'Cascadia Code', Consolas, monospace;
+            --sidebar-w: 16rem;
+            --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0F172A;
+                --surface: #1E293B;
+                --surface-2: #334155;
+                --ink: #F1F5F9;
+                --ink-muted: #94A3B8;
+                --border: #334155;
+                --brand-soft: rgba(37, 99, 235, 0.15);
+                --accent-soft: rgba(5, 150, 105, 0.15);
+                --warn-soft: rgba(217, 119, 6, 0.15);
+                --danger-soft: rgba(220, 38, 38, 0.15);
+                --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+                --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+                --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+            }
+        }
+        * { box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+        }
         .ltr { direction: ltr; unicode-bidi: isolate; }
+
+        /* ── Sidebar layout ── */
+        .app-shell { display: flex; min-height: 100vh; }
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--surface);
+            border-inline-end: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            flex-shrink: 0;
+        }
+        .sidebar-brand {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 1.25rem 1.25rem 1rem;
+            font-weight: 700; font-size: 1.25rem;
+            color: var(--ink); text-decoration: none;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-brand:hover { color: var(--brand); }
+        .brand-mark {
+            width: 2rem; height: 2rem; border-radius: 0.5rem;
+            background: linear-gradient(135deg, var(--brand), var(--accent));
+            color: #fff; display: grid; place-items: center;
+            font-weight: 700; font-size: 1rem; font-family: var(--font-mono);
+            flex-shrink: 0;
+        }
+        .sidebar-nav { flex: 1; padding: 0.75rem; overflow-y: auto; }
+        .nav-section-label {
+            font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.06em; color: var(--ink-muted);
+            padding: 0.75rem 0.75rem 0.375rem;
+        }
+        .nav-link-app {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.625rem 0.75rem; margin-bottom: 0.125rem;
+            border-radius: var(--radius-sm); color: var(--ink-muted);
+            text-decoration: none; font-weight: 500; font-size: 0.9375rem;
+            transition: background var(--transition), color var(--transition);
+        }
+        .nav-link-app svg { width: 1.15rem; height: 1.15rem; flex-shrink: 0; }
+        .nav-link-app:hover { background: var(--surface-2); color: var(--ink); }
+        .nav-link-app.active {
+            background: var(--brand-soft); color: var(--brand);
+            font-weight: 600;
+        }
+        .sidebar-footer { padding: 0.75rem; border-top: 1px solid var(--border); }
+        .btn-logout {
+            display: flex; align-items: center; gap: 0.5rem; width: 100%;
+            padding: 0.5rem 0.75rem; border-radius: var(--radius-sm);
+            border: 1px solid var(--border); background: transparent;
+            color: var(--ink-muted); font-weight: 500; font-size: 0.875rem;
+            transition: all var(--transition);
+        }
+        .btn-logout:hover { color: var(--danger); border-color: var(--danger); background: var(--danger-soft); }
+
+        /* ── Main column ── */
+        .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+        .topbar {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 1rem; padding: 1rem 1.5rem;
+            background: var(--surface); border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 30;
+        }
+        .topbar-title { font-size: 1.125rem; font-weight: 600; margin: 0; }
+        .topbar-actions { display: flex; align-items: center; gap: 0.75rem; }
+        .content { padding: 1.5rem; width: 100%; max-width: 80rem; margin-inline: auto; }
+
+        /* ── Buttons ── */
+        .btn { border-radius: var(--radius-sm); font-weight: 500; transition: all var(--transition); }
+        .btn:hover { transform: translateY(-1px); }
+        .btn-primary, .btn-success {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border: none;
+        }
+        .btn-success { background: linear-gradient(135deg, var(--accent), var(--accent-dark)); }
+        .btn-primary:hover, .btn-success:hover { filter: brightness(1.05); box-shadow: var(--shadow); }
+        .btn-outline-primary, .btn-outline-secondary, .btn-outline-warning, .btn-outline-danger, .btn-outline-info {
+            background: transparent;
+        }
+        .btn-outline-primary { color: var(--brand); border-color: var(--brand); }
+        .btn-outline-primary:hover { background: var(--brand); border-color: var(--brand); }
+        .btn-outline-success { color: var(--accent); border-color: var(--accent); }
+        .btn-outline-success:hover { background: var(--accent); border-color: var(--accent); }
+        .btn-outline-warning { color: var(--warn); border-color: var(--warn); }
+        .btn-outline-warning:hover { background: var(--warn); border-color: var(--warn); color: #fff; }
+        .btn-outline-danger { color: var(--danger); border-color: var(--danger); }
+        .btn-outline-danger:hover { background: var(--danger); border-color: var(--danger); }
+        .btn-outline-info { color: #0891B2; border-color: #0891B2; }
+        .btn-outline-info:hover { background: #0891B2; border-color: #0891B2; color: #fff; }
+        .btn-outline-secondary { color: var(--ink-muted); border-color: var(--border); }
+        .btn-outline-secondary:hover { background: var(--surface-2); border-color: var(--border); color: var(--ink); }
+        .btn:focus-visible, .btn-ghost:focus-visible, .nav-link-app:focus-visible, .btn-logout:focus-visible, .page-link:focus-visible {
+            outline: none; box-shadow: 0 0 0 3px var(--ring);
+        }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); box-shadow: var(--shadow-sm);
+        }
+        .card-body { padding: 1.25rem; }
+        .stat-card { position: relative; overflow: hidden; border: 1px solid var(--border); }
+        .stat-card .stat-icon {
+            width: 2.75rem; height: 2.75rem; border-radius: var(--radius-sm);
+            display: grid; place-items: center; margin-bottom: 0.75rem;
+        }
+        .stat-card .stat-value { font-size: 2rem; font-weight: 700; line-height: 1; }
+        .stat-card .stat-label { color: var(--ink-muted); font-size: 0.875rem; margin-top: 0.375rem; }
+        .stat-brand .stat-icon { background: var(--brand-soft); color: var(--brand); }
+        .stat-accent .stat-icon { background: var(--accent-soft); color: var(--accent); }
+        .stat-warn .stat-icon { background: var(--warn-soft); color: var(--warn); }
+        .stat-danger .stat-icon { background: var(--danger-soft); color: var(--danger); }
+        .stat-card .stat-icon svg { width: 1.5rem; height: 1.5rem; }
+
+        /* ── Tables ── */
+        .table {
+            --bs-table-bg: transparent;
+            background: var(--surface); border-radius: var(--radius);
+            border: 1px solid var(--border); overflow: hidden;
+            --bs-table-color: var(--ink);
+        }
+        .table thead th {
+            background: var(--surface-2); color: var(--ink-muted);
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.05em; border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1rem; white-space: nowrap;
+        }
+        .table tbody td { padding: 0.75rem 1rem; vertical-align: middle; border-color: var(--border); }
+        .table tbody tr { transition: background var(--transition); }
+        .table tbody tr:hover { background: var(--brand-soft); }
+        .table-striped > tbody > tr:nth-of-type(odd) > * { background-color: var(--surface-2); }
+        .table-dark thead th {
+            background: #0F172A; color: #F1F5F9; border-color: #1E293B;
+        }
+        .table-responsive { border-radius: var(--radius); }
+        .table > :not(caption) > * > * { background-color: transparent; }
+
+        /* ── Badges ── */
+        .badge {
+            border-radius: 999px; padding: 0.4em 0.75em; font-weight: 600;
+            font-size: 0.75rem; letter-spacing: 0.01em;
+        }
+        .badge.bg-success { background: var(--accent-soft) !important; color: var(--accent); }
+        .badge.bg-primary { background: var(--brand-soft) !important; color: var(--brand); }
+        .badge.bg-warning { background: var(--warn-soft) !important; color: var(--warn); }
+        .badge.bg-danger { background: var(--danger-soft) !important; color: var(--danger); }
+        .badge.bg-secondary, .badge.bg-dark { background: var(--surface-2) !important; color: var(--ink-muted); }
+        .badge.bg-info { background: rgba(8, 145, 178, 0.12) !important; color: #0891B2; }
+
+        /* ── Forms ── */
+        .form-control, .form-select {
+            border-radius: var(--radius-sm); border-color: var(--border);
+            background: var(--surface); color: var(--ink);
+            padding: 0.625rem 0.875rem; transition: border-color var(--transition), box-shadow var(--transition);
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--brand); box-shadow: 0 0 0 3px var(--ring);
+        }
+        .form-label { font-weight: 500; color: var(--ink); }
+        .form-text { color: var(--ink-muted); }
+
+        /* ── Alerts ── */
+        .alert { border-radius: var(--radius); border: none; padding: 1rem 1.25rem; }
+        .alert-success { background: var(--accent-soft); color: var(--accent-dark); }
+        .alert-danger { background: var(--danger-soft); color: var(--danger); }
+        .alert-warning { background: var(--warn-soft); color: var(--warn); }
+        .alert-info { background: var(--brand-soft); color: var(--brand-dark); }
+
+        /* ── Pagination ── */
+        .pagination { gap: 0.25rem; }
+        .page-link {
+            border: 1px solid var(--border); color: var(--ink-muted);
+            border-radius: var(--radius-sm) !important; background: var(--surface);
+            padding: 0.5rem 0.75rem; transition: all var(--transition);
+        }
+        .page-link:hover { background: var(--brand-soft); color: var(--brand); border-color: var(--border); }
+        .page-item.active .page-link { background: var(--brand); border-color: var(--brand); color: #fff; }
+        .page-item.disabled .page-link { background: var(--surface-2); color: var(--ink-muted); border-color: var(--border); }
+
+        /* ── Empty states ── */
+        .empty-state {
+            text-align: center; padding: 3rem 1.5rem;
+            background: var(--surface); border: 1px dashed var(--border);
+            border-radius: var(--radius); color: var(--ink-muted);
+        }
+        .empty-state svg { width: 3rem; height: 3rem; margin-bottom: 0.75rem; opacity: 0.5; }
+        .empty-state h5 { color: var(--ink); font-weight: 600; }
+
+        /* ── Misc ── */
+        .section-heading {
+            display: flex; align-items: center; gap: 0.75rem;
+            margin-bottom: 1rem; padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .section-heading h4 { margin: 0; font-weight: 600; font-size: 1.05rem; }
+        .section-heading::before {
+            content: ''; width: 4px; height: 1.5rem; border-radius: 999px;
+            background: linear-gradient(var(--brand), var(--accent));
+        }
+        .status-dot { display: inline-block; width: 0.5rem; height: 0.5rem; border-radius: 999px; margin-inline-end: 0.375rem; }
+        .text-success { color: var(--accent) !important; }
+        .text-muted { color: var(--ink-muted) !important; }
+        .list-group { border-radius: var(--radius); }
+        .list-group-item { background: var(--surface); border-color: var(--border); color: var(--ink); }
+        .card-title { font-weight: 600; }
+        a { color: var(--brand); }
+        a:hover { color: var(--brand-dark); }
+        h1, h2, h3, h4, h5 { color: var(--ink); }
+        .table-danger > td, .table-warning > td, .table-danger, .table-warning {
+            --bs-table-color: var(--ink);
+        }
+        .table-danger { --bs-table-bg: var(--danger-soft); }
+        .table-warning { --bs-table-bg: var(--warn-soft); }
+        .input-group-text { background: var(--surface-2); border-color: var(--border); color: var(--ink-muted); }
+
+        /* ── Mobile ── */
+        .sidebar-toggle { display: none; }
+        @media (max-width: 991.98px) {
+            .sidebar { position: fixed; inset-block: 0; inset-inline-start: 0; z-index: 1040; transform: translateX(calc(var(--sidebar-w) * -1)); transition: transform var(--transition); }
+            [dir="rtl"] .sidebar { transform: translateX(calc(var(--sidebar-w) * 1)); }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); z-index: 1039; opacity: 0; pointer-events: none; transition: opacity var(--transition); }
+            .sidebar-backdrop.open { opacity: 1; pointer-events: auto; }
+            .sidebar-toggle { display: inline-flex; }
+        }
+
+        /* Motion */
+        @media (prefers-reduced-motion: no-preference) {
+            .fade-up { animation: fadeUp 0.35s cubic-bezier(0.4, 0, 0.2, 1) both; }
+            @keyframes fadeUp {
+                from { opacity: 0; transform: translateY(12px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        }
     </style>
-    <title>Vroom</title>
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'fleet:dashboard' %}">Vroom</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'fleet:dashboard' %}">{% translate "Dashboard" %}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'fleet:vehicle_list' %}">{% translate "Vehicles" %}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'fleet:booking_list' %}">{% translate "Bookings" %}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'fleet:driver_list' %}">{% translate "Drivers" %}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'fleet:maintenance_list' %}">{% translate "Maintenance" %}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'fleet:violation_list' %}">{% translate "Violations" %}</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav align-items-center">
-                    <li class="nav-item dropdown">
-                        <button class="nav-link btn btn-link dropdown-toggle text-light text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <div class="app-shell">
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+        <aside class="sidebar" id="sidebar" aria-label="{% translate 'Main navigation' %}">
+            <a class="sidebar-brand" href="{% url 'fleet:dashboard' %}">
+                <span class="brand-mark">V</span>
+                <span>Vroom</span>
+            </a>
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">{% translate "Overview" %}</div>
+                <a class="nav-link-app {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'fleet:dashboard' %}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+                    {% translate "Dashboard" %}
+                </a>
+                <div class="nav-section-label">{% translate "Fleet" %}</div>
+                <a class="nav-link-app {% if request.resolver_match.url_name == 'vehicle_list' %}active{% endif %}" href="{% url 'fleet:vehicle_list' %}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17h14M5 17a2 2 0 1 1-4 0M5 17a2 2 0 1 0-4 0M19 17a2 2 0 1 1-4 0M19 17a2 2 0 1 0-4 0M3 9l1-4h12l2 5h3"/></svg>
+                    {% translate "Vehicles" %}
+                </a>
+                <a class="nav-link-app {% if request.resolver_match.url_name == 'booking_list' %}active{% endif %}" href="{% url 'fleet:booking_list' %}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                    {% translate "Bookings" %}
+                </a>
+                <a class="nav-link-app {% if request.resolver_match.url_name == 'driver_list' %}active{% endif %}" href="{% url 'fleet:driver_list' %}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>
+                    {% translate "Drivers" %}
+                </a>
+                <a class="nav-link-app {% if request.resolver_match.url_name == 'maintenance_list' %}active{% endif %}" href="{% url 'fleet:maintenance_list' %}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                    {% translate "Maintenance" %}
+                </a>
+                <a class="nav-link-app {% if request.resolver_match.url_name == 'violation_list' %}active{% endif %}" href="{% url 'fleet:violation_list' %}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+                    {% translate "Violations" %}
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-logout">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                            {% blocktranslate with username=user.username %}Logout ({{ username }}){% endblocktranslate %}
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </aside>
+
+        <div class="main">
+            <header class="topbar">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-outline-secondary sidebar-toggle" id="sidebarToggle" type="button" aria-label="{% translate 'Toggle navigation' %}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="20" height="20"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+                    </button>
+                    <h1 class="topbar-title">{% block page_title %}{% endblock %}</h1>
+                </div>
+                <div class="topbar-actions">
+                    {% if not user.is_authenticated %}
+                        <a href="{% url 'login' %}" class="btn btn-primary">{% translate "Login" %}</a>
+                    {% endif %}
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary d-inline-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
                             {{ LANGUAGE_CODE|upper }}
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -63,33 +392,34 @@
                                 </li>
                             {% endfor %}
                         </ul>
-                    </li>
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <form method="post" action="{% url 'logout' %}" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="nav-link btn btn-link text-light text-decoration-none">{% blocktranslate with username=user.username %}Logout ({{ username }}){% endblocktranslate %}</button>
-                            </form>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">{% translate "Login" %}</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
+                    </div>
+                </div>
+            </header>
 
-    <div class="container mt-4">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-        {% block content %}{% endblock %}
+            <main class="content">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} fade-up" role="alert">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% block content %}{% endblock %}
+            </main>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        (function () {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            const toggle = document.getElementById('sidebarToggle');
+            function closeSidebar() { sidebar.classList.remove('open'); backdrop.classList.remove('open'); }
+            if (toggle) toggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open'); backdrop.classList.toggle('open');
+            });
+            if (backdrop) backdrop.addEventListener('click', closeSidebar);
+        })();
+    </script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
