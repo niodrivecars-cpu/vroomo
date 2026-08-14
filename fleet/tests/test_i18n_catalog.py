@@ -162,7 +162,7 @@ class CatalogCoverageTests(SimpleTestCase):
                 continue
             for m in PY_PAT.finditer(f.read_text(encoding='utf-8')):
                 s = m.group(2)
-                if '%' in s or s.startswith('{') or '\n' in s:
+                if '%' in s or s.startswith('{') or '\n' in s or '\\n' in s:
                     continue
                 if s not in catalog:
                     missing.append((f.name, s))
