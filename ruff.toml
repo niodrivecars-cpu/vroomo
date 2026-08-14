@@ -8,6 +8,9 @@ exclude = [
     "__pycache__",
 ]
 
+[lint]
+ignore = ["EXE001"]
+
 [lint.per-file-ignores]
 "fleet/migrations/*.py" = ["RUF012"]
 "fleet/models.py" = ["RUF012"]
