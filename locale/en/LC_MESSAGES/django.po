@@ -740,7 +740,7 @@ msgstr ""
 msgid "Violations"
 msgstr ""
 
-msgid "Vroom alerts:\\n\\n"
+msgid "Vroom alerts:\n\n"
 msgstr ""
 
 msgid "Vroom daily report - %(date)s (%(count)d alert(s))"
@@ -755,7 +755,7 @@ msgstr ""
 msgid "You do not have permission to access this page"
 msgstr ""
 
-msgid "\\n\\n-- Vroom system"
+msgid "\n\n-- Vroom system"
 msgstr ""
 
 msgid "day(s)"
