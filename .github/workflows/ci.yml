@@ -51,7 +51,7 @@ jobs:
         run: |
           CONTAINER_ID=$(docker ps --filter "ancestor=mysql:8.0" --format '{{.ID}}' | head -n1)
           docker exec "$CONTAINER_ID" mysql --user=root --password=root \
-            -e "CREATE DATABASE IF NOT EXISTS test_vroom_ci; GRANT ALL PRIVILEGES ON \`test\_vroom\_ci\`.* TO 'vroom'@'%'; FLUSH PRIVILEGES;"
+            -e "GRANT ALL PRIVILEGES ON \`test\_%\`.* TO 'vroom'@'%'; FLUSH PRIVILEGES;"
 
       - name: Install Python dependencies
         run: pip install -r requirements.txt -r requirements-dev.txt
