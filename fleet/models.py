@@ -344,7 +344,7 @@ class AuditLog(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Date"))
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['-created_at', '-id']
         verbose_name = _('Audit log')
         verbose_name_plural = _('Audit logs')
 
