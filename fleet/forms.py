@@ -1,6 +1,7 @@
 from django import forms
 
 from .models import Booking, Driver, Maintenance, Vehicle, VehicleDocument, Violation
+from .pricing import calculate_booking_total
 from .validators import validate_file_extension, validate_file_size, validate_mime_type
 
 
@@ -37,6 +38,25 @@ class BookingForm(forms.ModelForm):
         if company:
             self.fields['vehicle'].queryset = Vehicle.objects.for_company(company)
             self.fields['driver'].queryset = Driver.objects.for_company(company)
+        # total_amount is server-authoritative (F3): never trusted from the
+        # client. Mark not-required so a missing/empty submission doesn't
+        # invalidate the form; save() always recomputes it.
+        self.fields['total_amount'].required = False
+
+    def save(self, commit=True):
+        booking = super().save(commit=False)
+        # Server-authoritative total: ignore any client-submitted total_amount.
+        # rental_days and total are derived from the vehicle's daily_rate and
+        # the rental window (see fleet/pricing.py, F3). The stored field remains
+        # the historical calculated snapshot.
+        booking.total_amount = calculate_booking_total(
+            booking.vehicle,
+            self.cleaned_data['pickup_date'],
+            self.cleaned_data['expected_return'],
+        )
+        if commit:
+            booking.save()
+        return booking
 
 
 class VehicleDocumentForm(forms.ModelForm):
