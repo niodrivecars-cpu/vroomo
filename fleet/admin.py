@@ -18,6 +18,7 @@ from .models import (
     VehicleDocument,
     Violation,
 )
+from .pricing import calculate_booking_total
 
 
 class VehicleDocumentAdminForm(forms.ModelForm):
@@ -155,6 +156,15 @@ class BookingAdmin(TenantAdminMixin, admin.ModelAdmin):
     search_fields = ('customer_name', 'customer_phone', 'vehicle__license_plate')
     list_editable = ('status',)
     date_hierarchy = 'pickup_date'
+
+    def save_model(self, request, obj, form, change):
+        # Server-authoritative total_amount (F3/F8): recompute from the
+        # vehicle's daily_rate and the rental window, ignoring any admin-
+        # submitted value. Mirrors BookingForm.save(). deposit is unchanged.
+        obj.total_amount = calculate_booking_total(
+            obj.vehicle, obj.pickup_date, obj.expected_return
+        )
+        super().save_model(request, obj, form, change)
 
     def get_is_late(self, obj):
         if obj.is_late:
