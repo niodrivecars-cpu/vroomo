@@ -13,9 +13,11 @@ def log_audit(request, action, obj=None, summary=''):
     from .models import AuditLog
     company_id = None
     if obj is not None:
-        vehicle = getattr(obj, 'vehicle', None)
-        if vehicle is not None:
-            company_id = vehicle.company_id
+        company_id = getattr(obj, 'company_id', None)
+        if company_id is None:
+            vehicle = getattr(obj, 'vehicle', None)
+            if vehicle is not None:
+                company_id = vehicle.company_id
     AuditLog.objects.create(
         user=request.user if request.user.is_authenticated else None,
         ip_address=get_client_ip(request) or None,
